@@ -39,6 +39,7 @@ import org.apache.solr.client.solrj.io.stream.expr.StreamFactory;
 import org.apache.solr.client.solrj.util.ClientUtils;
 import org.apache.solr.common.params.ModifiableSolrParams;
 
+
 import static org.apache.solr.common.params.CommonParams.SORT;
 import static org.apache.solr.common.params.CommonParams.VERSION_FIELD;
 
@@ -68,11 +69,14 @@ public class FetchStream extends TupleStream implements Expressible {
   private String[] fields;
   private String collection;
   private int batchSize;
+  private ModifiableSolrParams params;
   private boolean appendVersion = true;
   private boolean appendKey = true;
 
-  public FetchStream(String zkHost, String collection, TupleStream tupleStream, String on, String fieldList, int batchSize) throws IOException {
-    init(zkHost, collection, tupleStream, on, fieldList, batchSize);
+
+  public FetchStream(String zkHost, String
+          collection, TupleStream tupleStream, String on, String fieldList, int batchSize) throws IOException {
+    init(zkHost, collection, tupleStream, on, fieldList, batchSize, params);
   }
 
   public FetchStream(StreamExpression expression, StreamFactory factory) throws IOException {
@@ -83,6 +87,21 @@ public class FetchStream extends TupleStream implements Expressible {
     StreamExpressionNamedParameter flParam = factory.getNamedOperand(expression, "fl");
     StreamExpressionNamedParameter batchSizeParam = factory.getNamedOperand(expression, "batchSize");
     StreamExpressionNamedParameter zkHostExpression = factory.getNamedOperand(expression, "zkHost");
+
+    List<StreamExpressionNamedParameter> namedParams = factory.getNamedOperands(expression);
+
+    // Named parameters - passed directly to solr as solrparams
+    if(0 == namedParams.size()){
+      throw new IOException(String.format(Locale.ROOT,"invalid expression %s - at least one named parameter expected. eg. 'fl=id'",expression));
+    }
+
+    // pull out known named params
+    ModifiableSolrParams params = new ModifiableSolrParams();
+    for(StreamExpressionNamedParameter namedParam : namedParams){
+      if(!namedParam.getName().equals("on") && !namedParam.getName().equals("fl") && !namedParam.getName().equals("batchSize") && !namedParam.getName().equals("zkHost")){
+        params.add(namedParam.getName(), namedParam.getParameter().toString().trim());
+      }
+    }
 
     String on = null;
     String fl = null;
@@ -110,6 +129,7 @@ public class FetchStream extends TupleStream implements Expressible {
 
     TupleStream stream = factory.constructStream(streamExpressions.get(0));
 
+    // zkHost, optional - if not provided then will look into factory list to get
     String zkHost = null;
     if(null == zkHostExpression){
       zkHost = factory.getCollectionZkHost(collectionName);
@@ -124,16 +144,17 @@ public class FetchStream extends TupleStream implements Expressible {
       throw new IOException(String.format(Locale.ROOT,"invalid expression %s - zkHost not found for collection '%s'",expression,collectionName));
     }
 
-    init(zkHost, collectionName, stream, on, fl, batchSize);
+    init(zkHost, collectionName, stream, on, fl, batchSize, params);
   }
 
-  private void init(String zkHost, String collection, TupleStream tupleStream, String on, String fieldList, int batchSize) throws IOException{
+  private void init(String zkHost, String collection, TupleStream tupleStream, String on, String fieldList, int batchSize, ModifiableSolrParams params) throws IOException{
     this.zkHost = zkHost;
     this.collection = collection;
     this.stream = tupleStream;
     this.batchSize = batchSize;
     this.fields = fieldList.split(",");
     this.fieldList = fieldList;
+    this.params = params;
 
     if(on.indexOf("=") > -1) {
       String[] leftright = on.split("=");
@@ -231,13 +252,16 @@ public class FetchStream extends TupleStream implements Expressible {
         buf.append(' ').append(ClientUtils.escapeQueryChars(key));
       }
 
-      ModifiableSolrParams params = new ModifiableSolrParams();
-      params.add("q", buf.toString());
-      params.add("fl", fieldList+appendFields());
-      params.add("rows", Integer.toString(batchSize));
-      params.add(SORT, "_version_ desc");
+      ModifiableSolrParams paramsToSend = new ModifiableSolrParams();
+      paramsToSend.add(params);
+      // Add back the named parameters
+      paramsToSend.add("q", buf.toString());
+      paramsToSend.add("fl", fieldList+appendFields());
+      paramsToSend.add("rows", Integer.toString(batchSize));
+      paramsToSend.add(SORT, "_version_ desc");
+      //params.add("defType", "lucene");
 
-      CloudSolrStream cloudSolrStream = new CloudSolrStream(zkHost, collection, params);
+      CloudSolrStream cloudSolrStream = new CloudSolrStream(zkHost, collection, paramsToSend);
       StreamContext newContext = new StreamContext();
       newContext.setSolrClientCache(streamContext.getSolrClientCache());
       newContext.setObjectCache(streamContext.getObjectCache());

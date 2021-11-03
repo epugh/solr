@@ -875,6 +875,16 @@ public class StreamDecoratorTest extends SolrCloudTestCase {
     t = tuples.get(0);
     assertTrue("blah blah blah 99".equals(t.getString("subject")));
 
+
+    // SOLR-12505 test that passing in defType=lucene overrides already defined defType of edismax in solrconfig
+    stream = factory.constructStream("fetch(" + COLLECTIONORALIAS + ",  search(" + COLLECTIONORALIAS + ", q=*:*, fl=\"id,a_s,a_i,a_f\", sort=\"a_f asc\"), on=\"id=a_i\", batchSize=\"3\", fl=\"subject\", qt=\"/select\")");
+    context = new StreamContext();
+    context.setSolrClientCache(solrClientCache);
+    stream.setStreamContext(context);
+    tuples = getTuples(stream);
+
+    assert(tuples.size() == 10);
+
     solrClientCache.close();
   }
 
