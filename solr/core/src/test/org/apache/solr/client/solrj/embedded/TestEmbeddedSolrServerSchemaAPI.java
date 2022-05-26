@@ -33,7 +33,7 @@ import org.junit.Test;
 
 public class TestEmbeddedSolrServerSchemaAPI extends SolrTestCaseJ4 {
 
-  private String fieldName = "VerificationTest";
+  private final String fieldName = "VerificationTest";
   private static EmbeddedSolrServer server;
   private final Map<String, Object> fieldAttributes;
 
@@ -55,7 +55,7 @@ public class TestEmbeddedSolrServerSchemaAPI extends SolrTestCaseJ4 {
     Path coreDir = tmpHome.resolve(DEFAULT_TEST_CORENAME);
     copyMinConf(coreDir.toFile(), null, "solrconfig-managed-schema.xml");
     initCore(
-        "solrconfig.xml" /*it's renamed to to*/, "schema.xml", tmpHome.toAbsolutePath().toString());
+        "solrconfig.xml" /*it's renamed to*/, "schema.xml", tmpHome.toAbsolutePath().toString());
 
     server = new EmbeddedSolrServer(h.getCoreContainer(), DEFAULT_TEST_CORENAME);
   }
