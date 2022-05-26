@@ -103,13 +103,13 @@ public class TestEmbeddedSolrServerSchemaAPI extends SolrTestCaseJ4 {
     SchemaRequest.AddField addFieldUpdateSchemaRequest =
         new SchemaRequest.AddField(fieldAttributes);
     assertFailedSchemaResponse(
-        () -> addFieldUpdateSchemaRequest.process(server), "schema is not editable");
+        () -> addFieldUpdateSchemaRequest.process(server));
   }
 
   private static void assertFailedSchemaResponse(
-      ThrowingRunnable runnable, String expectedErrorMessage) {
+          ThrowingRunnable runnable) {
     ApiBag.ExceptionWithErrObject e = expectThrows(ApiBag.ExceptionWithErrObject.class, runnable);
     String msg = e.getErrs().get(0).get("errorMessages").toString();
-    assertTrue(msg.contains(expectedErrorMessage));
+    assertTrue(msg.contains("schema is not editable"));
   }
 }
