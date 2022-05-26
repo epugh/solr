@@ -27,7 +27,6 @@ import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpVersion;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.conn.ConnectionPoolTimeoutException;
 import org.apache.http.conn.ConnectionRequest;
@@ -48,8 +47,8 @@ import org.junit.Test;
 @SuppressSSL
 public class ConnectionReuseTest extends SolrCloudTestCase {
 
-  private AtomicInteger id = new AtomicInteger();
-  private HttpClientContext context = HttpClientContext.create();
+  private final AtomicInteger id = new AtomicInteger();
+  private final HttpClientContext context = HttpClientContext.create();
 
   private static final String COLLECTION = "collection1";
 
@@ -106,7 +105,7 @@ public class ConnectionReuseTest extends SolrCloudTestCase {
       HttpHost target = new HttpHost(url.getHost(), url.getPort(), isSSLMode() ? "https" : "http");
       HttpRoute route = new HttpRoute(target);
 
-      ConnectionRequest mConn = getClientConnectionRequest(httpClient, route, cm);
+      ConnectionRequest mConn = getClientConnectionRequest(route, cm);
 
       HttpClientConnection conn1 = getConn(mConn);
       headerRequest(target, route, conn1, cm);
@@ -158,7 +157,7 @@ public class ConnectionReuseTest extends SolrCloudTestCase {
               + client.getClass().getSimpleName(),
           metrics);
 
-      // we try and make sure the connection we get has handled all of the requests in this test
+      // we try and make sure the connection we get has handled all the requests in this test
       if (client instanceof ConcurrentUpdateSolrClient) {
         // we can't fully control queue polling breaking up requests - allow a bit of leeway
         int exp = cnt1 + queueBreaks + 2;
@@ -175,7 +174,7 @@ public class ConnectionReuseTest extends SolrCloudTestCase {
                 + client.getClass().getSimpleName()
                 + " "
                 + metrics.getRequestCount(),
-            cnt1 * cnt2 + 2 <= metrics.getRequestCount());
+                (long) cnt1 * cnt2 + 2 <= metrics.getRequestCount());
       }
 
     } finally {
@@ -185,9 +184,8 @@ public class ConnectionReuseTest extends SolrCloudTestCase {
 
   public HttpClientConnection getConn(ConnectionRequest mConn)
       throws InterruptedException, ConnectionPoolTimeoutException, ExecutionException {
-    HttpClientConnection conn = mConn.get(30, TimeUnit.SECONDS);
 
-    return conn;
+    return mConn.get(30, TimeUnit.SECONDS);
   }
 
   public void headerRequest(
@@ -211,8 +209,7 @@ public class ConnectionReuseTest extends SolrCloudTestCase {
   }
 
   public ConnectionRequest getClientConnectionRequest(
-      HttpClient httpClient, HttpRoute route, PoolingHttpClientConnectionManager cm) {
-    ConnectionRequest mConn = cm.requestConnection(route, HttpSolrClient.cacheKey);
-    return mConn;
+          HttpRoute route, PoolingHttpClientConnectionManager cm) {
+    return cm.requestConnection(route, HttpSolrClient.cacheKey);
   }
 }

@@ -78,7 +78,7 @@ public class TestEmbeddedSolrServerSchemaAPI extends SolrTestCaseJ4 {
 
   @Test
   public void testSchemaAddFieldAndVerifyExistence() throws Exception {
-    assumeTrue("it needs to ammend schema", Boolean.getBoolean("managed.schema.mutable"));
+    assumeTrue("it needs to amend schema", Boolean.getBoolean("managed.schema.mutable"));
     SchemaResponse.UpdateResponse addFieldResponse =
         new SchemaRequest.AddField(fieldAttributes).process(server);
 
