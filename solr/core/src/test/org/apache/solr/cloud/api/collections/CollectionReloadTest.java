@@ -60,7 +60,7 @@ public class CollectionReloadTest extends SolrCloudTestCase {
         1000,
         TimeUnit.MILLISECONDS,
         () -> {
-          long restartTime = 0;
+          long restartTime;
           try {
             restartTime = getCoreStatus(leader).getCoreStartTime().getTime();
           } catch (Exception e) {

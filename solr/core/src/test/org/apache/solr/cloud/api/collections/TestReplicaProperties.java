@@ -32,7 +32,6 @@ import org.apache.solr.common.cloud.ZkStateReader;
 import org.apache.solr.common.params.CollectionParams;
 import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.common.util.NamedList;
-import org.apache.zookeeper.KeeperException;
 import org.junit.Test;
 
 @Slow
@@ -227,20 +226,19 @@ public class TestReplicaProperties extends ReplicaPropertiesBase {
       // At this point we've assigned a preferred leader. Make it happen and check that all the
       // nodes that are leaders _also_ have the preferredLeader property set.
 
-      NamedList<Object> res =
-          doPropertyAction(
-              client,
-              "action",
-              CollectionParams.CollectionAction.REBALANCELEADERS.toString(),
-              "collection",
-              COLLECTION_NAME);
+      doPropertyAction(
+          client,
+          "action",
+          CollectionParams.CollectionAction.REBALANCELEADERS.toString(),
+          "collection",
+          COLLECTION_NAME);
 
       verifyLeaderAssignment(client, COLLECTION_NAME);
     }
   }
 
   private void verifyLeaderAssignment(CloudSolrClient client, String collectionName)
-      throws InterruptedException, KeeperException {
+      throws InterruptedException {
     String lastFailMsg = "";
     // Keep trying while Overseer writes the ZK state for up to 30 seconds.
     for (int idx = 0; idx < 300; ++idx) {
@@ -285,9 +283,10 @@ public class TestReplicaProperties extends ReplicaPropertiesBase {
 
   private void addProperty(CloudSolrClient client, String... paramsIn)
       throws IOException, SolrServerException {
-    assertTrue(
+    assertEquals(
         "paramsIn must be an even multiple of 2, it is: " + paramsIn.length,
-        (paramsIn.length % 2) == 0);
+        0,
+        (paramsIn.length % 2));
     ModifiableSolrParams params = new ModifiableSolrParams();
     for (int idx = 0; idx < paramsIn.length; idx += 2) {
       params.set(paramsIn[idx], paramsIn[idx + 1]);

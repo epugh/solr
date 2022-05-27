@@ -43,8 +43,6 @@ import org.slf4j.LoggerFactory;
 public class SplitByPrefixTest extends SolrCloudTestCase {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-  private final String COLLECTION_NAME = "c1";
-
   @BeforeClass
   public static void setupCluster() throws Exception {
     System.setProperty("managed.schema.mutable", "true"); // needed by cloud-managed config set
@@ -142,6 +140,7 @@ public class SplitByPrefixTest extends SolrCloudTestCase {
     // Also, autoscale triggers use async with splits as well.
     boolean doAsync = true;
 
+    String COLLECTION_NAME = "c1";
     CollectionAdminRequest.createCollection(COLLECTION_NAME, "conf", 1, 1)
         .process(cluster.getSolrClient());
 
@@ -170,7 +169,7 @@ public class SplitByPrefixTest extends SolrCloudTestCase {
 
     List<Prefix> prefixes = findPrefixes(20, 0, 0x00ffffff);
     List<Prefix> uniquePrefixes = removeDups(prefixes);
-    // make it an even sized list so we can split it exactly in two
+    // make it an even sized list, so we can split it exactly in two
     if (uniquePrefixes.size() % 2 == 1) {
       uniquePrefixes.remove(uniquePrefixes.size() - 1);
     }
@@ -196,7 +195,7 @@ public class SplitByPrefixTest extends SolrCloudTestCase {
         activeClusterShape(3, 5));
 
     // OK, now let's check that the correct split point was chosen
-    // We can use the router to find the shards for the middle prefixes and they should be
+    // We can use the router to find the shards for the middle prefixes, and they should be
     // different.
 
     DocCollection collection = client.getClusterState().getCollection(COLLECTION_NAME);
@@ -215,10 +214,10 @@ public class SplitByPrefixTest extends SolrCloudTestCase {
     Slice slice2 = slices2.iterator().next();
 
     assertTrue(slices1.size() == 1 && slices2.size() == 1);
-    assertTrue(slice1 != slice2);
+    assertNotSame(slice1, slice2);
 
     //
-    // now lets add enough documents to the first prefix to get it split out on its own
+    // now let's add enough documents to the first prefix to get it split out on its own
     //
     for (int i = 0; i < uniquePrefixes.size(); i++) {
       client.add(getDoc(uniquePrefixes.get(0).key, "doc" + (i + 100)));
@@ -248,7 +247,7 @@ public class SplitByPrefixTest extends SolrCloudTestCase {
     slice2 = slices2.iterator().next();
 
     assertTrue(slices1.size() == 1 && slices2.size() == 1);
-    assertTrue(slice1 != slice2);
+    assertNotSame(slice1, slice2);
 
     // Now if we call split (with splitByPrefix) on a shard that has a single prefix, it should
     // split it in half
@@ -271,7 +270,7 @@ public class SplitByPrefixTest extends SolrCloudTestCase {
         collection.getRouter().getSearchSlicesSingle(uniquePrefixes.get(0).key, null, collection);
     slice1 = slices1.iterator().next();
 
-    assertTrue(slices1.size() == 2);
+    assertEquals(2, slices1.size());
 
     //
     // split one more time, this time on a partial prefix/bucket
@@ -293,7 +292,7 @@ public class SplitByPrefixTest extends SolrCloudTestCase {
     slices1 =
         collection.getRouter().getSearchSlicesSingle(uniquePrefixes.get(0).key, null, collection);
 
-    assertTrue(slices1.size() == 3);
+    assertEquals(3, slices1.size());
 
     // System.err.println("### STATE=" +
     // cluster.getSolrClient().getZkStateReader().getClusterState().getCollection(COLLECTION_NAME));

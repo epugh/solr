@@ -59,7 +59,7 @@ public class TestRequestStatusCollectionAPI extends BasicDistributedZkTest {
     // Check for the request to be completed.
 
     NamedList<?> r = null;
-    NamedList<?> status = null;
+    NamedList<?> status;
     String message = null;
 
     params = new ModifiableSolrParams();

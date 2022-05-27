@@ -38,17 +38,14 @@ import org.junit.Test;
 public class PurgeGraphTest extends SolrTestCaseJ4 {
 
   private BackupRepository repository;
-  private URI baseLocationUri;
   private BackupFilePaths backupPaths;
 
   @Before
   public void setUpRepo() throws Exception {
     repository = new LocalFileSystemRepository();
-    baseLocationUri =
+    URI baseLocationUri =
         repository.createDirectoryURI(
-            createTempDir("backup_files_" + UUID.randomUUID().toString())
-                .toAbsolutePath()
-                .toString());
+            createTempDir("backup_files_" + UUID.randomUUID()).toAbsolutePath().toString());
     backupPaths = new BackupFilePaths(repository, baseLocationUri);
 
     backupPaths.createIncrementalBackupFolders();

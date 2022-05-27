@@ -26,7 +26,6 @@ import org.apache.solr.cloud.SolrCloudTestCase;
 import org.apache.solr.common.cloud.DocCollection;
 import org.apache.solr.common.cloud.Replica;
 import org.apache.solr.common.cloud.Slice;
-import org.apache.zookeeper.KeeperException;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -193,7 +192,7 @@ public class CollectionTooManyReplicasTest extends SolrCloudTestCase {
           return DocCollection.isFullyActive(n, c, 3, 2);
         });
     Map<String, Slice> slices = getCollectionState(collectionName).getSlicesMap();
-    assertEquals("There should be exaclty three slices", slices.size(), 3);
+    assertEquals("There should be exactly three slices", slices.size(), 3);
     assertNotNull("shardstart should exist", slices.get("shardstart"));
     assertNotNull("shard1 should exist", slices.get("shard1"));
     assertNotNull("shard2 should exist", slices.get("shard2"));
@@ -260,8 +259,7 @@ public class CollectionTooManyReplicasTest extends SolrCloudTestCase {
     }
   }
 
-  private List<String> getAllNodeNames(String collectionName)
-      throws KeeperException, InterruptedException {
+  private List<String> getAllNodeNames(String collectionName) {
     DocCollection state = getCollectionState(collectionName);
     return state.getReplicas().stream()
         .map(Replica::getNodeName)
