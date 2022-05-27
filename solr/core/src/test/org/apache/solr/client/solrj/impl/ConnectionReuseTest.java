@@ -174,7 +174,7 @@ public class ConnectionReuseTest extends SolrCloudTestCase {
                 + client.getClass().getSimpleName()
                 + " "
                 + metrics.getRequestCount(),
-                (long) cnt1 * cnt2 + 2 <= metrics.getRequestCount());
+            (long) cnt1 * cnt2 + 2 <= metrics.getRequestCount());
       }
 
     } finally {
@@ -209,7 +209,7 @@ public class ConnectionReuseTest extends SolrCloudTestCase {
   }
 
   public ConnectionRequest getClientConnectionRequest(
-          HttpRoute route, PoolingHttpClientConnectionManager cm) {
+      HttpRoute route, PoolingHttpClientConnectionManager cm) {
     return cm.requestConnection(route, HttpSolrClient.cacheKey);
   }
 }
