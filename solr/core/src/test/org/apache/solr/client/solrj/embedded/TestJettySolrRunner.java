@@ -55,7 +55,7 @@ public class TestJettySolrRunner extends SolrTestCaseJ4 {
     try {
       runner.start();
 
-      try (SolrClient client = getHttpSolrClient(runner.getBaseUrl().toString())) {
+      try (SolrClient client = getHttp2SolrClient(runner.getBaseUrl().toString())) {
         CoreAdminRequest.Create createReq = new CoreAdminRequest.Create();
         createReq.setCoreName("newcore");
         createReq.setConfigSet("minimal");

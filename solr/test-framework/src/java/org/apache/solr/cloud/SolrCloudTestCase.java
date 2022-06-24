@@ -35,16 +35,12 @@ import org.apache.solr.client.solrj.SolrRequest;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.JettySolrRunner;
 import org.apache.solr.client.solrj.impl.CloudLegacySolrClient;
+import org.apache.solr.client.solrj.impl.Http2SolrClient;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.request.CoreAdminRequest;
 import org.apache.solr.client.solrj.request.CoreStatus;
-import org.apache.solr.common.cloud.CollectionStatePredicate;
-import org.apache.solr.common.cloud.DocCollection;
-import org.apache.solr.common.cloud.LiveNodesPredicate;
-import org.apache.solr.common.cloud.Replica;
-import org.apache.solr.common.cloud.Slice;
-import org.apache.solr.common.cloud.SolrZkClient;
-import org.apache.solr.common.cloud.ZkStateReader;
+import org.apache.solr.client.solrj.request.QueryRequest;
+import org.apache.solr.common.cloud.*;
 import org.apache.solr.common.util.NamedList;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -370,5 +366,17 @@ public class SolrCloudTestCase extends SolrTestCaseJ4 {
       }
     }
     return replicaTypeMap;
+  }
+
+  protected Http2SolrClient getHttp2SolrClient(Replica replica, String coll) throws Exception {
+    ZkCoreNodeProps zkProps = new ZkCoreNodeProps(replica);
+    String url = zkProps.getBaseUrl() + "/" + coll;
+    return getHttp2SolrClient(url);
+  }
+
+  protected NamedList<Object> realTimeGetDocId(Http2SolrClient solr, String docId)
+          throws SolrServerException, IOException {
+    QueryRequest qr = new QueryRequest(params("qt", "/get", "id", docId, "distrib", "false"));
+    return solr.request(qr);
   }
 }

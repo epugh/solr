@@ -157,8 +157,8 @@ public class FullSolrCloudDistribCmdsTest extends SolrCloudTestCase {
     cloudClient.setDefaultCollection(name);
 
     final DocCollection docCol = cloudClient.getClusterState().getCollection(name);
-    try (SolrClient shard1 = getHttpSolrClient(docCol.getSlice("shard1").getLeader().getCoreUrl());
-        SolrClient shard2 = getHttpSolrClient(docCol.getSlice("shard2").getLeader().getCoreUrl())) {
+    try (SolrClient shard1 = getHttp2SolrClient(docCol.getSlice("shard1").getLeader().getCoreUrl());
+        SolrClient shard2 = getHttp2SolrClient(docCol.getSlice("shard2").getLeader().getCoreUrl())) {
 
       // Add three documents to shard1
       shard1.add(sdoc("id", "1", "title", "s1 one"));
@@ -275,8 +275,8 @@ public class FullSolrCloudDistribCmdsTest extends SolrCloudTestCase {
     cloudClient.setDefaultCollection(name);
 
     final DocCollection docCol = cloudClient.getClusterState().getCollection(name);
-    try (SolrClient shard1 = getHttpSolrClient(docCol.getSlice("shard1").getLeader().getCoreUrl());
-        SolrClient shard2 = getHttpSolrClient(docCol.getSlice("shard2").getLeader().getCoreUrl())) {
+    try (SolrClient shard1 = getHttp2SolrClient(docCol.getSlice("shard1").getLeader().getCoreUrl());
+        SolrClient shard2 = getHttp2SolrClient(docCol.getSlice("shard2").getLeader().getCoreUrl())) {
 
       // Add six documents w/diff routes (all sent to shard1 leader's core)
       shard1.add(sdoc("id", "1", "routefield_s", "europe"));
@@ -430,7 +430,7 @@ public class FullSolrCloudDistribCmdsTest extends SolrCloudTestCase {
         }
 
         // create client to send our updates to...
-        try (HttpSolrClient indexClient = getHttpSolrClient(indexingUrl)) {
+        try (SolrClient indexClient = getHttp2SolrClient(indexingUrl)) {
 
           // Sanity check: we should be able to send a bunch of updates that work right now...
           for (int i = 0; i < 100; i++) {
@@ -749,11 +749,11 @@ public class FullSolrCloudDistribCmdsTest extends SolrCloudTestCase {
       final Slice slice = entry.getValue();
       log.info("Checking: {} -> {}", shardName, slice);
       final Replica leader = entry.getValue().getLeader();
-      try (HttpSolrClient leaderClient = getHttpSolrClient(leader.getCoreUrl())) {
+      try (SolrClient leaderClient = getHttp2SolrClient(leader.getCoreUrl())) {
         final SolrDocumentList leaderResults = leaderClient.query(perReplicaParams).getResults();
         log.debug("Shard {}: Leader results: {}", shardName, leaderResults);
         for (Replica replica : slice) {
-          try (HttpSolrClient replicaClient = getHttpSolrClient(replica.getCoreUrl())) {
+          try (SolrClient replicaClient = getHttp2SolrClient(replica.getCoreUrl())) {
             final SolrDocumentList replicaResults =
                 replicaClient.query(perReplicaParams).getResults();
             if (log.isDebugEnabled()) {

@@ -58,7 +58,7 @@ public class NestedShardedAtomicUpdateTest extends SolrCloudTestCase {
     clients = new ArrayList<>();
     ClusterState clusterState = cloudClient.getClusterState();
     for (Replica replica : clusterState.getCollection(DEFAULT_COLLECTION).getReplicas()) {
-      clients.add(getHttpSolrClient(replica.getCoreUrl()));
+      clients.add(getHttp2SolrClient(replica.getCoreUrl()));
     }
   }
 

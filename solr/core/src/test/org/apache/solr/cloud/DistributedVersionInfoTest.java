@@ -36,6 +36,7 @@ import org.apache.solr.SolrTestCaseJ4.SuppressSSL;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.impl.Http2SolrClient;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.request.CollectionAdminRequest;
 import org.apache.solr.client.solrj.request.CoreAdminRequest;
@@ -111,7 +112,7 @@ public class DistributedVersionInfoTest extends SolrCloudTestCase {
         maxOnReplica);
 
     // send the same doc but with a lower version than the max in the index
-    try (SolrClient client = getHttpSolrClient(replica.getCoreUrl())) {
+    try (SolrClient client = getHttp2SolrClient(replica.getCoreUrl())) {
       String docId = String.valueOf(1);
       SolrInputDocument doc = new SolrInputDocument();
       doc.setField("id", docId);
@@ -298,7 +299,7 @@ public class DistributedVersionInfoTest extends SolrCloudTestCase {
     query.addSort(new SolrQuery.SortClause("_version_", SolrQuery.ORDER.desc));
     query.setParam("distrib", false);
 
-    try (SolrClient client = getHttpSolrClient(replica.getCoreUrl())) {
+    try (SolrClient client = getHttp2SolrClient(replica.getCoreUrl())) {
       QueryResponse qr = client.query(query);
       SolrDocumentList hits = qr.getResults();
       if (hits.isEmpty()) fail("No results returned from query: " + query);
@@ -320,8 +321,8 @@ public class DistributedVersionInfoTest extends SolrCloudTestCase {
       int lastDocId,
       Set<Integer> deletedDocs)
       throws Exception {
-    HttpSolrClient leaderSolr = getHttpSolrClient(leader);
-    List<HttpSolrClient> replicas = new ArrayList<HttpSolrClient>(notLeaders.size());
+    Http2SolrClient leaderSolr = getHttpSolrClient(leader);
+    List<Http2SolrClient> replicas = new ArrayList<>(notLeaders.size());
     for (Replica r : notLeaders) replicas.add(getHttpSolrClient(r));
 
     try {
@@ -331,21 +332,21 @@ public class DistributedVersionInfoTest extends SolrCloudTestCase {
 
         String docId = String.valueOf(d);
         Long leaderVers = assertDocExists(leaderSolr, testCollectionName, docId, null);
-        for (HttpSolrClient replicaSolr : replicas)
+        for (Http2SolrClient replicaSolr : replicas)
           assertDocExists(replicaSolr, testCollectionName, docId, leaderVers);
       }
     } finally {
       if (leaderSolr != null) {
         leaderSolr.close();
       }
-      for (HttpSolrClient replicaSolr : replicas) {
+      for (SolrClient replicaSolr : replicas) {
         replicaSolr.close();
       }
     }
   }
 
-  protected HttpSolrClient getHttpSolrClient(Replica replica) throws Exception {
-    return getHttpSolrClient(replica.getCoreUrl());
+  protected Http2SolrClient getHttpSolrClient(Replica replica) throws Exception {
+    return getHttp2SolrClient(replica.getCoreUrl());
   }
 
   protected void sendDoc(int docId) throws Exception {
@@ -360,7 +361,7 @@ public class DistributedVersionInfoTest extends SolrCloudTestCase {
    * Query the real-time get handler for a specific doc by ID to verify it exists in the provided
    * server, using distrib=false so it doesn't route to another replica.
    */
-  protected Long assertDocExists(HttpSolrClient solr, String coll, String docId, Long expVers)
+  protected Long assertDocExists(Http2SolrClient solr, String coll, String docId, Long expVers)
       throws Exception {
     QueryRequest qr =
         new QueryRequest(

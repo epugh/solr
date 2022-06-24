@@ -26,6 +26,7 @@ import org.apache.lucene.tests.util.LuceneTestCase.Slow;
 import org.apache.solr.SolrTestCaseJ4.SuppressSSL;
 import org.apache.solr.client.solrj.cloud.SocketProxy;
 import org.apache.solr.client.solrj.embedded.JettySolrRunner;
+import org.apache.solr.client.solrj.impl.Http2SolrClient;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.cloud.Replica;
@@ -127,11 +128,11 @@ public class LeaderFailoverAfterPartitionTest extends HttpPartitionTest {
     // doc should be on leader and 1 replica
     sendDoc(5);
 
-    try (HttpSolrClient server = getHttpSolrClient(leader, testCollectionName)) {
+    try (Http2SolrClient server = getHttp2SolrClient(leader, testCollectionName)) {
       assertDocExists(server, testCollectionName, "5");
     }
 
-    try (HttpSolrClient server = getHttpSolrClient(notLeaders.get(1), testCollectionName)) {
+    try (Http2SolrClient server = getHttp2SolrClient(notLeaders.get(1), testCollectionName)) {
       assertDocExists(server, testCollectionName, "5");
     }
 

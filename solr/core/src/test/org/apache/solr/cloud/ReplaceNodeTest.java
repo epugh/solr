@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.embedded.JettySolrRunner;
 import org.apache.solr.client.solrj.impl.CloudSolrClient;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
@@ -119,8 +120,8 @@ public class ReplaceNodeTest extends SolrCloudTestCase {
     log.info("excluded_node : {}  ", emptyNode);
     createReplaceNodeRequest(node2bdecommissioned, emptyNode, null)
         .processAndWait("000", cloudClient, 15);
-    try (HttpSolrClient coreclient =
-        getHttpSolrClient(
+    try (SolrClient coreclient =
+        getHttp2SolrClient(
             ZkStateReader.from(cloudClient).getBaseUrlForNodeName(node2bdecommissioned))) {
       CoreAdminResponse status = CoreAdminRequest.getStatus(null, coreclient);
       assertEquals(0, status.getCoreStatus().size());
@@ -142,8 +143,8 @@ public class ReplaceNodeTest extends SolrCloudTestCase {
     replaceNodeRequest.setWaitForFinalState(true);
     replaceNodeRequest.processAndWait("001", cloudClient, 10);
 
-    try (HttpSolrClient coreclient =
-        getHttpSolrClient(ZkStateReader.from(cloudClient).getBaseUrlForNodeName(emptyNode))) {
+    try (SolrClient coreclient =
+        getHttp2SolrClient(ZkStateReader.from(cloudClient).getBaseUrlForNodeName(emptyNode))) {
       CoreAdminResponse status = CoreAdminRequest.getStatus(null, coreclient);
       assertEquals(
           "Expecting no cores but found some: " + status.getCoreStatus(),
