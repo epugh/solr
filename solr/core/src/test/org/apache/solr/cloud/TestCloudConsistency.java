@@ -336,22 +336,4 @@ public class TestCloudConsistency extends SolrCloudTestCase {
       }
     }
   }
-
-  private void assertDocExists(Http2SolrClient solr, String coll, String docId) throws Exception {
-    NamedList<?> rsp = realTimeGetDocId(solr, docId);
-    String match = JSONTestUtil.matchObj("/id", rsp.get("doc"), docId);
-    assertTrue(
-        "Doc with id="
-            + docId
-            + " not found in "
-            + solr.getBaseURL()
-            + " due to: "
-            + match
-            + "; rsp="
-            + rsp,
-        match == null);
-  }
-
-
-
 }
