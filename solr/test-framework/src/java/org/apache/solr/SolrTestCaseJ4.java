@@ -2926,6 +2926,18 @@ public abstract class SolrTestCaseJ4 extends SolrTestCase {
   }
 
   /**
+   * TODO: Is this comment accurate?   I don't see any randmoizing???
+   * This method <i>may</i> randomize unspecified aspects of the resulting SolrClient. Tests that do
+   * not wish to have any randomized behavior should use the {@link
+   * org.apache.solr.client.solrj.impl.Http2SolrClient.Builder} class directly
+   *
+   * TODO: rename me to getHttpSolrClient when migration done.
+   */
+  public static Http2SolrClient getHttp2SolrClient(String url) {
+    return new Http2SolrClient.Builder(url).build();
+  }
+
+  /**
    * This method <i>may</i> randomize unspecified aspects of the resulting SolrClient. Tests that do
    * not wish to have any randomized behavior should use the {@link
    * org.apache.solr.client.solrj.impl.HttpSolrClient.Builder} class directly
