@@ -34,6 +34,7 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.lucene.tests.util.TestRuleRestoreSystemProperties;
 import org.apache.lucene.util.Constants;
 import org.apache.solr.SolrTestCaseJ4;
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.JettyConfig;
 import org.apache.solr.client.solrj.embedded.JettySolrRunner;
@@ -41,7 +42,6 @@ import org.apache.solr.client.solrj.impl.CloudLegacySolrClient;
 import org.apache.solr.client.solrj.impl.CloudSolrClient;
 import org.apache.solr.client.solrj.impl.Http2SolrClient;
 import org.apache.solr.client.solrj.impl.HttpClientUtil;
-import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.request.CollectionAdminRequest;
 import org.apache.solr.client.solrj.request.CoreAdminRequest;
 import org.apache.solr.common.cloud.ZkStateReader;
@@ -220,7 +220,7 @@ public class TestMiniSolrCloudClusterSSL extends SolrTestCaseJ4 {
             expectThrows(
                 SolrServerException.class,
                 () -> {
-                  try (HttpSolrClient client = getRandomizedHttpSolrClient(baseURL)) {
+                  try (SolrClient client = getRandomizedHttpSolrClient(baseURL)) {
                     CoreAdminRequest req = new CoreAdminRequest();
                     req.setAction(CoreAdminAction.STATUS);
                     client.request(req);
@@ -313,7 +313,7 @@ public class TestMiniSolrCloudClusterSSL extends SolrTestCaseJ4 {
       assertEquals("http vs https: " + baseURL, ssl ? "https" : "http:", baseURL.substring(0, 5));
 
       // verify solr client success with expected protocol
-      try (HttpSolrClient client = getRandomizedHttpSolrClient(baseURL)) {
+      try (SolrClient client = getRandomizedHttpSolrClient(baseURL)) {
         assertEquals(0, CoreAdminRequest.getStatus(/* all */ null, client).getStatus());
       }
 
@@ -323,7 +323,7 @@ public class TestMiniSolrCloudClusterSSL extends SolrTestCaseJ4 {
       // NOTE: we're not responsible for closing the cloud client
       final HttpClient cloudClient =
           ((CloudLegacySolrClient) cluster.getSolrClient()).getHttpClient();
-      try (HttpSolrClient client = getRandomizedHttpSolrClient(baseURL)) {
+      try (SolrClient client = getRandomizedHttpSolrClient(baseURL)) {
         assertEquals(0, CoreAdminRequest.getStatus(/* all */ null, client).getStatus());
       }
 
@@ -334,7 +334,7 @@ public class TestMiniSolrCloudClusterSSL extends SolrTestCaseJ4 {
       expectThrows(
           SolrServerException.class,
           () -> {
-            try (HttpSolrClient client = getRandomizedHttpSolrClient(wrongBaseURL)) {
+            try (SolrClient client = getRandomizedHttpSolrClient(wrongBaseURL)) {
               CoreAdminRequest req = new CoreAdminRequest();
               req.setAction(CoreAdminAction.STATUS);
               client.request(req);
@@ -425,18 +425,18 @@ public class TestMiniSolrCloudClusterSSL extends SolrTestCaseJ4 {
    *
    * @see #getHttpSolrClient
    */
-  public static HttpSolrClient getRandomizedHttpSolrClient(String url) {
+  public static Http2SolrClient getRandomizedHttpSolrClient(String url) {
     // NOTE: at the moment, SolrTestCaseJ4 already returns "new HttpSolrClient" most of the time,
     // so this method may seem redundant -- but the point here is to sanity check 2 things:
-    // 1) a direct test that "new HttpSolrClient" works given the current JVM/sysprop defaults
-    // 2) a sanity check that whatever getHttpSolrClient(String) returns will work regardless of
+    // 1) a direct test that "new Http2SolrClient" works given the current JVM/sysprop defaults
+    // 2) a sanity check that whatever getHttp2SolrClient(String) returns will work regardless of
     //    current test configuration.
     // ... so we are hopefully future proofing against possible changes to
-    // SolrTestCaseJ4.getHttpSolrClient that "optimize" the test client construction in a way that
-    // would prevent us from finding bugs with regular HttpSolrClient instantiation.
+    // SolrTestCaseJ4.getHttp2SolrClient that "optimize" the test client construction in a way that
+    // would prevent us from finding bugs with regular Http2SolrClient instantiation.
     if (random().nextBoolean()) {
-      return (new HttpSolrClient.Builder(url)).build();
+      return (new Http2SolrClient.Builder(url)).build();
     } // else...
-    return getHttpSolrClient(url);
+    return getHttp2SolrClient(url);
   }
 }

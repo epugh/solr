@@ -143,7 +143,7 @@ public class TestConfigSetsAPI extends SolrCloudTestCase {
   @Test
   public void testCreateErrors() throws Exception {
     final String baseUrl = cluster.getJettySolrRunners().get(0).getBaseUrl().toString();
-    try (final SolrClient solrClient = getHttpSolrClient(baseUrl)) {
+    try (final SolrClient solrClient = getHttp2SolrClient(baseUrl)) {
       getConfigSetService().uploadConfig("configSet", configset("configset-2"));
 
       // no action
@@ -303,7 +303,7 @@ public class TestConfigSetsAPI extends SolrCloudTestCase {
       String username)
       throws Exception {
     final String baseUrl = cluster.getJettySolrRunners().get(0).getBaseUrl().toString();
-    try (final SolrClient solrClient = getHttpSolrClient(baseUrl)) {
+    try (final SolrClient solrClient = getHttp2SolrClient(baseUrl)) {
       setupBaseConfigSet(baseConfigSetName, oldProps);
 
       try (SolrZkClient zkClient =
@@ -416,7 +416,7 @@ public class TestConfigSetsAPI extends SolrCloudTestCase {
   @Test
   public void testUploadErrors() throws Exception {
     final SolrClient solrClient =
-        getHttpSolrClient(cluster.getJettySolrRunners().get(0).getBaseUrl().toString());
+        getHttp2SolrClient(cluster.getJettySolrRunners().get(0).getBaseUrl().toString());
 
     ByteBuffer emptyData = ByteBuffer.allocate(0);
 
@@ -1708,7 +1708,7 @@ public class TestConfigSetsAPI extends SolrCloudTestCase {
   @Test
   public void testDeleteErrors() throws Exception {
     final String baseUrl = cluster.getJettySolrRunners().get(0).getBaseUrl().toString();
-    final SolrClient solrClient = getHttpSolrClient(baseUrl);
+    final SolrClient solrClient = getHttp2SolrClient(baseUrl);
     final File configDir = getFile("solr").toPath().resolve("configsets/configset-2/conf").toFile();
     final File tmpConfigDir = createTempDir().toFile();
     tmpConfigDir.deleteOnExit();
@@ -1745,7 +1745,7 @@ public class TestConfigSetsAPI extends SolrCloudTestCase {
   @Test
   public void testDelete() throws Exception {
     final String baseUrl = cluster.getJettySolrRunners().get(0).getBaseUrl().toString();
-    final SolrClient solrClient = getHttpSolrClient(baseUrl);
+    final SolrClient solrClient = getHttp2SolrClient(baseUrl);
     final String configSet = "testDelete";
     getConfigSetService().uploadConfig(configSet, configset("configset-2"));
     assertDelete(solrClient, configSet, true);
@@ -1777,7 +1777,7 @@ public class TestConfigSetsAPI extends SolrCloudTestCase {
   @Test
   public void testList() throws Exception {
     final String baseUrl = cluster.getJettySolrRunners().get(0).getBaseUrl().toString();
-    final SolrClient solrClient = getHttpSolrClient(baseUrl);
+    final SolrClient solrClient = getHttp2SolrClient(baseUrl);
 
     SolrZkClient zkClient =
         new SolrZkClient(
