@@ -101,7 +101,7 @@ public class TestCloudJSONFacetSKGEquiv extends SolrCloudTestCase {
   /** A basic client for operations at the cloud level, default collection will be set */
   private static CloudSolrClient CLOUD_CLIENT;
   /** One client per node */
-  private static final ArrayList<HttpSolrClient> CLIENTS = new ArrayList<>(5);
+  private static final ArrayList<SolrClient> CLIENTS = new ArrayList<>(5);
 
   @BeforeClass
   private static void createMiniSolrCloudCluster() throws Exception {
@@ -142,7 +142,7 @@ public class TestCloudJSONFacetSKGEquiv extends SolrCloudTestCase {
     waitForRecoveriesToFinish(CLOUD_CLIENT);
 
     for (JettySolrRunner jetty : cluster.getJettySolrRunners()) {
-      CLIENTS.add(getHttpSolrClient(jetty.getBaseUrl() + "/" + COLLECTION_NAME + "/"));
+      CLIENTS.add(getHttp2SolrClient(jetty.getBaseUrl() + "/" + COLLECTION_NAME + "/"));
     }
 
     final int numDocs = atLeast(100);
@@ -237,7 +237,7 @@ public class TestCloudJSONFacetSKGEquiv extends SolrCloudTestCase {
       CLOUD_CLIENT.close();
       CLOUD_CLIENT = null;
     }
-    for (HttpSolrClient client : CLIENTS) {
+    for (SolrClient client : CLIENTS) {
       client.close();
     }
     CLIENTS.clear();

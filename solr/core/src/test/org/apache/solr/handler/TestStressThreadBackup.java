@@ -100,7 +100,7 @@ public class TestStressThreadBackup extends SolrCloudTestCase {
             .setPerReplicaState(SolrCloudTestCase.USE_PER_REPLICA_STATE)
             .process(cluster.getSolrClient())
             .getStatus()));
-    adminClient = getHttpSolrClient(cluster.getJettySolrRunners().get(0).getBaseUrl().toString());
+    adminClient = getHttp2SolrClient(cluster.getJettySolrRunners().get(0).getBaseUrl().toString());
     initCoreNameAndSolrCoreClient();
   }
 
@@ -372,7 +372,7 @@ public class TestStressThreadBackup extends SolrCloudTestCase {
             .iterator()
             .next();
     coreName = r.getCoreName();
-    coreClient = getHttpSolrClient(r.getCoreUrl());
+    coreClient = getHttp2SolrClient(r.getCoreUrl());
   }
 
   /**

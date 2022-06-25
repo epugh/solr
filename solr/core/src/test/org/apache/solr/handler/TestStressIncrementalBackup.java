@@ -66,7 +66,7 @@ public class TestStressIncrementalBackup extends SolrCloudTestCase {
         (CollectionAdminRequest.createCollection(DEFAULT_TEST_COLLECTION_NAME, "conf1", 1, 1)
             .process(cluster.getSolrClient())
             .getStatus()));
-    adminClient = getHttpSolrClient(cluster.getJettySolrRunners().get(0).getBaseUrl().toString());
+    adminClient = getHttp2SolrClient(cluster.getJettySolrRunners().get(0).getBaseUrl().toString());
     initCoreNameAndSolrCoreClient();
   }
 
@@ -84,7 +84,7 @@ public class TestStressIncrementalBackup extends SolrCloudTestCase {
             .iterator()
             .next();
     coreName = r.getCoreName();
-    coreClient = getHttpSolrClient(r.getCoreUrl());
+    coreClient = getHttp2SolrClient(r.getCoreUrl());
   }
 
   @After

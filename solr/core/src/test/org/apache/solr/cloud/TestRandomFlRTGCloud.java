@@ -74,7 +74,7 @@ public class TestRandomFlRTGCloud extends SolrCloudTestCase {
   /** A basic client for operations at the cloud level, default collection will be set */
   private static CloudSolrClient CLOUD_CLIENT;
   /** One client per node */
-  private static final List<HttpSolrClient> CLIENTS =
+  private static final List<SolrClient> CLIENTS =
       Collections.synchronizedList(new ArrayList<>(5));
 
   /** Always included in fl so we can vet what doc we're looking at */
@@ -173,7 +173,7 @@ public class TestRandomFlRTGCloud extends SolrCloudTestCase {
     cluster.waitForActiveCollection(COLLECTION_NAME, numShards, repFactor * numShards);
 
     for (JettySolrRunner jetty : cluster.getJettySolrRunners()) {
-      CLIENTS.add(getHttpSolrClient(jetty.getBaseUrl() + "/" + COLLECTION_NAME + "/"));
+      CLIENTS.add(getHttp2SolrClient(jetty.getBaseUrl() + "/" + COLLECTION_NAME + "/"));
     }
   }
 
@@ -183,7 +183,7 @@ public class TestRandomFlRTGCloud extends SolrCloudTestCase {
       CLOUD_CLIENT.close();
       CLOUD_CLIENT = null;
     }
-    for (HttpSolrClient client : CLIENTS) {
+    for (SolrClient client : CLIENTS) {
       client.close();
     }
     CLIENTS.clear();

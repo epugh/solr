@@ -29,6 +29,7 @@ import java.util.Properties;
 import org.apache.commons.io.FileUtils;
 import org.apache.lucene.util.Constants;
 import org.apache.solr.SolrTestCaseJ4;
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.embedded.JettySolrRunner;
 import org.apache.solr.client.solrj.impl.BaseHttpSolrClient;
@@ -456,7 +457,7 @@ public class CoreAdminHandlerTest extends SolrTestCaseJ4 {
     }
 
     Path dataDir = null;
-    try (HttpSolrClient client = getHttpSolrClient(runner.getBaseUrl().toString())) {
+    try (SolrClient client = getHttp2SolrClient(runner.getBaseUrl().toString())) {
       CoreStatus status = CoreAdminRequest.getCoreStatus("corex", true, client);
       String dataDirectory = status.getDataDirectory();
       dataDir = Paths.get(dataDirectory);

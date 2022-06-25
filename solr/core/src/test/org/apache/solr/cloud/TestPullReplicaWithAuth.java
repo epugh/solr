@@ -29,10 +29,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import org.apache.lucene.tests.util.LuceneTestCase.Slow;
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrRequest;
-import org.apache.solr.client.solrj.SolrResponse;
-import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.*;
 import org.apache.solr.client.solrj.impl.CloudSolrClient;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.request.CollectionAdminRequest;
@@ -90,7 +87,7 @@ public class TestPullReplicaWithAuth extends SolrCloudTestCase {
     return req;
   }
 
-  private QueryResponse queryWithBasicAuth(HttpSolrClient client, SolrQuery q)
+  private QueryResponse queryWithBasicAuth(SolrClient client, SolrQuery q)
       throws IOException, SolrServerException {
     return withBasicAuth(new QueryRequest(q)).process(client);
   }
@@ -119,7 +116,7 @@ public class TestPullReplicaWithAuth extends SolrCloudTestCase {
       ureq.commit(solrClient, collectionName);
 
       Slice s = docCollection.getSlices().iterator().next();
-      try (HttpSolrClient leaderClient = getHttpSolrClient(s.getLeader().getCoreUrl())) {
+      try (SolrClient leaderClient = getHttp2SolrClient(s.getLeader().getCoreUrl())) {
         assertEquals(
             numDocs,
             queryWithBasicAuth(leaderClient, new SolrQuery("*:*")).getResults().getNumFound());
@@ -129,7 +126,7 @@ public class TestPullReplicaWithAuth extends SolrCloudTestCase {
       waitForNumDocsInAllReplicas(numDocs, pullReplicas, "*:*", USER, PASS);
 
       for (Replica r : pullReplicas) {
-        try (HttpSolrClient pullReplicaClient = getHttpSolrClient(r.getCoreUrl())) {
+        try (SolrClient pullReplicaClient = getHttp2SolrClient(r.getCoreUrl())) {
           QueryResponse statsResponse =
               queryWithBasicAuth(
                   pullReplicaClient, new SolrQuery("qt", "/admin/plugins", "stats", "true"));

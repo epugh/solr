@@ -113,8 +113,8 @@ public class TestSolrCoreSnapshots extends SolrCloudTestCase {
     String duplicateName = commitName.concat("_duplicate");
 
     try (SolrClient adminClient =
-            getHttpSolrClient(cluster.getJettySolrRunners().get(0).getBaseUrl().toString());
-        SolrClient leaderClient = getHttpSolrClient(replica.getCoreUrl())) {
+            getHttp2SolrClient(cluster.getJettySolrRunners().get(0).getBaseUrl().toString());
+        SolrClient leaderClient = getHttp2SolrClient(replica.getCoreUrl())) {
 
       SnapshotMetaData metaData = createSnapshot(adminClient, coreName, commitName);
       // Create another snapshot referring to the same index commit to verify the
@@ -204,8 +204,8 @@ public class TestSolrCoreSnapshots extends SolrCloudTestCase {
     String commitName = TestUtil.randomSimpleString(random(), 1, 5);
 
     try (SolrClient adminClient =
-            getHttpSolrClient(cluster.getJettySolrRunners().get(0).getBaseUrl().toString());
-        SolrClient leaderClient = getHttpSolrClient(replica.getCoreUrl())) {
+            getHttp2SolrClient(cluster.getJettySolrRunners().get(0).getBaseUrl().toString());
+        SolrClient leaderClient = getHttp2SolrClient(replica.getCoreUrl())) {
 
       SnapshotMetaData metaData = createSnapshot(adminClient, coreName, commitName);
 

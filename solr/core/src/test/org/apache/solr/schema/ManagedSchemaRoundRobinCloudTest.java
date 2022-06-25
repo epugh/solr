@@ -62,11 +62,11 @@ public class ManagedSchemaRoundRobinCloudTest extends SolrCloudTestCase {
 
   @Test
   public void testAddFieldsRoundRobin() throws Exception {
-    List<HttpSolrClient> clients = new ArrayList<>(NUM_SHARDS);
+    List<SolrClient> clients = new ArrayList<>(NUM_SHARDS);
     try {
       for (int shardNum = 0; shardNum < NUM_SHARDS; ++shardNum) {
         clients.add(
-            getHttpSolrClient(cluster.getJettySolrRunners().get(shardNum).getBaseUrl().toString()));
+            getHttp2SolrClient(cluster.getJettySolrRunners().get(shardNum).getBaseUrl().toString()));
       }
       int shardNum = 0;
       for (int fieldNum = 0; fieldNum < NUM_FIELDS_TO_ADD; ++fieldNum) {
