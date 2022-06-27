@@ -38,9 +38,9 @@ import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.message.AbstractHttpMessage;
 import org.apache.http.message.BasicHeader;
 import org.apache.solr.SolrTestCaseJ4;
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.embedded.JettySolrRunner;
 import org.apache.solr.client.solrj.impl.HttpClientUtil;
-import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.common.params.MapSolrParams;
 import org.apache.solr.common.util.Utils;
 import org.apache.solr.handler.admin.SecurityConfHandler;
@@ -90,11 +90,11 @@ public class BasicAuthStandaloneTest extends SolrTestCaseJ4 {
     String authzPrefix = "/admin/authorization";
 
     HttpClient cl = null;
-    HttpSolrClient httpSolrClient = null;
+    SolrClient httpSolrClient = null;
     try {
       cl = HttpClientUtil.createClient(null);
       String baseUrl = buildUrl(jetty.getLocalPort(), "/solr");
-      httpSolrClient = getHttpSolrClient(baseUrl);
+      httpSolrClient = getHttp2SolrClient(baseUrl);
 
       verifySecurityStatus(cl, baseUrl + authcPrefix, "/errorMessages", null, 20);
 

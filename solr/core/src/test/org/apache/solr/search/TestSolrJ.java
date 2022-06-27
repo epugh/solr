@@ -164,7 +164,7 @@ public class TestSolrJ extends SolrTestCaseJ4 {
 
   public void doCommitPerf() throws Exception {
 
-    try (HttpSolrClient client = getHttpSolrClient("http://127.0.0.1:8983/solr")) {
+    try (SolrClient client = getHttp2SolrClient("http://127.0.0.1:8983/solr")) {
 
       final RTimer timer = new RTimer();
 

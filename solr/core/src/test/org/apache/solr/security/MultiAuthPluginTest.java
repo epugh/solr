@@ -40,9 +40,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.message.BasicHeader;
 import org.apache.solr.SolrTestCaseJ4;
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.embedded.JettySolrRunner;
 import org.apache.solr.client.solrj.impl.HttpClientUtil;
-import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.common.SolrException;
 import org.apache.solr.common.util.CommandOperation;
 import org.apache.solr.common.util.Utils;
@@ -88,11 +88,11 @@ public class MultiAuthPluginTest extends SolrTestCaseJ4 {
     final String pass = "SolrRocks";
 
     HttpClient cl = null;
-    HttpSolrClient httpSolrClient = null;
+    SolrClient httpSolrClient = null;
     try {
       cl = HttpClientUtil.createClient(null);
       String baseUrl = buildUrl(jetty.getLocalPort(), "/solr");
-      httpSolrClient = getHttpSolrClient(baseUrl);
+      httpSolrClient = getHttp2SolrClient(baseUrl);
 
       verifySecurityStatus(cl, baseUrl + authcPrefix, "/errorMessages", null, 5);
 
