@@ -17,9 +17,20 @@
 
 package org.apache.solr.cluster.placement;
 
-import java.util.*;
+import org.apache.solr.cluster.Cluster;
+import org.apache.solr.cluster.Node;
+import org.apache.solr.cluster.Replica;
+import org.apache.solr.cluster.Shard;
+import org.apache.solr.cluster.SolrCollection;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
-import org.apache.solr.cluster.*;
 
 /**
  * Cluster abstractions independent of any internal SolrCloud abstractions to use in tests (of
