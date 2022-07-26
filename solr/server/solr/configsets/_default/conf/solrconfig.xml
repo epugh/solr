@@ -1066,6 +1066,7 @@
   <!-- The following response writers are implicitly configured unless
        overridden...
     -->
+    <queryResponseWriter name="jsontee" class="solr.JSONTeeResponseWriter"/>
   <!--
      <queryResponseWriter name="xml"
                           default="true"
