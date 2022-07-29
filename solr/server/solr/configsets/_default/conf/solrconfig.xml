@@ -449,6 +449,13 @@
               regenerator="com.mycompany.MyRegenerator"
               />
       -->
+      <cache name="ispy"
+             class="solr.CaffeineCache"
+             size="4096"
+             initialSize="1024"
+             autowarmCount="1024"
+             regenerator="solr.NoOpRegenerator"
+             />
 
 
     <!-- Lazy Field Loading
@@ -736,6 +743,9 @@
       <str name="echoParams">explicit</str>
       <int name="rows">10</int>
     </lst>
+    <lst name="invariants">
+      <str name="wt">jsontee</str>
+    </lst>
   </requestHandler>
 
   <!-- A request handler that returns indented JSON by default -->
@@ -753,6 +763,14 @@
       <str name="df">_text_</str>
     </lst>
   </initParams>
+
+  <!-- Primary search handler, expected by most clients, examples and UI frameworks -->
+  <requestHandler name="/admin/ispy" class="solr.ISpyRequestHandler">
+    <lst name="defaults">
+      <str name="echoParams">explicit</str>
+      <int name="rows">10</int>
+    </lst>
+  </requestHandler>
 
   <!-- Spell Check
 

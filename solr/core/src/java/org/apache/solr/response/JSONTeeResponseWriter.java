@@ -46,12 +46,14 @@ public class JSONTeeResponseWriter implements QueryResponseWriter {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public void write(Writer writer, SolrQueryRequest req, SolrQueryResponse rsp) throws IOException {
     final SolrParams params = req.getParams();
     final String wrapperFunction = params.get(JSONWriter.JSON_WRAPPER_FUNCTION);
     final String namedListStyle =
         params.get(JsonTextWriter.JSON_NL_STYLE, JsonTextWriter.JSON_NL_FLAT).intern();
     StringWriter ericCopy = new StringWriter();
+
     writer = new TeeWriter(writer, ericCopy);
 
     final JSONWriter w;
@@ -69,8 +71,23 @@ public class JSONTeeResponseWriter implements QueryResponseWriter {
     } finally {
       w.close();
 
+
+      String value = ericCopy.toString();
+
       System.out.println("\n\n\nHere Comes Our Copy");
-      System.out.println(ericCopy.toString());
+      System.out.println((value));
+
+
+
+      String key;
+      key = req.getOriginalParams().get("q");
+
+      System.out.println("Here is our key: " + key);
+
+
+      var cache = req.getSearcher().getCache("ispy");
+      cache.put(key, value);
+
     }
   }
 
