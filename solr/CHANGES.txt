@@ -88,7 +88,7 @@ Improvements
   `GET /api/node/logging/messages`.  And the threshold for the log "listener" can be modified with
   `PUT /api/node/logging/messages/threshold`.  (Jason Gerlowski, Calvince Otieno)
 
-* SOLR-16504: Convert CLI tools to use Jetty HTTP 2 client.  (Bence Szabo via Eric Pugh)  
+* SOLR-16504: Convert CLI tools to use Jetty HTTP 2 client.  (Bence Szabo via Eric Pugh)
 
 * SOLR-15737: Solr's collection-level "snapshot" APIs now have v2 equivalents.  Snapshots can be created at `POST
   /api/collections/collName/snapshots/snapshotName`, listed at `GET /api/collections/collName/snapshots`, and deleted at
@@ -110,6 +110,10 @@ Improvements
 
 * SOLR-16394: The v2 "restore" API has been tweaked to be more intuitive.  The top-level "restore-collection" command
   specifier has been removed, and the API now lives at the new path `POST /api/backups/backupName/restore`. (Jason Gerlowski)
+
+* SOLR-16764: Clarify that ExportTool exports documents in JSON with Lines format, not standard JSON.  Add explicit -compress option for gzipping output.
+  Add ability to specific a directory for output along with a specific file when using -out. (Eric Pugh)
+
 
 Optimizations
 ---------------------
