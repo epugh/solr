@@ -615,7 +615,7 @@ public class RunExampleTool extends ToolBase {
     String hostArg = (host != null && !"localhost".equals(host)) ? " -h " + host : "";
     String zkHostArg = (zkHost != null) ? " -z " + zkHost : "";
     String memArg = (memory != null) ? " -m " + memory : "";
-    String cloudModeArg = cloudMode ? "--cloud " : "";
+    String cloudModeArg = cloudMode ? "-cloud " : "";
     String forceArg = cli.hasOption("force") ? " --force" : "";
     String verboseArg = verbose ? "-V" : "";
 
