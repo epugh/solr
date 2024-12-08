@@ -51,6 +51,8 @@ import org.apache.solr.util.plugin.SolrCoreAware;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.apache.solr.handler.RequestHandlerBase.isInternalShardRequest;
+
 /**
  * User Behavior Insights (UBI) is an open standard for gathering query and event data from users
  * and storing it in a structured format. UBI can be used for in session personalization, implicit
@@ -231,33 +233,51 @@ public class UBIComponent extends SearchComponent implements SolrCoreAware {
     if (!params.getBool(COMPONENT_NAME, false)) {
       return;
     }
-
-    doStuff(rb);
+    if (!isInternalShardRequest(rb.req)) { // subordinate shard req shouldn't yield logs
+      doStuff(rb);
+    }
   }
 
   @Override
   public int distributedProcess(ResponseBuilder rb) throws IOException {
-
     SolrParams params = rb.req.getParams();
     if (!params.getBool(COMPONENT_NAME, false)) {
       return ResponseBuilder.STAGE_DONE;
     }
 
-    if (rb.stage != ResponseBuilder.STAGE_GET_FIELDS) {
-      return ResponseBuilder.STAGE_DONE;
+    if (rb.stage < ResponseBuilder.STAGE_GET_FIELDS) {
+      return ResponseBuilder.STAGE_GET_FIELDS;
     }
 
-    doStuff(rb);
+    if (rb.stage == ResponseBuilder.STAGE_GET_FIELDS) {
+      doDistribStuff(rb);
+      return ResponseBuilder.STAGE_DONE;
+    }
 
     return ResponseBuilder.STAGE_DONE;
   }
 
   public void doStuff(ResponseBuilder rb) throws IOException {
+    UBIQuery ubiQuery = getUbiQuery(rb);
+    if (ubiQuery == null) return;
 
-    // not sure why but sometimes we get it twoice...  how can a response have the
+    ResultContext rc = (ResultContext) rb.rsp.getResponse();
+    DocList docs = rc.getDocList();
+    // DocList docs = rb.getResults().docList;
+
+    String docIds = extractDocIds(docs, rb.req.getSearcher());
+
+    ubiQuery.setDocIds(docIds);
+
+    addUserBehaviorInsightsToResponse(ubiQuery, rb);
+    recordQuery(ubiQuery);
+  }
+
+  private static UBIQuery getUbiQuery(ResponseBuilder rb) {
+    // not sure why but sometimes we get it tw(o)ice...  how can a response have the
     // the same component run twice?
     if (rb.rsp.getValues().get("ubi") != null) {
-      return;
+      return null;
     }
     SolrParams params = rb.req.getParams();
 
@@ -270,9 +290,9 @@ public class UBIComponent extends SearchComponent implements SolrCoreAware {
     ubiQuery.setApplication(params.get(APPLICATION));
     if (ubiQuery.getApplication() == null) {
       ubiQuery.setApplication(
-          rb.isDistrib
-              ? rb.req.getCloudDescriptor().getCollectionName()
-              : searcher.getCore().getName());
+              rb.isDistrib
+                      ? rb.req.getCloudDescriptor().getCollectionName()
+                      : searcher.getCore().getName());
     }
 
     String queryAttributes = params.get(QUERY_ATTRIBUTES);
@@ -292,12 +312,19 @@ public class UBIComponent extends SearchComponent implements SolrCoreAware {
         }
       }
     }
+    return ubiQuery;
+  }
 
-    ResultContext rc = (ResultContext) rb.rsp.getResponse();
-    DocList docs = rc.getDocList();
-    // DocList docs = rb.getResults().docList;
+  public void doDistribStuff(ResponseBuilder rb) throws IOException {
 
-    String docIds = extractDocIds(docs, searcher);
+    // not sure why but sometimes we get it tw(o)ice...  how can a response have the
+    // the same component run twice?
+    UBIQuery ubiQuery = getUbiQuery(rb);
+    if (ubiQuery == null) return;
+
+
+    //String docIds = extractDocIds(docs, searcher);
+    String docIds =String.join(",", rb.resultIds.keySet().stream().map(Object::toString).toList());
     ubiQuery.setDocIds(docIds);
 
     addUserBehaviorInsightsToResponse(ubiQuery, rb);
