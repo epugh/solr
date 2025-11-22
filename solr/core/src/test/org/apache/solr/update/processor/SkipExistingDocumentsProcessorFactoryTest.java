@@ -27,7 +27,7 @@ import org.apache.solr.SolrTestCaseJ4;
 import org.apache.solr.common.SolrException;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.util.NamedList;
-import org.apache.solr.request.LocalSolrQueryRequest;
+import org.apache.solr.request.SimpleSolrQueryRequest;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.response.SolrQueryResponse;
 import org.apache.solr.update.AddUpdateCommand;
@@ -41,7 +41,7 @@ public class SkipExistingDocumentsProcessorFactoryTest extends SolrTestCaseJ4 {
   private BytesRef docId = new BytesRef();
 
   @SuppressWarnings({"rawtypes"})
-  private SolrQueryRequest defaultRequest = new LocalSolrQueryRequest(null, new NamedList());
+  private SolrQueryRequest defaultRequest = new SimpleSolrQueryRequest(null, new NamedList());
 
   @BeforeClass
   public static void beforeClass() {
@@ -170,7 +170,7 @@ public class SkipExistingDocumentsProcessorFactoryTest extends SolrTestCaseJ4 {
     factory.init(initArgs);
     NamedList<String> requestArgs = new NamedList<>();
     requestArgs.add("skipInsertIfExists", "false");
-    SolrQueryRequest req = new LocalSolrQueryRequest(null, requestArgs);
+    SolrQueryRequest req = new SimpleSolrQueryRequest(null, requestArgs);
     UpdateRequestProcessor next = Mockito.mock(DistributedUpdateProcessor.class);
 
     SkipExistingDocumentsUpdateProcessor processor =
@@ -187,7 +187,7 @@ public class SkipExistingDocumentsProcessorFactoryTest extends SolrTestCaseJ4 {
     factory.init(initArgs);
     NamedList<Object> requestArgs = new NamedList<>();
     requestArgs.add("skipUpdateIfMissing", false);
-    SolrQueryRequest req = new LocalSolrQueryRequest(null, requestArgs);
+    SolrQueryRequest req = new SimpleSolrQueryRequest(null, requestArgs);
     UpdateRequestProcessor next = Mockito.mock(DistributedUpdateProcessor.class);
 
     SkipExistingDocumentsUpdateProcessor processor =
@@ -205,7 +205,7 @@ public class SkipExistingDocumentsProcessorFactoryTest extends SolrTestCaseJ4 {
     factory.init(initArgs);
     NamedList<Object> requestArgs = new NamedList<>();
     requestArgs.add("skipUpdateIfMissing", "true");
-    SolrQueryRequest req = new LocalSolrQueryRequest(null, requestArgs);
+    SolrQueryRequest req = new SimpleSolrQueryRequest(null, requestArgs);
     UpdateRequestProcessor next = Mockito.mock(DistributedUpdateProcessor.class);
 
     SkipExistingDocumentsUpdateProcessor processor =

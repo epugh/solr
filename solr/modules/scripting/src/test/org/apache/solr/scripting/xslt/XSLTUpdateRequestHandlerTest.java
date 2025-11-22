@@ -26,7 +26,7 @@ import org.apache.solr.common.util.ContentStreamBase;
 import org.apache.solr.common.util.NamedList;
 import org.apache.solr.core.SolrCore;
 import org.apache.solr.handler.loader.ContentStreamLoader;
-import org.apache.solr.request.LocalSolrQueryRequest;
+import org.apache.solr.request.SimpleSolrQueryRequest;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.response.SolrQueryResponse;
 import org.apache.solr.update.AddUpdateCommand;
@@ -68,7 +68,7 @@ public class XSLTUpdateRequestHandlerTest extends SolrTestCaseJ4 {
     args.put("tr", "xsl-update-handler-test.xsl");
 
     SolrCore core = h.getCore();
-    LocalSolrQueryRequest req = new LocalSolrQueryRequest(core, new MapSolrParams(args));
+    SimpleSolrQueryRequest req = new SimpleSolrQueryRequest(core, new MapSolrParams(args));
     ArrayList<ContentStream> streams = new ArrayList<>();
     streams.add(new ContentStreamBase.StringStream(xml));
     req.setContentStreams(streams);

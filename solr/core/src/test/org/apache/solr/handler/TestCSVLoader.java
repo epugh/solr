@@ -25,7 +25,7 @@ import java.util.List;
 import org.apache.solr.SolrTestCaseJ4;
 import org.apache.solr.common.util.ContentStream;
 import org.apache.solr.common.util.ContentStreamBase;
-import org.apache.solr.request.LocalSolrQueryRequest;
+import org.apache.solr.request.SimpleSolrQueryRequest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -77,7 +77,7 @@ public class TestCSVLoader extends SolrTestCaseJ4 {
   }
 
   void loadLocal(String... args) throws Exception {
-    LocalSolrQueryRequest req = (LocalSolrQueryRequest) req(args);
+    SimpleSolrQueryRequest req = (SimpleSolrQueryRequest) req(args);
 
     // TODO: stop using locally defined streams once stream.file and
     // stream.body work everywhere

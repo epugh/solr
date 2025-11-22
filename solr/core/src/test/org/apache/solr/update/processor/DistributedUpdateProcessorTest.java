@@ -32,7 +32,7 @@ import org.apache.solr.SolrTestCaseJ4;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.common.util.ExecutorUtil;
-import org.apache.solr.request.LocalSolrQueryRequest;
+import org.apache.solr.request.SimpleSolrQueryRequest;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.update.AddUpdateCommand;
 import org.apache.solr.update.DeleteUpdateCommand;
@@ -64,7 +64,7 @@ public class DistributedUpdateProcessorTest extends SolrTestCaseJ4 {
 
   @Test
   public void testShouldBufferUpdateZk() throws IOException {
-    SolrQueryRequest req = new LocalSolrQueryRequest(h.getCore(), new ModifiableSolrParams());
+    SolrQueryRequest req = new SimpleSolrQueryRequest(h.getCore(), new ModifiableSolrParams());
     try (DistributedUpdateProcessor processor =
         new DistributedUpdateProcessor(req, null, null, null)) {
       AddUpdateCommand cmd = new AddUpdateCommand(req);
@@ -81,7 +81,7 @@ public class DistributedUpdateProcessorTest extends SolrTestCaseJ4 {
 
   @Test
   public void testVersionAdd() throws IOException {
-    SolrQueryRequest req = new LocalSolrQueryRequest(h.getCore(), new ModifiableSolrParams());
+    SolrQueryRequest req = new SimpleSolrQueryRequest(h.getCore(), new ModifiableSolrParams());
     int threads = 5;
     Function<DistributedUpdateProcessor, Boolean> versionAddFunc =
         (DistributedUpdateProcessor process) -> {
@@ -105,7 +105,7 @@ public class DistributedUpdateProcessorTest extends SolrTestCaseJ4 {
 
   @Test
   public void testVersionDelete() throws IOException {
-    SolrQueryRequest req = new LocalSolrQueryRequest(h.getCore(), new ModifiableSolrParams());
+    SolrQueryRequest req = new SimpleSolrQueryRequest(h.getCore(), new ModifiableSolrParams());
 
     int threads = 5;
     Function<DistributedUpdateProcessor, Boolean> versionDeleteFunc =

@@ -42,7 +42,7 @@ import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.common.util.NamedList;
 import org.apache.solr.core.CoreContainer;
 import org.apache.solr.core.NodeConfig;
-import org.apache.solr.request.LocalSolrQueryRequest;
+import org.apache.solr.request.SimpleSolrQueryRequest;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -57,7 +57,7 @@ public class RestoreCollectionAPITest extends SolrTestCaseJ4 {
         new RestoreCollection(
             new CoreContainer(
                 new NodeConfig.NodeConfigBuilder("testnode", createTempDir()).build()),
-            new LocalSolrQueryRequest(null, new NamedList<>()),
+            new SimpleSolrQueryRequest(null, new NamedList<>()),
             null);
   }
 

@@ -34,7 +34,7 @@ import org.apache.solr.common.params.SolrParams;
 import org.apache.solr.common.util.ContentStreamBase;
 import org.apache.solr.common.util.NamedList;
 import org.apache.solr.core.SolrCore;
-import org.apache.solr.request.LocalSolrQueryRequest;
+import org.apache.solr.request.SimpleSolrQueryRequest;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.request.SolrRequestHandler;
 import org.apache.solr.response.SolrQueryResponse;
@@ -125,7 +125,7 @@ public class ShowFileRequestHandlerTest extends SolrJettyTestBase {
   public void testContentTypeHtmlBecomesTextPlain() {
     SolrRequestHandler handler = h.getCore().getRequestHandler("/admin/file");
     SolrQueryRequest req =
-        new LocalSolrQueryRequest(
+        new SimpleSolrQueryRequest(
             h.getCore(), params("file", "schema.xml", "contentType", "text/html"));
     SolrQueryResponse rsp = new SolrQueryResponse();
     handler.handleRequest(req, rsp);
@@ -136,7 +136,7 @@ public class ShowFileRequestHandlerTest extends SolrJettyTestBase {
 
   public void testContentTypeHtmlDefault() {
     SolrRequestHandler handler = h.getCore().getRequestHandler("/admin/file");
-    SolrQueryRequest req = new LocalSolrQueryRequest(h.getCore(), params("file", "example.html"));
+    SolrQueryRequest req = new SimpleSolrQueryRequest(h.getCore(), params("file", "example.html"));
     SolrQueryResponse rsp = new SolrQueryResponse();
     handler.handleRequest(req, rsp);
     ContentStreamBase.FileStream content =

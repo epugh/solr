@@ -118,7 +118,7 @@ import org.apache.solr.core.SolrCore;
 import org.apache.solr.core.SolrXmlConfig;
 import org.apache.solr.embedded.JettySolrRunner;
 import org.apache.solr.handler.UpdateRequestHandler;
-import org.apache.solr.request.LocalSolrQueryRequest;
+import org.apache.solr.request.SimpleSolrQueryRequest;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.request.SolrQueryRequestBase;
 import org.apache.solr.request.SolrRequestHandler;
@@ -1321,7 +1321,7 @@ public abstract class SolrTestCaseJ4 extends SolrTestCase {
     for (int i = 0; i < moreParams.length; i += 2) {
       mp.add(moreParams[i], moreParams[i + 1]);
     }
-    return new LocalSolrQueryRequest(h.getCore(), mp);
+    return new SimpleSolrQueryRequest(h.getCore(), mp);
   }
 
   /** Necessary to make method signatures un-ambiguous */

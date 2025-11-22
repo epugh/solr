@@ -28,7 +28,7 @@ import org.apache.solr.common.cloud.Replica;
 import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.common.params.SolrParams;
 import org.apache.solr.handler.component.HttpShardHandlerFactory;
-import org.apache.solr.request.LocalSolrQueryRequest;
+import org.apache.solr.request.SimpleSolrQueryRequest;
 import org.apache.solr.request.SolrQueryRequest;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -100,7 +100,7 @@ public class ReplicaListTransformerTest extends SolrTestCase {
               return super.getReplicaListTransformer(req);
             }
           }.getReplicaListTransformer(
-              new LocalSolrQueryRequest(null, new ModifiableSolrParams().add("toyRegEx", regex)));
+              new SimpleSolrQueryRequest(null, new ModifiableSolrParams().add("toyRegEx", regex)));
     }
 
     final List<Replica> inputs = new ArrayList<>();

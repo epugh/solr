@@ -18,7 +18,7 @@ package org.apache.solr;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.solr.request.LocalSolrQueryRequest;
+import org.apache.solr.request.SimpleSolrQueryRequest;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.util.ErrorLogMuter;
 import org.junit.BeforeClass;
@@ -106,7 +106,7 @@ public class ConvertedLegacyTest extends SolrTestCaseJ4 {
     assertU("<commit/>");
     assertQ(req("val_s:[a TO z]"), "//*[@numFound='3'] ", "*[count(//doc)=3] ", "//*[@start='0']");
     args = new HashMap<>();
-    req = new LocalSolrQueryRequest(h.getCore(), "val_s:[a TO z]", "/select", 2, 5, args);
+    req = new SimpleSolrQueryRequest(h.getCore(), "val_s:[a TO z]", "/select", 2, 5, args);
     assertQ(
         req,
         "//*[@numFound='3'] ",
@@ -114,42 +114,42 @@ public class ConvertedLegacyTest extends SolrTestCaseJ4 {
         "*//doc[1]/str[.='pear'] ",
         "//*[@start='2']");
     args = new HashMap<>();
-    req = new LocalSolrQueryRequest(h.getCore(), "val_s:[a TO z]", "/select", 3, 5, args);
+    req = new SimpleSolrQueryRequest(h.getCore(), "val_s:[a TO z]", "/select", 3, 5, args);
     assertQ(req, "//*[@numFound='3'] ", "*[count(//doc)=0]");
     args = new HashMap<>();
-    req = new LocalSolrQueryRequest(h.getCore(), "val_s:[a TO z]", "/select", 4, 5, args);
+    req = new SimpleSolrQueryRequest(h.getCore(), "val_s:[a TO z]", "/select", 4, 5, args);
     assertQ(req, "//*[@numFound='3'] ", "*[count(//doc)=0]");
     args = new HashMap<>();
-    req = new LocalSolrQueryRequest(h.getCore(), "val_s:[a TO z]", "/select", 25, 5, args);
+    req = new SimpleSolrQueryRequest(h.getCore(), "val_s:[a TO z]", "/select", 25, 5, args);
     assertQ(req, "//*[@numFound='3'] ", "*[count(//doc)=0]");
     args = new HashMap<>();
-    req = new LocalSolrQueryRequest(h.getCore(), "val_s:[a TO z]", "/select", 0, 1, args);
+    req = new SimpleSolrQueryRequest(h.getCore(), "val_s:[a TO z]", "/select", 0, 1, args);
     assertQ(req, "//*[@numFound='3'] ", "*[count(//doc)=1] ", "*//doc[1]/str[.='apple']");
     args = new HashMap<>();
-    req = new LocalSolrQueryRequest(h.getCore(), "val_s:[a TO z]", "/select", 0, 2, args);
+    req = new SimpleSolrQueryRequest(h.getCore(), "val_s:[a TO z]", "/select", 0, 2, args);
     assertQ(req, "//*[@numFound='3'] ", "*[count(//doc)=2] ", "*//doc[2]/str[.='banana']");
     args = new HashMap<>();
-    req = new LocalSolrQueryRequest(h.getCore(), "val_s:[a TO z]", "/select", 1, 1, args);
+    req = new SimpleSolrQueryRequest(h.getCore(), "val_s:[a TO z]", "/select", 1, 1, args);
     assertQ(req, "//*[@numFound='3'] ", "*[count(//doc)=1] ", "*//doc[1]/str[.='banana']");
     args = new HashMap<>();
-    req = new LocalSolrQueryRequest(h.getCore(), "val_s:[a TO z]", "/select", 3, 1, args);
+    req = new SimpleSolrQueryRequest(h.getCore(), "val_s:[a TO z]", "/select", 3, 1, args);
     assertQ(req, "//*[@numFound='3'] ", "*[count(//doc)=0]");
     args = new HashMap<>();
-    req = new LocalSolrQueryRequest(h.getCore(), "val_s:[a TO z]", "/select", 4, 1, args);
+    req = new SimpleSolrQueryRequest(h.getCore(), "val_s:[a TO z]", "/select", 4, 1, args);
     assertQ(req, "//*[@numFound='3'] ", "*[count(//doc)=0]");
     args = new HashMap<>();
-    req = new LocalSolrQueryRequest(h.getCore(), "val_s:[a TO z]", "/select", 1, 0, args);
+    req = new SimpleSolrQueryRequest(h.getCore(), "val_s:[a TO z]", "/select", 1, 0, args);
     assertQ(req, "//*[@numFound='3'] ", "*[count(//doc)=0]");
     args = new HashMap<>();
-    req = new LocalSolrQueryRequest(h.getCore(), "val_s:[a TO z]", "/select", 0, 0, args);
+    req = new SimpleSolrQueryRequest(h.getCore(), "val_s:[a TO z]", "/select", 0, 0, args);
     assertQ(req, "//*[@numFound='3'] ", "*[count(//doc)=0]");
     args = new HashMap<>();
     args.put("sort", "val_s1 asc");
-    req = new LocalSolrQueryRequest(h.getCore(), "val_s:[a TO z]", "/select", 0, 0, args);
+    req = new SimpleSolrQueryRequest(h.getCore(), "val_s:[a TO z]", "/select", 0, 0, args);
     assertQ(req, "//*[@numFound='3'] ", "*[count(//doc)=0]");
     args = new HashMap<>();
     args.put("sort", "val_s1 desc");
-    req = new LocalSolrQueryRequest(h.getCore(), "val_s:[a TO z]", "/select", 0, 0, args);
+    req = new SimpleSolrQueryRequest(h.getCore(), "val_s:[a TO z]", "/select", 0, 0, args);
     assertQ(req, "//*[@numFound='3'] ", "*[count(//doc)=0]");
     assertQ(req("val_s:[a TO b]"), "//*[@numFound='1']");
     assertQ(req("val_s:[a TO cat]"), "//*[@numFound='2']");
@@ -808,18 +808,18 @@ public class ConvertedLegacyTest extends SolrTestCaseJ4 {
     assertQ(req("id:44"));
     args = new HashMap<>();
     args.put("fl", "fname_s,arr_f  ");
-    req = new LocalSolrQueryRequest(h.getCore(), "id:44", "/select", 0, 10, args);
+    req = new SimpleSolrQueryRequest(h.getCore(), "id:44", "/select", 0, 10, args);
     assertQ(req, "//str[.='Yonik']  ", "//float[.='1.4142135']");
     args = new HashMap<>();
     args.put("fl", "fname_s,score");
-    req = new LocalSolrQueryRequest(h.getCore(), "id:44", "/select", 0, 10, args);
+    req = new SimpleSolrQueryRequest(h.getCore(), "id:44", "/select", 0, 10, args);
     assertQ(req, "//str[.='Yonik']", "//float[@name='score' and . > 0]");
 
     // test addition of score field
 
     args = new HashMap<>();
     args.put("fl", "score,* ");
-    req = new LocalSolrQueryRequest(h.getCore(), "id:44", "/select", 0, 10, args);
+    req = new SimpleSolrQueryRequest(h.getCore(), "id:44", "/select", 0, 10, args);
     assertQ(
         req,
         "//str[.='Yonik']  ",
@@ -828,7 +828,7 @@ public class ConvertedLegacyTest extends SolrTestCaseJ4 {
         "*[count(//doc/*)>=13]");
     args = new HashMap<>();
     args.put("fl", "*,score ");
-    req = new LocalSolrQueryRequest(h.getCore(), "id:44", "/select", 0, 10, args);
+    req = new SimpleSolrQueryRequest(h.getCore(), "id:44", "/select", 0, 10, args);
     assertQ(
         req,
         "//str[.='Yonik']  ",
@@ -837,33 +837,33 @@ public class ConvertedLegacyTest extends SolrTestCaseJ4 {
         "*[count(//doc/*)>=13]");
     args = new HashMap<>();
     args.put("fl", "* ");
-    req = new LocalSolrQueryRequest(h.getCore(), "id:44", "/select", 0, 10, args);
+    req = new SimpleSolrQueryRequest(h.getCore(), "id:44", "/select", 0, 10, args);
     assertQ(req, "//str[.='Yonik']  ", "//float[.='1.4142135'] ", "*[count(//doc/*)>=12]");
 
     // test maxScore
 
     args = new HashMap<>();
     args.put("fl", "score ");
-    req = new LocalSolrQueryRequest(h.getCore(), "id:44", "/select", 0, 10, args);
+    req = new SimpleSolrQueryRequest(h.getCore(), "id:44", "/select", 0, 10, args);
     assertQ(req, "//result[@maxScore>0]");
     args = new HashMap<>();
     args.put("fl", "score ");
     args.put("sort", "id desc");
-    req = new LocalSolrQueryRequest(h.getCore(), "id:44", "/select", 0, 10, args);
+    req = new SimpleSolrQueryRequest(h.getCore(), "id:44", "/select", 0, 10, args);
     assertQ(req, "//result[@maxScore>0]");
     args = new HashMap<>();
     args.put("fl", "score ");
-    req = new LocalSolrQueryRequest(h.getCore(), "id:44", "/select", 0, 10, args);
+    req = new SimpleSolrQueryRequest(h.getCore(), "id:44", "/select", 0, 10, args);
     assertQ(req, "//@maxScore = //doc/float[@name='score']");
     args = new HashMap<>();
     args.put("fl", "score ");
     args.put("sort", "id desc");
-    req = new LocalSolrQueryRequest(h.getCore(), "id:44", "/select", 0, 10, args);
+    req = new SimpleSolrQueryRequest(h.getCore(), "id:44", "/select", 0, 10, args);
     assertQ(req, "//@maxScore = //doc/float[@name='score']");
     args = new HashMap<>();
     args.put("fl", "*,score");
     args.put("sort", "id desc");
-    req = new LocalSolrQueryRequest(h.getCore(), "id:44", "/select", 0, 0, args);
+    req = new SimpleSolrQueryRequest(h.getCore(), "id:44", "/select", 0, 0, args);
     assertQ(req, "//result[@maxScore>0]");
 
     //  test schema field attribute inheritance and overriding
