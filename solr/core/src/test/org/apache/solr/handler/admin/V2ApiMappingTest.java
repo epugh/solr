@@ -35,7 +35,7 @@ import org.apache.solr.common.util.CommandOperation;
 import org.apache.solr.common.util.ContentStream;
 import org.apache.solr.common.util.ContentStreamBase;
 import org.apache.solr.handler.RequestHandlerBase;
-import org.apache.solr.request.LocalSolrQueryRequest;
+import org.apache.solr.request.SimpleSolrQueryRequest;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.response.SolrQueryResponse;
 import org.junit.Before;
@@ -111,8 +111,8 @@ public abstract class V2ApiMappingTest<T extends RequestHandlerBase> extends Sol
     final HashMap<String, String> parts = new HashMap<>();
     final Api api = apiBag.lookup(v2Path, v2Method, parts);
     final SolrQueryResponse rsp = new SolrQueryResponse();
-    final LocalSolrQueryRequest req =
-        new LocalSolrQueryRequest(null, Map.of()) {
+    final SimpleSolrQueryRequest req =
+        new SimpleSolrQueryRequest(null, Map.of()) {
           @Override
           public List<CommandOperation> getCommands(boolean validateInput) {
             if (v2RequestBody == null) return Collections.emptyList();
@@ -151,8 +151,8 @@ public abstract class V2ApiMappingTest<T extends RequestHandlerBase> extends Sol
     final HashMap<String, String> parts = new HashMap<>();
     final Api api = apiBag.lookup(path, method, parts);
     final SolrQueryResponse rsp = new SolrQueryResponse();
-    final LocalSolrQueryRequest req =
-        new LocalSolrQueryRequest(null, queryParams) {
+    final SimpleSolrQueryRequest req =
+        new SimpleSolrQueryRequest(null, queryParams) {
           @Override
           public List<CommandOperation> getCommands(boolean validateInput) {
             return Collections.emptyList();
@@ -185,8 +185,8 @@ public abstract class V2ApiMappingTest<T extends RequestHandlerBase> extends Sol
     final HashMap<String, String> parts = new HashMap<>();
     final Api api = apiBag.lookup(path, method, parts);
     final SolrQueryResponse rsp = new SolrQueryResponse();
-    final LocalSolrQueryRequest req =
-        new LocalSolrQueryRequest(null, queryParams) {
+    final SimpleSolrQueryRequest req =
+        new SimpleSolrQueryRequest(null, queryParams) {
           @Override
           public List<CommandOperation> getCommands(boolean validateInput) {
             if (v2RequestBody == null) return Collections.emptyList();

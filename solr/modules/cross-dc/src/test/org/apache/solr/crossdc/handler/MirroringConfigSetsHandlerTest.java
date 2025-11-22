@@ -41,7 +41,7 @@ import org.apache.solr.core.SolrCore;
 import org.apache.solr.core.SolrXmlConfig;
 import org.apache.solr.crossdc.common.KafkaMirroringSink;
 import org.apache.solr.crossdc.common.MirroredSolrRequest;
-import org.apache.solr.request.LocalSolrQueryRequest;
+import org.apache.solr.request.SimpleSolrQueryRequest;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.response.SolrQueryResponse;
 import org.apache.solr.util.SolrKafkaTestsIgnoredThreadsFilter;
@@ -80,7 +80,7 @@ public class MirroringConfigSetsHandlerTest extends SolrTestCaseJ4 {
       String zipResource)
       throws Exception {
     ModifiableSolrParams params = new ModifiableSolrParams();
-    LocalSolrQueryRequest req = new LocalSolrQueryRequest(solrCore, params);
+    SimpleSolrQueryRequest req = new SimpleSolrQueryRequest(solrCore, params);
     params.set(ConfigSetParams.ACTION, action.toLower());
     String method = "GET";
     if (action == ConfigSetParams.ConfigSetAction.UPLOAD) {

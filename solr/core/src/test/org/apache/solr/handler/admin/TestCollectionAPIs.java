@@ -45,7 +45,7 @@ import org.apache.solr.common.util.Pair;
 import org.apache.solr.common.util.Utils;
 import org.apache.solr.core.CoreContainer;
 import org.apache.solr.handler.ClusterAPI;
-import org.apache.solr.request.LocalSolrQueryRequest;
+import org.apache.solr.request.SimpleSolrQueryRequest;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.response.SolrQueryResponse;
 import org.apache.solr.servlet.SolrRequestParsers;
@@ -150,8 +150,8 @@ public class TestCollectionAPIs extends SolrTestCaseJ4 {
     Api api = apiBag.lookup(path, method.toString(), parts);
     if (api == null) throw new RuntimeException("No handler at path :" + path);
     SolrQueryResponse rsp = new SolrQueryResponse();
-    LocalSolrQueryRequest req =
-        new LocalSolrQueryRequest(null, queryParams) {
+    SimpleSolrQueryRequest req =
+        new SimpleSolrQueryRequest(null, queryParams) {
           @Override
           public List<CommandOperation> getCommands(boolean validateInput) {
             if (payload == null) return Collections.emptyList();
@@ -194,7 +194,7 @@ public class TestCollectionAPIs extends SolrTestCaseJ4 {
   }
 
   static class MockCollectionsHandler extends CollectionsHandler {
-    LocalSolrQueryRequest req;
+    SimpleSolrQueryRequest req;
 
     MockCollectionsHandler() {}
 

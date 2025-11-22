@@ -35,7 +35,7 @@ import org.apache.solr.common.params.MapSolrParams;
 import org.apache.solr.core.SolrCore;
 import org.apache.solr.core.SolrEventListener;
 import org.apache.solr.index.TieredMergePolicyFactory;
-import org.apache.solr.request.LocalSolrQueryRequest;
+import org.apache.solr.request.SimpleSolrQueryRequest;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.search.SolrIndexSearcher;
 import org.apache.solr.util.LogLevel;
@@ -360,7 +360,7 @@ public class DirectUpdateHandlerTest extends SolrTestCaseJ4 {
     Map<String, String> args = new HashMap<>();
     args.put(CommonParams.Q, "id:A OR id:B");
     args.put("indent", "true");
-    SolrQueryRequest req = new LocalSolrQueryRequest(core, new MapSolrParams(args));
+    SolrQueryRequest req = new SimpleSolrQueryRequest(core, new MapSolrParams(args));
     assertQ(
         "\"B\" should not be found.",
         req,
@@ -424,7 +424,7 @@ public class DirectUpdateHandlerTest extends SolrTestCaseJ4 {
     Map<String, String> args = new HashMap<>();
     args.put(CommonParams.Q, "id:A OR id:B");
     args.put("indent", "true");
-    SolrQueryRequest req = new LocalSolrQueryRequest(core, new MapSolrParams(args));
+    SolrQueryRequest req = new SimpleSolrQueryRequest(core, new MapSolrParams(args));
     assertQ(
         "\"A\" and \"B\" should be found.",
         req,

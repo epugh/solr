@@ -22,7 +22,7 @@ import org.apache.solr.common.SolrException.ErrorCode;
 import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.core.CoreContainer;
 import org.apache.solr.core.SolrCore;
-import org.apache.solr.request.LocalSolrQueryRequest;
+import org.apache.solr.request.SimpleSolrQueryRequest;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.request.SolrRequestHandler;
 import org.apache.solr.request.SolrRequestInfo;
@@ -213,7 +213,7 @@ public class TestCrossCoreJoin extends SolrTestCaseJ4 {
   public void testCoresAreDifferent() throws Exception {
     assertQEx("schema12.xml" + " has no \"cat\" field", req("cat:*"), ErrorCode.BAD_REQUEST);
     try (var req =
-        new LocalSolrQueryRequest(fromCore, "cat:*", "/select", 0, 100, Collections.emptyMap())) {
+        new SimpleSolrQueryRequest(fromCore, "cat:*", "/select", 0, 100, Collections.emptyMap())) {
       final String resp = query(fromCore, req);
       assertTrue(resp, resp.contains("numFound=\"1\""));
       assertTrue(resp, resp.contains("<str name=\"id\">10</str>"));

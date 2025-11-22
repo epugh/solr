@@ -43,7 +43,7 @@ import org.apache.solr.common.params.CommonParams;
 import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.common.util.NamedList;
 import org.apache.solr.common.util.Utils;
-import org.apache.solr.request.LocalSolrQueryRequest;
+import org.apache.solr.request.SimpleSolrQueryRequest;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.search.ReturnFields;
 import org.apache.solr.search.SolrReturnFields;
@@ -157,7 +157,7 @@ public class SmileWriterTest extends SolrTestCaseJ4 {
     SolrDocumentList l = constructSolrDocList(response);
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     new SmileResponseWriter()
-        .write(baos, new LocalSolrQueryRequest(null, new ModifiableSolrParams()), response);
+        .write(baos, new SimpleSolrQueryRequest(null, new ModifiableSolrParams()), response);
 
     byte[] bytes = baos.toByteArray();
     Map m = (Map) decodeSmile(new ByteArrayInputStream(bytes, 0, bytes.length));

@@ -39,7 +39,7 @@ import org.apache.solr.core.SolrCore;
 import org.apache.solr.core.SolrXmlConfig;
 import org.apache.solr.handler.UpdateRequestHandler;
 import org.apache.solr.logging.MDCSnapshot;
-import org.apache.solr.request.LocalSolrQueryRequest;
+import org.apache.solr.request.SimpleSolrQueryRequest;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.request.SolrRequestHandler;
 import org.apache.solr.request.SolrRequestInfo;
@@ -296,7 +296,7 @@ public class TestHarness extends BaseTestHarness {
    * @return null if all good, otherwise the first test that fails.
    * @exception Exception any exception in the response.
    * @exception IOException if there is a problem writing the XML
-   * @see LocalSolrQueryRequest
+   * @see SimpleSolrQueryRequest
    */
   public String validateQuery(SolrQueryRequest req, String... tests) throws Exception {
 
@@ -311,7 +311,7 @@ public class TestHarness extends BaseTestHarness {
    * @return The XML response to the query
    * @exception Exception any exception in the response.
    * @exception IOException if there is a problem writing the XML
-   * @see LocalSolrQueryRequest
+   * @see SimpleSolrQueryRequest
    */
   public String query(SolrQueryRequest req) throws Exception {
     return query(req.getParams().get(CommonParams.QT), req);
@@ -326,7 +326,7 @@ public class TestHarness extends BaseTestHarness {
    * @return The XML response to the query
    * @exception Exception any exception in the response.
    * @exception IOException if there is a problem writing the XML
-   * @see LocalSolrQueryRequest
+   * @see SimpleSolrQueryRequest
    */
   public String query(String handler, SolrQueryRequest req) throws Exception {
     try (var mdcSnap = MDCSnapshot.create()) {
@@ -396,7 +396,7 @@ public class TestHarness extends BaseTestHarness {
   }
 
   /**
-   * A Factory that generates LocalSolrQueryRequest objects using a specified set of default
+   * A Factory that generates SimpleSolrQueryRequest objects using a specified set of default
    * options.
    */
   public class LocalRequestFactory {
@@ -408,16 +408,16 @@ public class TestHarness extends BaseTestHarness {
     public LocalRequestFactory() {}
 
     /**
-     * Creates a LocalSolrQueryRequest based on variable args; for historical reasons, this method
+     * Creates a SimpleSolrQueryRequest based on variable args; for historical reasons, this method
      * has some peculiar behavior:
      *
      * <ul>
      *   <li>If there is a single arg, then it is treated as the "q" param, and the
-     *       LocalSolrQueryRequest consists of that query string along with "qt", "start", and
+     *       SimpleSolrQueryRequest consists of that query string along with "qt", "start", and
      *       "rows" params (based on the qtype, start, and limit properties of this factory) along
      *       with any other default "args" set on this factory.
      *   <li>If there are multiple args, then there must be an even number of them, and each pair of
-     *       args is used as a key=value param in the LocalSolrQueryRequest. <b>NOTE: In this usage,
+     *       args is used as a key=value param in the SimpleSolrQueryRequest. <b>NOTE: In this usage,
      *       the "qtype", "start", "limit", and "args" properties of this factory are ignored.</b>
      * </ul>
      *
@@ -425,9 +425,9 @@ public class TestHarness extends BaseTestHarness {
      * increment the core reference count and decrement it in the request close() method?
      */
     @SuppressWarnings({"unchecked"})
-    public LocalSolrQueryRequest makeRequest(String... q) {
+    public SimpleSolrQueryRequest makeRequest(String... q) {
       if (q.length == 1) {
-        return new LocalSolrQueryRequest(
+        return new SimpleSolrQueryRequest(
             TestHarness.this.getCore(), q[0], qtype, start, limit, args);
       }
       if (q.length % 2 != 0) {
@@ -442,7 +442,7 @@ public class TestHarness extends BaseTestHarness {
       @SuppressWarnings({"rawtypes"})
       NamedList nl = new NamedList(entries);
       if (nl.get("wt") == null) nl.add("wt", "xml");
-      return new LocalSolrQueryRequest(TestHarness.this.getCore(), nl);
+      return new SimpleSolrQueryRequest(TestHarness.this.getCore(), nl);
     }
   }
 }

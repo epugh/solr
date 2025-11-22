@@ -42,7 +42,7 @@ import org.apache.solr.handler.admin.LoggingHandler;
 import org.apache.solr.handler.admin.PropertiesRequestHandler;
 import org.apache.solr.handler.admin.SystemInfoHandler;
 import org.apache.solr.handler.admin.ThreadDumpHandler;
-import org.apache.solr.request.LocalSolrQueryRequest;
+import org.apache.solr.request.SimpleSolrQueryRequest;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.response.SolrQueryResponse;
 import org.junit.Before;
@@ -212,8 +212,8 @@ public class V2NodeAPIMappingTest extends SolrTestCaseJ4 {
             });
     final Api api = apiBag.lookup(path, method, parts);
     final SolrQueryResponse rsp = new SolrQueryResponse();
-    final LocalSolrQueryRequest req =
-        new LocalSolrQueryRequest(null, inputParamsMap) {
+    final SimpleSolrQueryRequest req =
+        new SimpleSolrQueryRequest(null, inputParamsMap) {
           @Override
           public List<CommandOperation> getCommands(boolean validateInput) {
             if (v2RequestBody == null) return Collections.emptyList();

@@ -24,7 +24,7 @@ import org.apache.solr.common.SolrException;
 import org.apache.solr.common.util.ContentStream;
 import org.apache.solr.common.util.ContentStreamBase;
 import org.apache.solr.common.util.NamedList;
-import org.apache.solr.request.LocalSolrQueryRequest;
+import org.apache.solr.request.SimpleSolrQueryRequest;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.response.SolrQueryResponse;
 import org.apache.solr.update.AddUpdateCommand;
@@ -1046,7 +1046,7 @@ public abstract class ExtractingRequestHandlerTestAbstract extends SolrTestCaseJ
   SolrQueryResponse loadLocalFromHandler(String handler, String filename, String... args)
       throws Exception {
 
-    try (LocalSolrQueryRequest req = (LocalSolrQueryRequest) req(args)) {
+    try (SimpleSolrQueryRequest req = (LocalSolrQueryRequest) req(args)) {
       // TODO: stop using locally defined streams once stream.file and
       // stream.body work everywhere
       List<ContentStream> cs = new ArrayList<>();

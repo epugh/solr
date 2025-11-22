@@ -28,7 +28,7 @@ import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.common.util.CommandOperation;
 import org.apache.solr.common.util.ContentStreamBase;
 import org.apache.solr.common.util.Utils;
-import org.apache.solr.request.LocalSolrQueryRequest;
+import org.apache.solr.request.SimpleSolrQueryRequest;
 import org.apache.solr.response.SolrQueryResponse;
 import org.apache.solr.security.BasicAuthPlugin;
 import org.apache.solr.security.RuleBasedAuthorizationPlugin;
@@ -43,7 +43,7 @@ public class SecurityConfHandlerTest extends SolrTestCaseJ4 {
             + "'set-user': {'tom':'TomIsCool'},\n"
             + "'set-user':{ 'tom':'TomIsUberCool'}\n"
             + "}";
-    LocalSolrQueryRequest req = new LocalSolrQueryRequest(null, new ModifiableSolrParams());
+    SimpleSolrQueryRequest req = new SimpleSolrQueryRequest(null, new ModifiableSolrParams());
     req.getContext().put("httpMethod", "POST");
     req.getContext().put("path", "/admin/authentication");
     ContentStreamBase.ByteArrayStream o =
@@ -76,7 +76,7 @@ public class SecurityConfHandlerTest extends SolrTestCaseJ4 {
             + "                  'role': 'admin'}\n"
             + "}";
 
-    req = new LocalSolrQueryRequest(null, new ModifiableSolrParams());
+    req = new SimpleSolrQueryRequest(null, new ModifiableSolrParams());
     req.getContext().put("httpMethod", "POST");
     req.getContext().put("path", "/admin/authorization");
     o = new ContentStreamBase.ByteArrayStream(command.getBytes(StandardCharsets.UTF_8), "");
@@ -100,7 +100,7 @@ public class SecurityConfHandlerTest extends SolrTestCaseJ4 {
             + "'set-permission':{index : 2,  name : security-edit,\n"
             + "                  'role': ['admin','dev']\n"
             + "                  }}";
-    req = new LocalSolrQueryRequest(null, new ModifiableSolrParams());
+    req = new SimpleSolrQueryRequest(null, new ModifiableSolrParams());
     req.getContext().put("httpMethod", "POST");
     req.getContext().put("path", "/admin/authorization");
     o = new ContentStreamBase.ByteArrayStream(command.getBytes(StandardCharsets.UTF_8), "");
@@ -121,7 +121,7 @@ public class SecurityConfHandlerTest extends SolrTestCaseJ4 {
             + "'update-permission':{'index': 1,\n"
             + "                  'role': ['guest','admin']\n"
             + "                  }}";
-    req = new LocalSolrQueryRequest(null, new ModifiableSolrParams());
+    req = new SimpleSolrQueryRequest(null, new ModifiableSolrParams());
     req.getContext().put("httpMethod", "POST");
     req.getContext().put("path", "/admin/authorization");
     o = new ContentStreamBase.ByteArrayStream(command.getBytes(StandardCharsets.UTF_8), "");
@@ -138,7 +138,7 @@ public class SecurityConfHandlerTest extends SolrTestCaseJ4 {
     assertEquals("admin", rol.get(1));
 
     command = "{\n" + "delete-permission: 1,\n" + " set-user-role : { tom :null}\n" + "}";
-    req = new LocalSolrQueryRequest(null, new ModifiableSolrParams());
+    req = new SimpleSolrQueryRequest(null, new ModifiableSolrParams());
     req.getContext().put("httpMethod", "POST");
     req.getContext().put("path", "/admin/authorization");
     o = new ContentStreamBase.ByteArrayStream(command.getBytes(StandardCharsets.UTF_8), "");
@@ -162,7 +162,7 @@ public class SecurityConfHandlerTest extends SolrTestCaseJ4 {
             + "                  'method':'POST',"
             + "                  'role': 'admin'\n"
             + "                  }}";
-    req = new LocalSolrQueryRequest(null, new ModifiableSolrParams());
+    req = new SimpleSolrQueryRequest(null, new ModifiableSolrParams());
     req.getContext().put("httpMethod", "POST");
     req.getContext().put("path", "/admin/authorization");
     o = new ContentStreamBase.ByteArrayStream(command.getBytes(StandardCharsets.UTF_8), "");
@@ -236,7 +236,7 @@ public class SecurityConfHandlerTest extends SolrTestCaseJ4 {
 
     public String getStandardJson() throws Exception {
       String command = "{\n" + "'set-user': {'solr':'SolrRocks'}\n" + "}";
-      LocalSolrQueryRequest req = new LocalSolrQueryRequest(null, new ModifiableSolrParams());
+      SimpleSolrQueryRequest req = new SimpleSolrQueryRequest(null, new ModifiableSolrParams());
       req.getContext().put("httpMethod", "POST");
       req.getContext().put("path", "/admin/authentication");
       ContentStreamBase.ByteArrayStream o =
@@ -248,7 +248,7 @@ public class SecurityConfHandlerTest extends SolrTestCaseJ4 {
           "{'set-user-role': { 'solr': 'admin'},\n"
               + "'set-permission':{'name': 'security-edit', 'role': 'admin'}"
               + "}";
-      req = new LocalSolrQueryRequest(null, new ModifiableSolrParams());
+      req = new SimpleSolrQueryRequest(null, new ModifiableSolrParams());
       req.getContext().put("httpMethod", "POST");
       req.getContext().put("path", "/admin/authorization");
       o = new ContentStreamBase.ByteArrayStream(command.getBytes(StandardCharsets.UTF_8), "");

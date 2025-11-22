@@ -43,7 +43,7 @@ import org.apache.http.message.BasicHttpRequest;
 import org.apache.solr.SolrTestCaseJ4;
 import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.metrics.SolrMetricsContext;
-import org.apache.solr.request.LocalSolrQueryRequest;
+import org.apache.solr.request.SimpleSolrQueryRequest;
 import org.apache.solr.request.SolrRequestInfo;
 import org.apache.solr.response.SolrQueryResponse;
 import org.apache.solr.util.CryptoKeys;
@@ -88,8 +88,8 @@ public class TestPKIAuthenticationPlugin extends SolrTestCaseJ4 {
 
   final CryptoKeys.RSAKeyPair aKeyPair = new CryptoKeys.RSAKeyPair();
 
-  final LocalSolrQueryRequest localSolrQueryRequest =
-      new LocalSolrQueryRequest(null, new ModifiableSolrParams()) {
+  final SimpleSolrQueryRequest localSolrQueryRequest =
+      new SimpleSolrQueryRequest(null, new ModifiableSolrParams()) {
         @Override
         public Principal getUserPrincipal() {
           return principal.get();

@@ -34,7 +34,7 @@ import org.apache.solr.common.params.SolrParams;
 import org.apache.solr.common.util.IOUtils;
 import org.apache.solr.common.util.SimpleOrderedMap;
 import org.apache.solr.core.SolrCore;
-import org.apache.solr.request.LocalSolrQueryRequest;
+import org.apache.solr.request.SimpleSolrQueryRequest;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.request.SolrRequestHandler;
 import org.apache.solr.response.SolrQueryResponse;
@@ -435,7 +435,7 @@ public class TolerantUpdateProcessorTest extends UpdateProcessorTestBase {
     SolrQueryResponse rsp = new SolrQueryResponse();
     rsp.add("responseHeader", new SimpleOrderedMap<>());
 
-    SolrQueryRequest req = new LocalSolrQueryRequest(core, requestParams);
+    SolrQueryRequest req = new SimpleSolrQueryRequest(core, requestParams);
     UpdateRequestProcessor processor = null;
     try {
       processor = pc.createProcessor(req, rsp);
