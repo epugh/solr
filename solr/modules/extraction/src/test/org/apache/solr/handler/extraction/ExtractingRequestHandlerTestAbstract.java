@@ -1046,7 +1046,7 @@ public abstract class ExtractingRequestHandlerTestAbstract extends SolrTestCaseJ
   SolrQueryResponse loadLocalFromHandler(String handler, String filename, String... args)
       throws Exception {
 
-    try (SimpleSolrQueryRequest req = (LocalSolrQueryRequest) req(args)) {
+    try (SimpleSolrQueryRequest req = (SimpleSolrQueryRequest) req(args)) {
       // TODO: stop using locally defined streams once stream.file and
       // stream.body work everywhere
       List<ContentStream> cs = new ArrayList<>();

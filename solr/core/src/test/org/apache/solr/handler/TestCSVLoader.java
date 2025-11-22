@@ -77,7 +77,7 @@ public class TestCSVLoader extends SolrTestCaseJ4 {
   }
 
   void loadLocal(String... args) throws Exception {
-    SimpleSolrQueryRequest req = (LocalSolrQueryRequest) req(args);
+    SimpleSolrQueryRequest req = (SimpleSolrQueryRequest) req(args);
 
     // TODO: stop using locally defined streams once stream.file and
     // stream.body work everywhere
