@@ -36,12 +36,14 @@ import org.apache.solr.common.params.ShardParams;
 import org.apache.solr.common.util.NamedList;
 import org.apache.solr.response.SolrQueryResponse;
 import org.apache.solr.util.ExternalPaths;
+import org.apache.solr.util.RandomizeSSL;
 import org.apache.solr.util.SolrJettyTestRule;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 
+@RandomizeSSL(1.0)
 public class DistributedDebugComponentTest extends SolrTestCaseJ4 {
 
   @ClassRule public static SolrJettyTestRule solrTestRule = new SolrJettyTestRule();
@@ -69,8 +71,8 @@ public class DistributedDebugComponentTest extends SolrTestCaseJ4 {
 
     String urlCollection1 = solrTestRule.getBaseUrl() + "/" + "collection1";
     String urlCollection2 = solrTestRule.getBaseUrl() + "/" + "collection2";
-    shard1 = urlCollection1.replaceAll("https?://", "");
-    shard2 = urlCollection2.replaceAll("https?://", "");
+    shard1 = urlCollection1; // .replaceAll("https?://", "");
+    shard2 = urlCollection2; // .replaceAll("https?://", "");
     collection1 = solrTestRule.getSolrClient("collection1");
     collection2 = solrTestRule.getSolrClient("collection2");
 
@@ -88,14 +90,8 @@ public class DistributedDebugComponentTest extends SolrTestCaseJ4 {
 
   @AfterClass
   public static void destroyThings() throws IOException {
-    if (collection1 != null) {
-      collection1.close();
-      collection1 = null;
-    }
-    if (collection2 != null) {
-      collection2.close();
-      collection2 = null;
-    }
+    collection1 = null;
+    collection2 = null;
     resetExceptionIgnores();
     systemClearPropertySolrEnableUrlAllowList();
   }
