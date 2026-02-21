@@ -53,8 +53,6 @@ import org.apache.solr.search.SyntaxError;
  * <p>Examples - [child parentFilter="fieldName:fieldValue"] [child
  * parentFilter="fieldName:fieldValue" childFilter="fieldName:fieldValue"] [child
  * parentFilter="fieldName:fieldValue" childFilter="fieldName:fieldValue" limit=20]
- *
- * @since solr 4.9
  */
 public class ChildDocTransformerFactory extends TransformerFactory {
 

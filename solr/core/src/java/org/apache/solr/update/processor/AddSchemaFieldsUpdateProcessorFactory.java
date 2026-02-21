@@ -115,8 +115,6 @@ import org.slf4j.LoggerFactory;
  *     &lt;str name="fieldType"&gt;pdoubles&lt;/str&gt;
  *   &lt;/lst&gt;
  * &lt;/updateProcessor&gt;</pre>
- *
- * @since 4.4.0
  */
 public class AddSchemaFieldsUpdateProcessorFactory extends UpdateRequestProcessorFactory
     implements SolrCoreAware, UpdateRequestProcessorFactory.RunAlways {

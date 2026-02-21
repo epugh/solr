@@ -40,8 +40,6 @@ import org.apache.solr.response.SolrQueryResponse;
  * &lt;processor class="solr.HTMLStripFieldUpdateProcessorFactory"&gt;
  *   &lt;str name="typeClass"&gt;solr.StrField&lt;/str&gt;
  * &lt;/processor&gt;</pre>
- *
- * @since 4.0.0
  */
 public final class HTMLStripFieldUpdateProcessorFactory
     extends FieldMutatingUpdateProcessorFactory {

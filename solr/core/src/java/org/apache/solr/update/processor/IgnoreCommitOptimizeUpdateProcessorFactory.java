@@ -34,8 +34,6 @@ import org.slf4j.LoggerFactory;
  * Gives system administrators a way to ignore explicit commit or optimize requests from clients.
  * The factory can be configured to return a specific HTTP response code, default is 403, and
  * optional response message, such as to warn the client application that its request was ignored.
- *
- * @since 5.0.0
  */
 public class IgnoreCommitOptimizeUpdateProcessorFactory extends UpdateRequestProcessorFactory {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

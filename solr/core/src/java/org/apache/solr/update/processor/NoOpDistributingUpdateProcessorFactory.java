@@ -27,8 +27,6 @@ import org.apache.solr.response.SolrQueryResponse;
  * {@link DistributedUpdateProcessorFactory}</code> nor any custom implementation of <code>
  * {@link DistributingUpdateProcessorFactory}</code> is desired (ie: shards are managed externally
  * from Solr)
- *
- * @since 4.0.0
  */
 public class NoOpDistributingUpdateProcessorFactory extends UpdateRequestProcessorFactory
     implements DistributingUpdateProcessorFactory {

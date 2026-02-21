@@ -88,8 +88,6 @@ import org.slf4j.LoggerFactory;
  * This should include tests against the example solr config
  *
  * <p>This lets us try various SolrClient implementations with the same tests.
- *
- * @since solr 1.3
  */
 @SuppressSSL
 public abstract class SolrExampleTests extends SolrExampleTestsBase {

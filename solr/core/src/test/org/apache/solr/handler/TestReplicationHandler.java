@@ -83,11 +83,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Test for ReplicationHandler
- *
- * @since 1.4
- */
+/** Test for ReplicationHandler */
 @LuceneTestCase.Nightly
 @SuppressSSL // Currently, unknown why SSL does not work with this test
 public class TestReplicationHandler extends SolrTestCaseJ4 {

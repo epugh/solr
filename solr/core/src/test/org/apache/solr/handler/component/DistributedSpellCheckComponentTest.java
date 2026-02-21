@@ -32,7 +32,6 @@ import org.junit.Test;
 /**
  * Test for SpellCheckComponent's distributed querying
  *
- * @since solr 1.5
  * @see org.apache.solr.handler.component.SpellCheckComponent
  */
 @SuppressTempFileChecks(

@@ -82,8 +82,6 @@ import org.slf4j.LoggerFactory;
  *   &lt;processor class="solr.RunUpdateProcessorFactory" /&gt;
  * &lt;/updateRequestProcessorChain&gt;
  * </pre>
- *
- * @since 6.4.0
  */
 public class SkipExistingDocumentsProcessorFactory extends UpdateRequestProcessorFactory
     implements SolrCoreAware, UpdateRequestProcessorFactory.RunAlways {

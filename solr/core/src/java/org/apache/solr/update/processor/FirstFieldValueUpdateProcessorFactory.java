@@ -41,7 +41,6 @@ import org.apache.solr.update.processor.FieldMutatingUpdateProcessor.FieldNameSe
  * </pre>
  *
  * @see LastFieldValueUpdateProcessorFactory
- * @since 4.0.0
  */
 public final class FirstFieldValueUpdateProcessorFactory
     extends FieldValueSubsetUpdateProcessorFactory {

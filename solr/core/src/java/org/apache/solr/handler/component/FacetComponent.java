@@ -57,11 +57,7 @@ import org.apache.solr.util.SolrResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Computes facets -- aggregations with counts of terms or ranges over the whole search results.
- *
- * @since solr 1.3
- */
+/** Computes facets -- aggregations with counts of terms or ranges over the whole search results. */
 public class FacetComponent extends SearchComponent {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

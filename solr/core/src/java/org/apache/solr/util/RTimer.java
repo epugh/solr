@@ -22,8 +22,6 @@ import java.util.concurrent.TimeUnit;
  * A simple timer.
  *
  * <p>RTimers are started automatically when instantiated.
- *
- * @since solr 1.3
  */
 public class RTimer {
 

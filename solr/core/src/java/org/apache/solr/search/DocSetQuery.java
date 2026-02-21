@@ -34,7 +34,6 @@ import org.apache.solr.util.SolrDefaultScorerSupplier;
  * A Query based on a {@link DocSet}. The un-boosted score is always 1.
  *
  * @see DocSet#makeQuery()
- * @since 9.0
  */
 class DocSetQuery extends Query implements DocSetProducer {
   private final DocSet docSet;

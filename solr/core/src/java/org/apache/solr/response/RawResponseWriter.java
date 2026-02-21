@@ -34,8 +34,6 @@ import org.apache.solr.request.SolrQueryRequest;
  * added, then a "base" QueryResponseWriter will be used to write the response according to the
  * usual contract. The name of the "base" writer can be specified as an initialization param for
  * this writer, or it defaults to the "standard" writer.
- *
- * @since solr 1.3
  */
 public class RawResponseWriter implements QueryResponseWriter {
 

@@ -33,8 +33,6 @@ import org.apache.solr.search.SolrIndexSearcher;
  * <p>Refer to <a
  * href="https://solr.apache.org/guide/solr/latest/query-guide/spell-checking.html">https://solr.apache.org/guide/solr/latest/query-guide/spell-checking.html</a>
  * for more details.
- *
- * @since solr 1.3
  */
 public class IndexBasedSpellChecker extends AbstractLuceneSpellChecker {
 

@@ -19,11 +19,7 @@ package org.apache.solr.search;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TotalHits;
 
-/**
- * <code>TopDocsSlice</code> implements DocList based off provided <code>TopDocs</code>.
- *
- * @since solr 9.9
- */
+/** <code>TopDocsSlice</code> implements DocList based off provided <code>TopDocs</code>. */
 public class TopDocsSlice extends DocSlice {
 
   private final TopDocs topDocs;

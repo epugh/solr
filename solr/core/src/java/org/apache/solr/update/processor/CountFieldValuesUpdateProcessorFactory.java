@@ -55,8 +55,6 @@ import org.apache.solr.response.SolrQueryResponse;
  * values with the size of that list. If <code>DefaultValueUpdateProcessorFactory</code> was not
  * used, then any document that had no values for the <code>category</code> field, would also have
  * no value in the <code>category_count</code> field.
- *
- * @since 4.0.0
  */
 public final class CountFieldValuesUpdateProcessorFactory
     extends FieldMutatingUpdateProcessorFactory {

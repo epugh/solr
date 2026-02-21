@@ -26,7 +26,6 @@ import org.apache.solr.client.solrj.io.stream.expr.StreamExpressionParser;
 import org.apache.solr.client.solrj.io.stream.expr.StreamFactory;
 import org.junit.Test;
 
-/** */
 public class OperationsTest extends SolrTestCase {
 
   StreamFactory factory;

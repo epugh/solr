@@ -18,7 +18,6 @@ package org.apache.solr.core;
 
 import java.util.Collections;
 
-/** */
 public class MetricsConfig {
 
   private final PluginInfo[] metricReporters;

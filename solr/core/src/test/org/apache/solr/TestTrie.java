@@ -31,7 +31,6 @@ import org.junit.Test;
  * Tests for numeric field functionality. The name originated from {@link TrieField}, but all tests
  * done in this class are also valid for any numeric field types.
  *
- * @since solr 1.4
  * @deprecated Trie fields are deprecated as of Solr 7.0
  */
 @Deprecated

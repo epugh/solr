@@ -49,11 +49,7 @@ import org.apache.solr.schema.IndexSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * An IndexWriter that is configured via Solr config mechanisms.
- *
- * @since solr 0.9
- */
+/** An IndexWriter that is configured via Solr config mechanisms. */
 public class SolrIndexWriter extends IndexWriter {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
   // These should *only* be used for debugging or monitoring purposes

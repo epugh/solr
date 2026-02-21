@@ -43,8 +43,6 @@ import org.apache.solr.common.util.GlobPatternUtil;
 /**
  * Selects fields from the incoming stream and applies optional field renaming. Does not reorder the
  * outgoing stream.
- *
- * @since 6.0.0
  */
 public class SelectStream extends TupleStream implements Expressible {
 

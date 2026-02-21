@@ -18,7 +18,6 @@ package org.apache.solr.search;
 
 import org.apache.solr.schema.SchemaField;
 
-/** */
 public class SpatialOptions {
   public String pointStr;
   public double distance;

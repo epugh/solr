@@ -33,11 +33,7 @@ import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.common.params.SolrParams;
 import org.apache.solr.common.util.NamedList;
 
-/**
- * A request for the org.apache.solr.handler.DocumentAnalysisRequestHandler.
- *
- * @since solr 1.4
- */
+/** A request for the org.apache.solr.handler.DocumentAnalysisRequestHandler. */
 public class DocumentAnalysisRequest
     extends CollectionRequiringSolrRequest<DocumentAnalysisResponse> {
 

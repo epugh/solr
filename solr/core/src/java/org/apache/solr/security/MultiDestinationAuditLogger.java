@@ -46,7 +46,6 @@ import org.slf4j.LoggerFactory;
  *
  * This interface may change in next release and is marked experimental
  *
- * @since 8.1.0
  * @lucene.experimental
  */
 public class MultiDestinationAuditLogger extends AuditLoggerPlugin implements ResourceLoaderAware {

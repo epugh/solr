@@ -41,8 +41,6 @@ import java.util.List;
  *
  * In case of <code>group.query</code> only one group is present and ngroups is always <code>null
  * </code>.
- *
- * @since solr 3.4
  */
 public class GroupCommand implements Serializable {
 

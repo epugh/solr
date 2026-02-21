@@ -25,9 +25,6 @@ import org.apache.solr.client.solrj.apache.HttpSolrClient;
 import org.apache.solr.client.solrj.request.SolrQuery;
 import org.junit.Test;
 
-/**
- * @since solr 1.3
- */
 public class SolrExceptionTest extends SolrTestCase {
 
   @Test

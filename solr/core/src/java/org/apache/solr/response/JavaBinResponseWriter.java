@@ -159,8 +159,6 @@ public class JavaBinResponseWriter implements QueryResponseWriter {
    * Serializes and deserializes to a {@link NamedList}, thus normalizing a response as if read from
    * a client via JavaBin. Documents become {@link org.apache.solr.common.SolrDocument}, DocList
    * becomes {@link org.apache.solr.common.SolrDocumentList}, etc.
-   *
-   * @since solr 1.4
    */
   public static NamedList<Object> getParsedResponse(SolrQueryRequest req, SolrQueryResponse rsp) {
     // NOTE: EmbeddedSolrServer.writeResponse is similar

@@ -75,8 +75,6 @@ import org.slf4j.LoggerFactory;
  * supports query analysis by sending either an "analysis.query" or "q" request parameter that holds
  * the query text to be analyzed. It also supports the "analysis.showmatch" parameter which when set
  * to {@code true}, all field tokens that match the query tokens will be marked as a "match".
- *
- * @since solr 1.4
  */
 public class DocumentAnalysisRequestHandler extends AnalysisRequestHandlerBase {
 

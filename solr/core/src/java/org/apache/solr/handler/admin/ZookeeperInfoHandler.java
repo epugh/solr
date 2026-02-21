@@ -64,11 +64,7 @@ import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Zookeeper Info
- *
- * @since solr 4.0
- */
+/** Zookeeper Info */
 public final class ZookeeperInfoHandler extends RequestHandlerBase {
   private static final String PARAM_DETAIL = "detail";
   private final CoreContainer cores;

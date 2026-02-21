@@ -18,11 +18,7 @@ package org.apache.solr.util.plugin;
 
 import org.apache.solr.common.util.NamedList;
 
-/**
- * A plugin that can be initialized with a NamedList
- *
- * @since solr 1.3
- */
+/** A plugin that can be initialized with a NamedList */
 public interface NamedListInitializedPlugin {
   /**
    * <code>init</code> will be called just once, immediately after creation.

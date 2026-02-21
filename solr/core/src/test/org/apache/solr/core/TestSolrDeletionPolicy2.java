@@ -20,7 +20,6 @@ import org.apache.solr.SolrTestCaseJ4;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/** */
 public class TestSolrDeletionPolicy2 extends SolrTestCaseJ4 {
   @BeforeClass
   public static void beforeClass() throws Exception {

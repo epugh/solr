@@ -51,8 +51,6 @@ import org.apache.solr.common.util.TimeSource;
  * strategy. Instead it strives to remove least recently used items but when the initial cleanup
  * does not remove enough items to reach the 'acceptableWaterMark' limit, it can remove more items
  * forcefully regardless of access order.
- *
- * @since solr 1.4
  */
 public class ConcurrentLRUCache<K, V> implements Cache<K, V>, Accountable {
 

@@ -29,11 +29,7 @@ import org.apache.solr.common.cloud.SolrClassLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * An abstract super class that manages standard solr-style plugin configuration.
- *
- * @since solr 1.3
- */
+/** An abstract super class that manages standard solr-style plugin configuration. */
 public abstract class AbstractPluginLoader<T> {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

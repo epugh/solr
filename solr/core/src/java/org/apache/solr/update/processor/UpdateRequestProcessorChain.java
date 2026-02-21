@@ -86,7 +86,6 @@ import org.slf4j.LoggerFactory;
  * @see UpdateRequestProcessorFactory
  * @see #init
  * @see #createProcessor
- * @since solr 1.3
  */
 public final class UpdateRequestProcessorChain implements PluginInfoInitialized {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

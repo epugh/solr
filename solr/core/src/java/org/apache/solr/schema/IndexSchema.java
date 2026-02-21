@@ -211,8 +211,6 @@ public class IndexSchema {
    * The resource loader to be used to load components related to the schema when the schema is
    * loading / initialising. It should <em>not</em> be used for any other purpose or time; consider
    * {@link SolrCore#getResourceLoader()} instead.
-   *
-   * @since solr 1.4
    */
   public SolrResourceLoader getResourceLoader() {
     // TODO consider asserting the schema has not finished loading somehow?
@@ -409,8 +407,6 @@ public class IndexSchema {
    * This will re-create the Analyzers. If you make any modifications to the Field map ({@link
    * IndexSchema#getFields()}, this function is required to synch the internally cached field
    * analyzers.
-   *
-   * @since solr 1.3
    */
   public void refreshAnalyzers() {
     indexAnalyzer = new SolrIndexAnalyzer();
@@ -1522,7 +1518,6 @@ public class IndexSchema {
    * Get all copy fields for a specified source field, both static and dynamic ones.
    *
    * @return List of CopyFields to copy to.
-   * @since solr 1.4
    */
   // This is useful when we need the maxSize param of each CopyField
   public List<CopyField> getCopyFieldsList(final String sourceField) {
@@ -1544,11 +1539,7 @@ public class IndexSchema {
     return result;
   }
 
-  /**
-   * Check if a field is used as the destination of a copyField operation
-   *
-   * @since solr 1.3
-   */
+  /** Check if a field is used as the destination of a copyField operation */
   public boolean isCopyFieldTarget(SchemaField f) {
     return copyFieldTargetCounts.containsKey(f);
   }

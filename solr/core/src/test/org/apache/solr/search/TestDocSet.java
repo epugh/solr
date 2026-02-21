@@ -52,7 +52,6 @@ import org.apache.lucene.util.FixedBitSet;
 import org.apache.lucene.util.Version;
 import org.apache.solr.SolrTestCase;
 
-/** */
 public class TestDocSet extends SolrTestCase {
   Random rand;
 

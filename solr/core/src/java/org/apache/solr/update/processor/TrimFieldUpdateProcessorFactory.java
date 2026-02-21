@@ -36,8 +36,6 @@ import org.apache.solr.response.SolrQueryResponse;
  *     &lt;str name="fieldRegex"&gt;.*_literal&lt;/str&gt;
  *   &lt;/lst&gt;
  * &lt;/processor&gt;</pre>
- *
- * @since 4.0.0
  */
 public final class TrimFieldUpdateProcessorFactory extends FieldMutatingUpdateProcessorFactory {
   @Override

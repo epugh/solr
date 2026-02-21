@@ -80,8 +80,6 @@ import org.slf4j.LoggerFactory;
  *       tombstone document. In general is not a good idea to populate tombsone documents with
  *       anything other than the minimum required fields so that it doean't match queries
  * </ul>
- *
- * @since 4.6.0
  */
 public class DocBasedVersionConstraintsProcessorFactory extends UpdateRequestProcessorFactory
     implements SolrCoreAware, UpdateRequestProcessorFactory.RunAlways {

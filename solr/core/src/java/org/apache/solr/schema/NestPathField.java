@@ -32,7 +32,6 @@ import org.apache.solr.common.SolrException;
  * more general way of accomplishing this.
  *
  * @see org.apache.solr.update.processor.NestedUpdateProcessorFactory
- * @since 8.0
  */
 public class NestPathField extends SortableTextField {
 

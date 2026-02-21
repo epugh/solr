@@ -43,8 +43,6 @@ import org.apache.solr.update.processor.FieldMutatingUpdateProcessor.FieldNameSe
  *    &lt;str name="fieldRegex"&gt;.*_uniq&lt;/str&gt;
  *  &lt;/processor&gt;
  * </pre>
- *
- * @since 3.4.0
  */
 public class UniqFieldsUpdateProcessorFactory extends FieldValueSubsetUpdateProcessorFactory {
 

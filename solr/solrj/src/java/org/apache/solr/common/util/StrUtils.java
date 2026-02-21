@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Locale;
 import org.apache.solr.common.SolrException;
 
-/** */
 public class StrUtils {
   @SuppressWarnings("MutablePublicArray")
   public static final char[] HEX_DIGITS = {

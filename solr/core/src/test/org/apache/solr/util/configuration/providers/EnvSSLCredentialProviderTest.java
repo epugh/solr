@@ -25,7 +25,6 @@ import org.apache.solr.SolrTestCase;
 import org.apache.solr.util.configuration.SSLCredentialProvider;
 import org.junit.Test;
 
-/** */
 public class EnvSSLCredentialProviderTest extends SolrTestCase {
 
   @Test

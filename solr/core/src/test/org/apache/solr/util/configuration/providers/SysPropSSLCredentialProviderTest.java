@@ -29,7 +29,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 
-/** */
 public class SysPropSSLCredentialProviderTest extends SolrTestCase {
 
   @Rule

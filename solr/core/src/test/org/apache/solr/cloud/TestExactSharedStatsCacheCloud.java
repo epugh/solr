@@ -18,7 +18,6 @@ package org.apache.solr.cloud;
 
 import org.apache.solr.search.stats.ExactSharedStatsCache;
 
-/** */
 public class TestExactSharedStatsCacheCloud extends TestBaseStatsCacheCloud {
   @Override
   protected boolean assertSameScores() {

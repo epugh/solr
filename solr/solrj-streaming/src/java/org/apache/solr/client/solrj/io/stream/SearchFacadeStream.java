@@ -35,8 +35,6 @@ import org.apache.solr.common.params.ModifiableSolrParams;
  * Connects to Zookeeper to pick replicas from a specific collection to send the query to. Under the
  * covers the SolrStream instances send the query to the replicas. SolrStreams are opened using a
  * thread pool, but a single thread is used to iterate and merge Tuples from each SolrStream.
- *
- * @since 5.1.0
  */
 public class SearchFacadeStream extends TupleStream implements Expressible {
 

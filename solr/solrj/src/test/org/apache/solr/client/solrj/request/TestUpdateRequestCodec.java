@@ -43,7 +43,6 @@ import org.junit.Test;
  * Test for UpdateRequestCodec
  *
  * @see org.apache.solr.client.solrj.request.UpdateRequest
- * @since solr 1.4
  */
 public class TestUpdateRequestCodec extends SolrTestCase {
 

@@ -27,11 +27,7 @@ import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.common.params.SolrParams;
 import org.apache.solr.common.util.NamedList;
 
-/**
- * Class for making Solr delegation token requests.
- *
- * @since Solr 6.2
- */
+/** Class for making Solr delegation token requests. */
 public abstract class DelegationTokenRequest<
         Q extends DelegationTokenRequest<Q, R>, R extends DelegationTokenResponse>
     extends SolrRequest<R> {

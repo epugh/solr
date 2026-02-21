@@ -22,7 +22,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import org.apache.commons.io.FileExistsException;
 
-/** */
 public class FileUtils {
 
   public static boolean fileExists(String filePathString) {

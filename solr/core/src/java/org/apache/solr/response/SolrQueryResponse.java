@@ -59,8 +59,6 @@ import org.apache.solr.search.SolrReturnFields;
  *
  * <p>Other data types may be added to the SolrQueryResponse, but there is no guarantee that
  * QueryResponseWriters will be able to deal with unexpected types.
- *
- * @since solr 0.9
  */
 public class SolrQueryResponse {
   public static final String NAME = "response";

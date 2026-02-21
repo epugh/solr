@@ -26,8 +26,6 @@ import org.apache.solr.common.SolrDocumentList;
  * <p>A group value can be a field value, function result or a query string depending on the {@link
  * GroupCommand}. In case of a field value or a function result the value is always an indexed
  * value.
- *
- * @since solr 3.4
  */
 public class Group implements Serializable {
 

@@ -970,9 +970,7 @@ public class DirectUpdateHandler2 extends UpdateHandler
     solrCoreState.newIndexWriter(core, rollback);
   }
 
-  /**
-   * @since Solr 1.4
-   */
+  /** */
   @Override
   public void rollback(RollbackUpdateCommand cmd) throws IOException {
     TestInjection.injectDirectUpdateLatch();

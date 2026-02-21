@@ -22,8 +22,6 @@ import org.apache.lucene.search.TotalHits;
  * <code>DocList</code> represents the result of a query: an ordered list of document ids with
  * optional score. This list contains a subset of the complete list of documents actually matched:
  * <code>size()</code> document ids starting at <code>offset()</code>.
- *
- * @since solr 0.9
  */
 public interface DocList {
 

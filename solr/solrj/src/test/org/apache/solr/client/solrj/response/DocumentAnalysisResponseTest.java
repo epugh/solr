@@ -22,11 +22,7 @@ import org.apache.solr.SolrTestCase;
 import org.apache.solr.common.util.NamedList;
 import org.junit.Test;
 
-/**
- * A test for the {@link DocumentAnalysisResponse} class.
- *
- * @since solr 1.4
- */
+/** A test for the {@link DocumentAnalysisResponse} class. */
 public class DocumentAnalysisResponseTest extends SolrTestCase {
 
   /**

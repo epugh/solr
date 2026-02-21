@@ -38,7 +38,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runners.model.MultipleFailureException;
 
-/** */
 public class TestSolrCachePerf extends SolrTestCaseJ4 {
 
   @SuppressWarnings({"unchecked", "rawtypes"})

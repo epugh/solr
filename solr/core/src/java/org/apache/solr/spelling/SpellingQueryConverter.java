@@ -41,8 +41,6 @@ import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
  * to whether the term would likely behave as if it is Required or Prohibited and sets the flags
  * accordingly. These flags are used downstream to generate collations for {@link
  * WordBreakSolrSpellChecker}, in cases where an original term is split up into multiple Tokens.
- *
- * @since solr 1.3
  */
 public class SpellingQueryConverter extends QueryConverter {
 

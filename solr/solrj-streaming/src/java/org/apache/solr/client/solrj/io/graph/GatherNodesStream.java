@@ -63,9 +63,6 @@ import org.apache.solr.common.util.SolrNamedThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @since 6.1.0
- */
 public class GatherNodesStream extends TupleStream implements Expressible {
 
   private String zkHost;

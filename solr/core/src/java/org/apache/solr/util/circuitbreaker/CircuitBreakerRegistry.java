@@ -46,7 +46,6 @@ import org.slf4j.LoggerFactory;
  * map of globally registered Circuit Breakers that are always checked.
  *
  * @lucene.experimental
- * @since 9.4
  */
 public class CircuitBreakerRegistry implements Closeable {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

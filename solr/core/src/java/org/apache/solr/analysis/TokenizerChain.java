@@ -30,8 +30,6 @@ import org.apache.lucene.analysis.custom.CustomAnalyzer;
  * An analyzer that uses a tokenizer and a list of token filters to create a TokenStream.
  *
  * <p>It should probably be replaced with {@link CustomAnalyzer}.
- *
- * @since 3.1
  */
 public final class TokenizerChain extends SolrAnalyzer {
   private static final CharFilterFactory[] EMPTY_CHAR_FITLERS = new CharFilterFactory[0];

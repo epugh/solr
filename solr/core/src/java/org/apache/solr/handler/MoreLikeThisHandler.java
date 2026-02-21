@@ -81,8 +81,6 @@ import org.slf4j.LoggerFactory;
  * Solr MoreLikeThis --
  *
  * <p>Return similar documents either based on a single document or based on posted text.
- *
- * @since solr 1.3
  */
 public class MoreLikeThisHandler extends RequestHandlerBase {
   // Pattern is thread safe -- TODO? share this with general 'fl' param

@@ -36,7 +36,6 @@ import org.apache.solr.schema.SimilarityFactory;
  * </ul>
  *
  * @lucene.experimental
- * @since 8.0.0
  */
 public class BM25SimilarityFactory extends SimilarityFactory {
   private BM25Similarity similarity;

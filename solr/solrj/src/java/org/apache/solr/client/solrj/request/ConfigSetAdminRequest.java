@@ -35,11 +35,7 @@ import org.apache.solr.common.util.ContentStream;
 import org.apache.solr.common.util.ContentStreamBase.FileStream;
 import org.apache.solr.common.util.NamedList;
 
-/**
- * This class is experimental and subject to change.
- *
- * @since solr 5.4
- */
+/** This class is experimental and subject to change. */
 public abstract class ConfigSetAdminRequest<
         Q extends ConfigSetAdminRequest<Q, R>, R extends ConfigSetAdminResponse>
     extends SolrRequest<R> {

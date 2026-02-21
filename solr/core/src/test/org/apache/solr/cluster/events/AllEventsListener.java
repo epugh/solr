@@ -25,7 +25,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import org.junit.Assert;
 
-/** */
 public class AllEventsListener implements ClusterEventListener {
   CountDownLatch eventLatch = new CountDownLatch(1);
   ClusterEvent.EventType expectedType;

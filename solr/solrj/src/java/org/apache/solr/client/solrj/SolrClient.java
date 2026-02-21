@@ -45,11 +45,7 @@ import org.apache.solr.common.params.SolrParams;
 import org.apache.solr.common.util.NamedList;
 import org.apache.solr.common.util.StrUtils;
 
-/**
- * Abstraction through which all communication with a Solr server may be routed
- *
- * @since 5.0, replaced {@code SolrServer}
- */
+/** Abstraction through which all communication with a Solr server may be routed */
 public abstract class SolrClient implements Serializable, Closeable {
 
   private static final long serialVersionUID = 1L;
@@ -64,7 +60,6 @@ public abstract class SolrClient implements Serializable, Closeable {
    * @return an {@link org.apache.solr.client.solrj.response.UpdateResponse} from the server
    * @throws IOException if there is a communication error with the server
    * @throws SolrServerException if there is an error on the server
-   * @since Solr 5.1
    */
   public UpdateResponse add(String collection, Collection<SolrInputDocument> docs)
       throws SolrServerException, IOException {
@@ -93,7 +88,6 @@ public abstract class SolrClient implements Serializable, Closeable {
    * @return an {@link org.apache.solr.client.solrj.response.UpdateResponse} from the server
    * @throws IOException if there is a communication error with the server
    * @throws SolrServerException if there is an error on the server
-   * @since Solr 5.1
    */
   public UpdateResponse add(
       String collection, Collection<SolrInputDocument> docs, int commitWithinMs)
@@ -112,7 +106,6 @@ public abstract class SolrClient implements Serializable, Closeable {
    * @return an {@link org.apache.solr.client.solrj.response.UpdateResponse} from the server
    * @throws IOException if there is a communication error with the server
    * @throws SolrServerException if there is an error on the server
-   * @since Solr 3.5
    */
   public UpdateResponse add(Collection<SolrInputDocument> docs, int commitWithinMs)
       throws SolrServerException, IOException {
@@ -158,7 +151,6 @@ public abstract class SolrClient implements Serializable, Closeable {
    * @return an {@link org.apache.solr.client.solrj.response.UpdateResponse} from the server
    * @throws IOException if there is a communication error with the server
    * @throws SolrServerException if there is an error on the server
-   * @since solr 5.1
    */
   public UpdateResponse add(String collection, SolrInputDocument doc, int commitWithinMs)
       throws SolrServerException, IOException {
@@ -176,7 +168,6 @@ public abstract class SolrClient implements Serializable, Closeable {
    * @return an {@link org.apache.solr.client.solrj.response.UpdateResponse} from the server
    * @throws IOException if there is a communication error with the server
    * @throws SolrServerException if there is an error on the server
-   * @since solr 3.5
    */
   public UpdateResponse add(SolrInputDocument doc, int commitWithinMs)
       throws SolrServerException, IOException {
@@ -326,7 +317,6 @@ public abstract class SolrClient implements Serializable, Closeable {
    * @throws IOException if there is a communication error with the server
    * @throws SolrServerException if there is an error on the server
    * @see DocumentObjectBinder
-   * @since solr 5.1
    */
   public UpdateResponse addBeans(String collection, Collection<?> beans, int commitWithinMs)
       throws SolrServerException, IOException {
@@ -349,7 +339,6 @@ public abstract class SolrClient implements Serializable, Closeable {
    * @throws IOException if there is a communication error with the server
    * @throws SolrServerException if there is an error on the server
    * @see DocumentObjectBinder
-   * @since solr 3.5
    */
   public UpdateResponse addBeans(Collection<?> beans, int commitWithinMs)
       throws SolrServerException, IOException {
@@ -726,7 +715,6 @@ public abstract class SolrClient implements Serializable, Closeable {
    *     from the server
    * @throws IOException If there is a low-level I/O error.
    * @throws SolrServerException if there is an error on the server
-   * @since 5.1
    */
   public UpdateResponse deleteById(String collection, String id, int commitWithinMs)
       throws SolrServerException, IOException {
@@ -746,7 +734,6 @@ public abstract class SolrClient implements Serializable, Closeable {
    *     from the server
    * @throws IOException If there is a low-level I/O error.
    * @throws SolrServerException if there is an error on the server
-   * @since 3.6
    */
   public UpdateResponse deleteById(String id, int commitWithinMs)
       throws SolrServerException, IOException {
@@ -792,7 +779,6 @@ public abstract class SolrClient implements Serializable, Closeable {
    *     from the server
    * @throws IOException If there is a low-level I/O error.
    * @throws SolrServerException if there is an error on the server
-   * @since 5.1
    */
   public UpdateResponse deleteById(String collection, List<String> ids, int commitWithinMs)
       throws SolrServerException, IOException {
@@ -817,7 +803,6 @@ public abstract class SolrClient implements Serializable, Closeable {
    *     from the server
    * @throws IOException If there is a low-level I/O error.
    * @throws SolrServerException if there is an error on the server
-   * @since 3.6
    */
   public UpdateResponse deleteById(List<String> ids, int commitWithinMs)
       throws SolrServerException, IOException {
@@ -862,7 +847,6 @@ public abstract class SolrClient implements Serializable, Closeable {
    *     from the server
    * @throws IOException If there is a low-level I/O error.
    * @throws SolrServerException if there is an error on the server
-   * @since 5.1
    */
   public UpdateResponse deleteByQuery(String collection, String query, int commitWithinMs)
       throws SolrServerException, IOException {
@@ -881,7 +865,6 @@ public abstract class SolrClient implements Serializable, Closeable {
    *     from the server
    * @throws IOException If there is a low-level I/O error.
    * @throws SolrServerException if there is an error on the server
-   * @since 3.6
    */
   public UpdateResponse deleteByQuery(String query, int commitWithinMs)
       throws SolrServerException, IOException {
@@ -987,7 +970,6 @@ public abstract class SolrClient implements Serializable, Closeable {
    *     from the server
    * @throws IOException If there is a low-level I/O error.
    * @throws SolrServerException if there is an error on the server
-   * @since solr 5.1
    */
   public QueryResponse queryAndStreamResponse(
       String collection, SolrParams params, StreamingResponseCallback callback)
@@ -1026,7 +1008,6 @@ public abstract class SolrClient implements Serializable, Closeable {
    *     from the server
    * @throws IOException If there is a low-level I/O error.
    * @throws SolrServerException if there is an error on the server
-   * @since solr 4.0
    */
   public QueryResponse queryAndStreamResponse(SolrParams params, StreamingResponseCallback callback)
       throws SolrServerException, IOException {

@@ -21,7 +21,6 @@ import org.apache.solr.common.SolrException.ErrorCode;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/** */
 public class DistanceFunctionTest extends SolrTestCaseJ4 {
   @BeforeClass
   public static void beforeClass() throws Exception {

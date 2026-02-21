@@ -39,7 +39,6 @@ import org.apache.solr.update.processor.UpdateRequestProcessorChain;
 import org.apache.solr.util.RTimer;
 import org.junit.BeforeClass;
 
-/** */
 public class TestSearchPerf extends SolrTestCaseJ4 {
 
   private static final int ITERATIONS = 500;

@@ -111,7 +111,6 @@ public class DocumentBuilder {
    * needs to be able to fill up a SolrDocument from a lucene document - this is one place that may
    * happen. It may also be moved to an independent function
    *
-   * @since solr 1.3
    * @param doc SolrInputDocument from which the document has to be built
    * @param schema Schema instance
    * @param forInPlaceUpdate Whether the output document would be used for an in-place update or

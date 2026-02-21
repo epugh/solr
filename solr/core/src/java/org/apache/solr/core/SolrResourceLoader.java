@@ -78,9 +78,6 @@ import org.apache.solr.util.plugin.SolrCoreAware;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @since solr 1.3
- */
 public class SolrResourceLoader
     implements ResourceLoader, Closeable, SolrClassLoader, SolrCoreAware {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

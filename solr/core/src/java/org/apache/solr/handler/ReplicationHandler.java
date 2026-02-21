@@ -146,8 +146,6 @@ import org.slf4j.MDC;
  *   <li>Enable/Disable polling the leader for new versions (command=enablepoll or
  *       command=disablepoll)
  * </ol>
- *
- * @since solr 1.4
  */
 public class ReplicationHandler extends RequestHandlerBase
     implements SolrCoreAware, APIConfigProvider<ReplicationHandlerConfig> {

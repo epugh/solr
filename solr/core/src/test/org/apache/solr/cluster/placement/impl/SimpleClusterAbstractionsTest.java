@@ -33,7 +33,6 @@ import org.apache.solr.common.cloud.Slice;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/** */
 public class SimpleClusterAbstractionsTest extends SolrCloudTestCase {
 
   private static final String COLLECTION =

@@ -39,11 +39,7 @@ import org.apache.solr.client.solrj.SolrRequest;
 import org.apache.solr.client.solrj.request.RequestWriter;
 import org.apache.solr.common.SolrException;
 
-/**
- * Three concrete implementations for ContentStream - one for File/URL/String
- *
- * @since solr 1.2
- */
+/** Three concrete implementations for ContentStream - one for File/URL/String */
 public abstract class ContentStreamBase implements ContentStream {
 
   public static final String DEFAULT_CHARSET = StandardCharsets.UTF_8.name();

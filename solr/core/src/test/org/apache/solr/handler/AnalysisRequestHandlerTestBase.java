@@ -20,11 +20,7 @@ import java.util.Arrays;
 import org.apache.solr.SolrTestCaseJ4;
 import org.apache.solr.common.util.NamedList;
 
-/**
- * A base class for all analysis request handler tests.
- *
- * @since solr 1.4
- */
+/** A base class for all analysis request handler tests. */
 public abstract class AnalysisRequestHandlerTestBase extends SolrTestCaseJ4 {
 
   protected void assertToken(NamedList<?> token, TokenInfo info) {

@@ -41,11 +41,7 @@ import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.util.SuppressForbidden;
 
-/**
- * Maps objects to and from Solr documents.
- *
- * @since solr 1.3
- */
+/** Maps objects to and from Solr documents. */
 public class DocumentObjectBinder {
 
   /**

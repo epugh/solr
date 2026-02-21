@@ -19,11 +19,7 @@ package org.apache.solr.client.solrj.embedded;
 import org.apache.solr.client.solrj.SolrExampleTests;
 import org.junit.BeforeClass;
 
-/**
- * This runs SolrServer test using
- *
- * @since solr 1.3
- */
+/** This runs SolrServer test using */
 public class SolrExampleEmbeddedTest extends SolrExampleTests {
 
   @BeforeClass

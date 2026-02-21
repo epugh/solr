@@ -37,8 +37,6 @@ import org.apache.solr.util.LocaleUtils;
  *
  * <p>See {@link Locale} for a description of acceptable language, country (optional) and variant
  * (optional) values, joined with underscore(s).
- *
- * @since 4.4.0
  */
 public abstract class ParseNumericFieldUpdateProcessorFactory
     extends FieldMutatingUpdateProcessorFactory {

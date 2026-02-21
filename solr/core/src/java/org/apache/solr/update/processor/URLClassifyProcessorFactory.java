@@ -21,11 +21,7 @@ import org.apache.solr.common.util.NamedList;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.response.SolrQueryResponse;
 
-/**
- * Creates URLClassifyProcessor
- *
- * @since 3.6.0
- */
+/** Creates URLClassifyProcessor */
 public class URLClassifyProcessorFactory extends UpdateRequestProcessorFactory {
 
   private SolrParams params;

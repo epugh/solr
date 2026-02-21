@@ -49,7 +49,6 @@ import org.slf4j.LoggerFactory;
  * TokenFilterFactory and ManagedResource implementation for doing CRUD on synonyms using the REST
  * API.
  *
- * @since 7.0.0
  * @lucene.spi {@value #NAME}
  */
 public class ManagedSynonymGraphFilterFactory extends BaseManagedTokenFilterFactory {

@@ -133,8 +133,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Provides functionality of downloading changed index files as well as config files and a timer for
  * scheduling fetches from the leader.
- *
- * @since solr 1.4
  */
 public class IndexFetcher {
   private static final int _100K = 100000;

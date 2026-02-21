@@ -25,11 +25,7 @@ import org.apache.lucene.util.BitSetIterator;
 import org.apache.lucene.util.FixedBitSet;
 import org.apache.lucene.util.RamUsageEstimator;
 
-/**
- * A {@link FixedBitSet} based implementation of a {@link DocSet}. Good for medium/large sets.
- *
- * @since solr 0.9
- */
+/** A {@link FixedBitSet} based implementation of a {@link DocSet}. Good for medium/large sets. */
 public class BitDocSet extends DocSet {
   // for the array object inside the FixedBitSet. long[] array won't change alignment, so no need to
   // calculate it.

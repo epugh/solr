@@ -45,8 +45,6 @@ import java.util.regex.Pattern;
  *   <li>?#? for numeric parameters in integer or decimal format (no exponents)
  *   <li>?(n)? for expressions producing n sub-expressions (minimum n=1)
  * </ul>
- *
- * @since 8.0.0
  */
 public class InjectionDefense {
 

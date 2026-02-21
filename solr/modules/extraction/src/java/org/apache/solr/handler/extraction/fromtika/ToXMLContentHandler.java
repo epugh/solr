@@ -33,8 +33,6 @@ import org.xml.sax.SAXException;
  * SAX event handler that serializes the XML document to a character stream. The incoming SAX events
  * are expected to be well-formed (properly nested, etc.) and to explicitly include namespace
  * declaration attributes and corresponding namespace prefixes in element and attribute names.
- *
- * @since Apache Tika 0.10
  */
 public class ToXMLContentHandler extends ToTextContentHandler {
 

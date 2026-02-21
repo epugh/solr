@@ -22,7 +22,6 @@ import org.apache.lucene.index.IndexDeletionPolicy;
 import org.apache.solr.common.util.NamedList;
 import org.apache.solr.util.plugin.NamedListInitializedPlugin;
 
-/** */
 public class FakeDeletionPolicy extends IndexDeletionPolicy implements NamedListInitializedPlugin {
 
   private String var1;

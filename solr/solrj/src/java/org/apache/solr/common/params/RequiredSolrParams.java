@@ -26,8 +26,6 @@ import org.apache.solr.common.SolrException;
  * <p>In short, any value you for from a <code>RequiredSolrParams</code> will return a valid
  * non-null value or throw a 400 exception. (If you pass in <code>null</code> as the default value,
  * you can get a null return value)
- *
- * @since solr 1.2
  */
 public class RequiredSolrParams extends SolrParams {
   protected final SolrParams params;

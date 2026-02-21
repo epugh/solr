@@ -36,8 +36,6 @@ import org.slf4j.LoggerFactory;
 /**
  * <code>UpdateHandler</code> handles requests to change the index (adds, deletes, commits,
  * optimizes, etc).
- *
- * @since solr 0.9
  */
 public abstract class UpdateHandler implements SolrInfoBean {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

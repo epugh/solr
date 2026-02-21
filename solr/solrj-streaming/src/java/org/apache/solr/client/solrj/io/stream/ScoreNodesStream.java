@@ -51,8 +51,6 @@ import org.apache.solr.common.util.NamedList;
  *
  * <p>You can use a different value for termFreq by providing the termFreq param
  * scoreNodes(gatherNodes(...), termFreq="min(weight)")
- *
- * @since 6.2.0
  */
 public class ScoreNodesStream extends TupleStream implements Expressible {
 

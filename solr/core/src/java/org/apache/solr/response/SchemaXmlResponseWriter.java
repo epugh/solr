@@ -21,7 +21,6 @@ import java.io.Writer;
 import org.apache.solr.client.solrj.response.XMLResponseParser;
 import org.apache.solr.request.SolrQueryRequest;
 
-/** */
 public class SchemaXmlResponseWriter implements TextQueryResponseWriter {
   @Override
   public void write(Writer writer, SolrQueryRequest req, SolrQueryResponse rsp) throws IOException {

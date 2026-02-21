@@ -45,11 +45,7 @@ import org.apache.solr.search.stats.StatsCache;
 import org.apache.solr.util.SolrPluginUtils;
 import org.apache.solr.util.SolrResponseUtil;
 
-/**
- * Adds debugging information to a request.
- *
- * @since solr 1.3
- */
+/** Adds debugging information to a request. */
 public class DebugComponent extends SearchComponent {
   public static final String COMPONENT_NAME = "debug";
 

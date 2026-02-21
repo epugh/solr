@@ -52,9 +52,6 @@ import org.apache.solr.common.params.SolrParams;
 import org.apache.solr.common.util.CollectionUtil;
 import org.apache.solr.common.util.NamedList;
 
-/**
- * @since 6.6.0
- */
 public class StatsStream extends TupleStream implements Expressible, ParallelMetricsRollup {
 
   private static final long serialVersionUID = 1;

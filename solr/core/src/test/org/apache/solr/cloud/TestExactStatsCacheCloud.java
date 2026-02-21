@@ -19,7 +19,6 @@ package org.apache.solr.cloud;
 import org.apache.solr.search.stats.ExactStatsCache;
 import org.apache.solr.util.LogLevel;
 
-/** */
 @LogLevel("org.apache.solr.search=DEBUG")
 public class TestExactStatsCacheCloud extends TestBaseStatsCacheCloud {
   @Override

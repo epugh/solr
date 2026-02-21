@@ -76,7 +76,6 @@ import org.apache.solr.uninverting.UninvertingReader.Type;
  * @see Collator
  * @see Locale
  * @see RuleBasedCollator
- * @since solr 4.0
  */
 public class CollationField extends FieldType {
   private Analyzer analyzer;

@@ -49,7 +49,6 @@ import org.apache.solr.common.util.Utils;
  * @see <a
  *     href="https://solr.apache.org/guide/solr/latest/configuration-guide/managed-resources.html">Solr
  *     managed resources</a>
- * @since solr 5.3
  */
 public class SchemaRequest extends AbstractSchemaRequest<SchemaResponse> {
 

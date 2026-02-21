@@ -42,7 +42,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/** */
 public class DocumentBuilderTest extends SolrTestCaseJ4 {
   static final int save_min_len = DocumentBuilder.MIN_LENGTH_TO_MOVE_LAST;
 

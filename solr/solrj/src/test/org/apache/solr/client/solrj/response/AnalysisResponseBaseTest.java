@@ -22,11 +22,7 @@ import org.apache.solr.SolrTestCase;
 import org.apache.solr.common.util.NamedList;
 import org.junit.Test;
 
-/**
- * A Test case for the {@link AnalysisResponseBase} class.
- *
- * @since solr 1.4
- */
+/** A Test case for the {@link AnalysisResponseBase} class. */
 public class AnalysisResponseBaseTest extends SolrTestCase {
 
   /**

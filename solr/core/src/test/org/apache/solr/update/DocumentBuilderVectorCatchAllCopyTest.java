@@ -33,7 +33,6 @@ import org.apache.solr.core.SolrCore;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/** */
 public class DocumentBuilderVectorCatchAllCopyTest extends SolrTestCaseJ4 {
   static final int save_min_len = DocumentBuilder.MIN_LENGTH_TO_MOVE_LAST;
 

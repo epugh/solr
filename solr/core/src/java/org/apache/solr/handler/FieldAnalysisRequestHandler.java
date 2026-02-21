@@ -90,8 +90,6 @@ import org.apache.solr.security.AuthorizationContext;
  * search field's analyzer is used.
  *
  * <p>Note that if one of analysis.value or analysis.query or q must be specified
- *
- * @since solr 1.4
  */
 public class FieldAnalysisRequestHandler extends AnalysisRequestHandlerBase {
 

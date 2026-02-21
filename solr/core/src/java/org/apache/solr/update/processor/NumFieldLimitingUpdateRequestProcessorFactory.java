@@ -55,8 +55,6 @@ import org.slf4j.LoggerFactory;
  *       about the limit being exceeded but doesn't abort update requests. Defaults to <code>false
  *       </code> if not specified
  * </ul>
- *
- * @since 9.7.0
  */
 public class NumFieldLimitingUpdateRequestProcessorFactory extends UpdateRequestProcessorFactory {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

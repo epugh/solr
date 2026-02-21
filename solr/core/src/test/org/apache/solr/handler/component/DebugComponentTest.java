@@ -28,7 +28,6 @@ import org.apache.solr.response.SolrQueryResponse;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/** */
 public class DebugComponentTest extends SolrTestCaseJ4 {
 
   @BeforeClass

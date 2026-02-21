@@ -55,7 +55,6 @@ import org.apache.solr.uninverting.UninvertingReader.Type;
  *
  * @see RankQParserPlugin
  * @lucene.experimental
- * @since 8.6
  */
 public class RankField extends FieldType {
 

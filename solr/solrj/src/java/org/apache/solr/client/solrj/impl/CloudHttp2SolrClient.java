@@ -24,7 +24,6 @@ import org.apache.solr.common.util.IOUtils;
  * This {@link CloudSolrClient} is a base implementation using a {@link HttpSolrClientBase}. The '2'
  * in the name has no differentiating significance anymore.
  *
- * @since solr 8.0
  * @lucene.internal
  */
 @SuppressWarnings("serial")

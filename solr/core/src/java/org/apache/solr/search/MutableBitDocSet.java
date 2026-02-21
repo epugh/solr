@@ -22,8 +22,6 @@ import org.apache.lucene.util.FixedBitSet;
  * A {@link BitDocSet} based implementation that mutates the underlying bits for andNot and
  * intersection. This allows for computing the combinations of sets without duplicating the
  * underlying array. This MutableBitDocSet should not be cached because it can be modified.
- *
- * @since solr 9.2
  */
 class MutableBitDocSet extends BitDocSet {
   private MutableBitDocSet(FixedBitSet bits, int size) {

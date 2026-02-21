@@ -19,11 +19,7 @@ package org.apache.solr.response.transform;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.search.DocIterationInfo;
 
-/**
- * Simple Augmenter that adds the score
- *
- * @since solr 4.0
- */
+/** Simple Augmenter that adds the score */
 public class ScoreAugmenter extends DocTransformer {
   final String name;
 

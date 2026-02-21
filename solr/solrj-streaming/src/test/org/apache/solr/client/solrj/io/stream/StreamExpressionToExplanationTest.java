@@ -30,7 +30,6 @@ import org.apache.solr.client.solrj.io.stream.metrics.MinMetric;
 import org.apache.solr.client.solrj.io.stream.metrics.SumMetric;
 import org.junit.Test;
 
-/** */
 public class StreamExpressionToExplanationTest extends SolrTestCase {
 
   private StreamFactory factory;

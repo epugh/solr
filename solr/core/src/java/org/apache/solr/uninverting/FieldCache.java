@@ -38,7 +38,6 @@ import org.apache.solr.legacy.LegacyNumericUtils;
  *
  * <p>Created: May 19, 2004 11:13:14 AM
  *
- * @since lucene 1.4
  * @lucene.internal
  */
 public interface FieldCache {

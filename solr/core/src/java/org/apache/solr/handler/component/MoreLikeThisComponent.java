@@ -55,11 +55,7 @@ import org.apache.solr.search.SolrReturnFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * TODO!
- *
- * @since solr 1.3
- */
+/** TODO! */
 public class MoreLikeThisComponent extends SearchComponent {
   public static final String COMPONENT_NAME = "mlt";
   public static final String DIST_DOC_ID = "mlt.dist.id";

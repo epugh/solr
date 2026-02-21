@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import org.apache.solr.SolrTestCase;
 
-/** */
 public class SolrDocumentTest extends SolrTestCase {
   @SuppressWarnings({"unchecked"})
   public void testSimple() {

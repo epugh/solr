@@ -40,8 +40,6 @@ import org.slf4j.LoggerFactory;
  * Gives system administrators a way to ignore very large update from clients. When an update goes
  * through processors its size can change therefore this processor should be the last processor of
  * the chain.
- *
- * @since 7.4.0
  */
 public class IgnoreLargeDocumentProcessorFactory extends UpdateRequestProcessorFactory {
   public static final String LIMIT_SIZE_PARAM = "limit";

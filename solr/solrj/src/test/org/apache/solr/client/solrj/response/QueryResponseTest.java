@@ -34,11 +34,7 @@ import org.apache.solr.common.util.SimpleOrderedMap;
 import org.apache.solr.core.SolrResourceLoader;
 import org.junit.Test;
 
-/**
- * A few tests for parsing Solr response in QueryResponse
- *
- * @since solr 1.3
- */
+/** A few tests for parsing Solr response in QueryResponse */
 @Limit(bytes = 20000)
 public class QueryResponseTest extends SolrTestCase {
   @Test

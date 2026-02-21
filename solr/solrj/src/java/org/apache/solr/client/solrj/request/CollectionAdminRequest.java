@@ -59,11 +59,7 @@ import org.apache.solr.common.params.SolrParams;
 import org.apache.solr.common.util.NamedList;
 import org.apache.solr.common.util.StrUtils;
 
-/**
- * This class is experimental and subject to change.
- *
- * @since solr 4.5
- */
+/** This class is experimental and subject to change. */
 public abstract class CollectionAdminRequest<T extends CollectionAdminResponse>
     extends SolrRequest<T> implements MapWriter {
 

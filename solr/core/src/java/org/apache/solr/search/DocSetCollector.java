@@ -24,7 +24,6 @@ import org.apache.lucene.search.ScoreMode;
 import org.apache.lucene.search.SimpleCollector;
 import org.apache.lucene.util.FixedBitSet;
 
-/** */
 public class DocSetCollector extends SimpleCollector {
   int pos = 0;
   FixedBitSet bits;

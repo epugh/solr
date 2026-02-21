@@ -27,8 +27,6 @@ import org.apache.solr.util.plugin.SolrCoreAware;
  *
  * <p>If the factory needs access to {@link SolrCore} in initialization, it could implement {@link
  * SolrCoreAware}
- *
- * @since solr 1.3
  */
 public abstract class UpdateRequestProcessorFactory implements NamedListInitializedPlugin {
 

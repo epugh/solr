@@ -27,8 +27,6 @@ import org.apache.solr.client.solrj.io.stream.expr.StreamFactory;
 /**
  * Joins leftStream with rightStream based on an Equalitor. Both streams must be sorted by the
  * fields being joined on. Resulting stream is sorted by the equalitor.
- *
- * @since 9.10.0
  */
 public class FullOuterJoinStream extends BiJoinStream {
 

@@ -34,7 +34,6 @@ import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/** */
 public class TestFaceting extends SolrTestCaseJ4 {
   @BeforeClass
   public static void beforeClass() throws Exception {

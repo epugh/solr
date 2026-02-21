@@ -47,7 +47,6 @@ import org.apache.lucene.util.BytesRefBuilder;
  *
  * @lucene.internal
  * @deprecated Please use {@link org.apache.lucene.index.PointValues} instead.
- * @since 2.9, API changed non backwards-compliant in 4.0
  */
 @Deprecated
 public final class LegacyNumericUtils {
@@ -323,7 +322,6 @@ public final class LegacyNumericUtils {
    * Callback for {@link #splitLongRange}. You need to overwrite only one of the methods.
    *
    * @lucene.internal
-   * @since 2.9, API changed non backwards-compliant in 4.0
    */
   public abstract static class LongRangeBuilder {
 
@@ -351,7 +349,6 @@ public final class LegacyNumericUtils {
    * Callback for {@link #splitIntRange}. You need to overwrite only one of the methods.
    *
    * @lucene.internal
-   * @since 2.9, API changed non backwards-compliant in 4.0
    */
   public abstract static class IntRangeBuilder {
 

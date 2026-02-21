@@ -24,8 +24,6 @@ import java.util.Map;
 /**
  * Implementations of SolrSpellChecker must return suggestions as SpellResult instance. This is
  * converted into the required NamedList format in SpellCheckComponent.
- *
- * @since solr 1.3
  */
 public class SpellingResult {
   private Collection<Token> tokens;

@@ -19,11 +19,7 @@ package org.apache.solr.response.transform;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.search.DocIterationInfo;
 
-/**
- * Return a field with a name that is different that what is indexed
- *
- * @since solr 4.0
- */
+/** Return a field with a name that is different that what is indexed */
 public class RenameFieldTransformer extends DocTransformer {
   final String from;
   final String to;

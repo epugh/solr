@@ -25,8 +25,6 @@ import org.apache.solr.common.util.NamedList;
  * A response that is returned by processing the {@link
  * org.apache.solr.client.solrj.request.FieldAnalysisRequest}. Holds a map of {@link Analysis}
  * objects per field name as well as a map of {@link Analysis} objects per field type.
- *
- * @since solr 1.4
  */
 public class FieldAnalysisResponse extends AnalysisResponseBase {
 

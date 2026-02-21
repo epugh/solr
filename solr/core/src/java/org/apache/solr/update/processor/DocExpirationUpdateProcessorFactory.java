@@ -136,8 +136,6 @@ import org.slf4j.LoggerFactory;
  *   &lt;null name="ttlParamName"/&gt;
  *   &lt;str name="expirationFieldName"&gt;_expire_at_&lt;/str&gt;
  * &lt;/processor&gt;</pre>
- *
- * @since 4.8.0
  */
 public final class DocExpirationUpdateProcessorFactory extends UpdateRequestProcessorFactory
     implements SolrCoreAware {

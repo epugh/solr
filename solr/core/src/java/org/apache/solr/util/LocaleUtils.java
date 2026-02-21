@@ -19,7 +19,6 @@ package org.apache.solr.util;
 import java.util.Locale;
 import org.apache.solr.common.util.SuppressForbidden;
 
-/** */
 public class LocaleUtils {
 
   private LocaleUtils() {}

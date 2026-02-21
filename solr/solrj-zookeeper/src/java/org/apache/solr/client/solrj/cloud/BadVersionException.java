@@ -16,7 +16,6 @@
  */
 package org.apache.solr.client.solrj.cloud;
 
-/** */
 public class BadVersionException extends Exception {
 
   private final String path;

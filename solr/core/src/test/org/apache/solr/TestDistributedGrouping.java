@@ -40,8 +40,6 @@ import org.junit.Test;
 /**
  * TODO? perhaps use: http://docs.codehaus.org/display/JETTY/ServletTester rather then open a real
  * connection?
- *
- * @since solr 4.0
  */
 @SuppressPointFields(bugUrl = "https://issues.apache.org/jira/browse/SOLR-10844")
 public class TestDistributedGrouping extends BaseDistributedSearchTestCase {

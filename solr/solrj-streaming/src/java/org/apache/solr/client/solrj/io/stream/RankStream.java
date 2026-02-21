@@ -39,11 +39,7 @@ import org.apache.solr.client.solrj.io.stream.expr.StreamExpressionNamedParamete
 import org.apache.solr.client.solrj.io.stream.expr.StreamExpressionValue;
 import org.apache.solr.client.solrj.io.stream.expr.StreamFactory;
 
-/**
- * Iterates over a TupleStream and Ranks the topN tuples based on a Comparator.
- *
- * @since 5.1.0
- */
+/** Iterates over a TupleStream and Ranks the topN tuples based on a Comparator. */
 public class RankStream extends TupleStream implements Expressible {
 
   private static final long serialVersionUID = 1;

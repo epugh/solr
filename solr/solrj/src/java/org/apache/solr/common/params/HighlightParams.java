@@ -16,9 +16,6 @@
  */
 package org.apache.solr.common.params;
 
-/**
- * @since solr 1.3
- */
 public interface HighlightParams {
   // primary
   public static final String HIGHLIGHT = "hl";

@@ -33,11 +33,7 @@ import org.apache.solr.client.solrj.io.stream.expr.StreamExpressionNamedParamete
 import org.apache.solr.client.solrj.io.stream.expr.StreamExpressionValue;
 import org.apache.solr.client.solrj.io.stream.expr.StreamFactory;
 
-/**
- * The SortStream emits a stream of Tuples sorted by a Comparator.
- *
- * @since 6.1.0
- */
+/** The SortStream emits a stream of Tuples sorted by a Comparator. */
 public class SortStream extends TupleStream implements Expressible {
 
   private static final long serialVersionUID = 1;

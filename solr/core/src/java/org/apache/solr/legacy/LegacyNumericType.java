@@ -19,7 +19,6 @@ package org.apache.solr.legacy;
 /**
  * Data type of the numeric value
  *
- * @since 3.2
  * @deprecated Please switch to {@link org.apache.lucene.index.PointValues} instead
  */
 @Deprecated

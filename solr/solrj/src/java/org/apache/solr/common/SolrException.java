@@ -26,7 +26,6 @@ import org.apache.solr.common.util.SimpleOrderedMap;
 import org.slf4j.Logger;
 import org.slf4j.MDC;
 
-/** */
 public class SolrException extends RuntimeException {
 
   private final Map<String, String> mdcContext;
@@ -34,8 +33,6 @@ public class SolrException extends RuntimeException {
   /**
    * This list of valid HTTP Status error codes that Solr may return when there is a "Server Side"
    * error.
-   *
-   * @since solr 1.2
    */
   public enum ErrorCode {
     BAD_REQUEST(400),

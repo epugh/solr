@@ -47,11 +47,7 @@ import org.apache.solr.search.grouping.GroupingSpecification;
 import org.apache.solr.search.grouping.distributed.command.QueryCommandResult;
 import org.apache.solr.util.RTimer;
 
-/**
- * This class is experimental and will be changing in the future.
- *
- * @since solr 1.3
- */
+/** This class is experimental and will be changing in the future. */
 public class ResponseBuilder {
   public SolrQueryRequest req;
   public SolrQueryResponse rsp;

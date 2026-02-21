@@ -41,9 +41,6 @@ import org.apache.solr.common.util.XMLErrorLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @since solr 1.3
- */
 public class XMLResponseParser extends ResponseParser {
   public static final String XML_CONTENT_TYPE = "application/xml; charset=UTF-8";
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

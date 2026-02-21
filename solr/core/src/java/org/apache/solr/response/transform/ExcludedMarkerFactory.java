@@ -24,9 +24,6 @@ import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.schema.FieldType;
 import org.apache.solr.schema.SchemaField;
 
-/**
- * @since solr 4.0
- */
 public class ExcludedMarkerFactory extends TransformerFactory {
 
   @Override

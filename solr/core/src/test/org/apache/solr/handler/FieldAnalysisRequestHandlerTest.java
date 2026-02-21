@@ -49,11 +49,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/**
- * A test for {@link FieldAnalysisRequestHandler}.
- *
- * @since solr 1.4
- */
+/** A test for {@link FieldAnalysisRequestHandler}. */
 public class FieldAnalysisRequestHandlerTest extends AnalysisRequestHandlerTestBase {
 
   private FieldAnalysisRequestHandler handler;

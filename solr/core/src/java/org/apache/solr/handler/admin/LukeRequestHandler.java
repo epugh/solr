@@ -95,7 +95,6 @@ import org.slf4j.LoggerFactory;
  * module: https://github.com/apache/lucene/tree/main/lucene/luke
  *
  * @see SegmentsInfoRequestHandler
- * @since solr 1.2
  */
 public class LukeRequestHandler extends RequestHandlerBase {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

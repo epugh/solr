@@ -44,11 +44,7 @@ import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Test for LBHttpSolrClient
- *
- * @since solr 1.4
- */
+/** Test for LBHttpSolrClient */
 public class TestLBHttpSolrClient extends SolrTestCaseJ4 {
 
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

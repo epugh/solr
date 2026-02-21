@@ -34,7 +34,6 @@ import org.apache.solr.schema.SchemaField;
  *
  * @see RankField
  * @lucene.experimental
- * @since 8.6
  */
 public class RankQParserPlugin extends QParserPlugin {
 

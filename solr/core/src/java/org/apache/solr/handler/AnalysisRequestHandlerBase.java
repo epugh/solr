@@ -56,11 +56,7 @@ import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.response.SolrQueryResponse;
 import org.apache.solr.schema.FieldType;
 
-/**
- * A base class for all analysis request handlers.
- *
- * @since solr 1.4
- */
+/** A base class for all analysis request handlers. */
 public abstract class AnalysisRequestHandlerBase extends RequestHandlerBase {
 
   public static final Set<BytesRef> EMPTY_BYTES_SET = Collections.emptySet();

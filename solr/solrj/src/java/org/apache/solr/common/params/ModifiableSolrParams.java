@@ -24,8 +24,6 @@ import java.util.Set;
 /**
  * This class is similar to {@link MultiMapSolrParams} except you can edit the parameters after it
  * is initialized. It has helper functions to set/add integer and boolean param values.
- *
- * @since solr 1.3
  */
 public class ModifiableSolrParams extends SolrParams {
   private Map<String, String[]> vals;

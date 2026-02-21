@@ -33,7 +33,6 @@ import org.apache.solr.update.UpdateHandler;
  * explicitly executing the update commands in an alternative custom <code>
  * UpdateRequestProcessorFactory</code>
  *
- * @since solr 1.3
  * @see DistributingUpdateProcessorFactory
  */
 public class RunUpdateProcessorFactory extends UpdateRequestProcessorFactory {
@@ -105,9 +104,7 @@ public class RunUpdateProcessorFactory extends UpdateRequestProcessorFactory {
       }
     }
 
-    /**
-     * @since Solr 1.4
-     */
+    /** */
     @Override
     public void processRollback(RollbackUpdateCommand cmd) throws IOException {
       updateHandler.rollback(cmd);

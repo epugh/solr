@@ -38,11 +38,7 @@ import org.apache.solr.common.params.CommonParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Sends tuples emitted by a wrapped {@link TupleStream} as updates to a SolrCloud collection.
- *
- * @since 6.0.0
- */
+/** Sends tuples emitted by a wrapped {@link TupleStream} as updates to a SolrCloud collection. */
 public class UpdateStream extends TupleStream implements Expressible {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

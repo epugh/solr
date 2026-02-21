@@ -142,9 +142,7 @@ public class XMLLoader extends ContentStreamLoader {
     return cs.getStream();
   }
 
-  /**
-   * @since solr 1.2
-   */
+  /** */
   protected void processUpdate(
       SolrQueryRequest req, UpdateRequestProcessor processor, XMLStreamReader parser)
       throws XMLStreamException, IOException, FactoryConfigurationError {
@@ -229,9 +227,7 @@ public class XMLLoader extends ContentStreamLoader {
     }
   }
 
-  /**
-   * @since solr 1.3
-   */
+  /** */
   void processDelete(SolrQueryRequest req, UpdateRequestProcessor processor, XMLStreamReader parser)
       throws XMLStreamException, IOException {
     // Parse the command
@@ -310,11 +306,7 @@ public class XMLLoader extends ContentStreamLoader {
     }
   }
 
-  /**
-   * Given the input stream, read a document
-   *
-   * @since solr 1.3
-   */
+  /** Given the input stream, read a document */
   public SolrInputDocument readDoc(XMLStreamReader parser) throws XMLStreamException {
     return readDoc(parser, false);
   }

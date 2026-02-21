@@ -26,7 +26,6 @@ import org.apache.solr.schema.SchemaField;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/** */
 public class SortSpecParsingTest extends SolrTestCaseJ4 {
   @BeforeClass
   public static void beforeClass() throws Exception {

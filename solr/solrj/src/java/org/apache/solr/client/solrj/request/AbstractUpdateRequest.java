@@ -97,9 +97,7 @@ public abstract class AbstractUpdateRequest extends CollectionRequiringSolrReque
     return this;
   }
 
-  /**
-   * @since Solr 1.4
-   */
+  /** */
   public AbstractUpdateRequest rollback() {
     params.set(UpdateParams.ROLLBACK, "true");
     return this;

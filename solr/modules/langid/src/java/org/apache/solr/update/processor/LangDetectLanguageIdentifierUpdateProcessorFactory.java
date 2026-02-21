@@ -51,8 +51,6 @@ import org.apache.solr.util.plugin.SolrCoreAware;
  *
  * See <a
  * href="https://solr.apache.org/guide/solr/latest/indexing-guide/language-detection.html">https://solr.apache.org/guide/solr/latest/indexing-guide/language-detection.html</a>
- *
- * @since 3.5
  */
 public class LangDetectLanguageIdentifierUpdateProcessorFactory
     extends UpdateRequestProcessorFactory implements SolrCoreAware, LangIdParams {

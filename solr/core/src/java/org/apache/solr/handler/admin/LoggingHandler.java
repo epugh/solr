@@ -39,11 +39,7 @@ import org.apache.solr.security.AuthorizationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * A request handler to show which loggers are registered and allows you to set them
- *
- * @since 4.0
- */
+/** A request handler to show which loggers are registered and allows you to set them */
 public class LoggingHandler extends RequestHandlerBase {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

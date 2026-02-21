@@ -38,9 +38,6 @@ import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.response.SolrQueryResponse;
 import org.apache.solr.security.AuthorizationContext;
 
-/**
- * @since solr 1.2
- */
 public class ThreadDumpHandler extends RequestHandlerBase {
 
   @Override

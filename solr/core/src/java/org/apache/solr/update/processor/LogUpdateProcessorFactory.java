@@ -39,8 +39,6 @@ import org.slf4j.LoggerFactory;
  * prior to the next stage in the chain.
  *
  * <p>If the Log level is not &gt;= INFO the processor will not be created or added to the chain.
- *
- * @since solr 1.3
  */
 public class LogUpdateProcessorFactory extends UpdateRequestProcessorFactory
     implements UpdateRequestProcessorFactory.RunAlways {
@@ -176,9 +174,7 @@ public class LogUpdateProcessorFactory extends UpdateRequestProcessorFactory
       toLog.add(msg, "");
     }
 
-    /**
-     * @since Solr 1.4
-     */
+    /** */
     @Override
     public void processRollback(RollbackUpdateCommand cmd) throws IOException {
       if (logDebug) {

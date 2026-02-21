@@ -93,7 +93,6 @@ import org.apache.solr.common.params.ModifiableSolrParams;
  * httpd with mod_proxy_balancer as a load balancer. See <a
  * href="http://en.wikipedia.org/wiki/Load_balancing_(computing)">Load balancing on Wikipedia</a>
  *
- * @since solr 1.4
  * @deprecated Not supporting Apache HttpClient based implementations anymore
  */
 @Deprecated(since = "9.0")

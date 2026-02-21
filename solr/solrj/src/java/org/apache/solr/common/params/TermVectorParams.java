@@ -16,7 +16,6 @@
  */
 package org.apache.solr.common.params;
 
-/** */
 public interface TermVectorParams {
 
   public static final String TV_PREFIX = "tv.";

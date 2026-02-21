@@ -22,7 +22,6 @@ import java.io.Reader;
 import org.apache.solr.client.solrj.request.RequestWriter.ContentWriter;
 
 /**
- * @since solr 1.2
  * @deprecated Use {@link ContentWriter} instead.
  */
 @Deprecated

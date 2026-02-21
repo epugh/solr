@@ -46,7 +46,6 @@ import org.apache.solr.common.util.NamedList;
  *     it's a {@link SolrResponse}.
  * @see org.apache.solr.client.solrj.request.QueryRequest
  * @see org.apache.solr.client.solrj.request.UpdateRequest
- * @since solr 1.3
  */
 public abstract class SolrRequest<T> implements Serializable {
   // This user principal is typically used by Auth plugins during distributed/sharded search

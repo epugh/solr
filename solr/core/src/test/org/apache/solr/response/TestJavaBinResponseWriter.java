@@ -35,11 +35,7 @@ import org.apache.solr.response.JavaBinResponseWriter.Resolver;
 import org.apache.solr.search.SolrReturnFields;
 import org.junit.BeforeClass;
 
-/**
- * Test for JavaBinResponseWriter
- *
- * @since solr 1.4
- */
+/** Test for JavaBinResponseWriter */
 public class TestJavaBinResponseWriter extends SolrTestCaseJ4 {
 
   @BeforeClass

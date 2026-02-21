@@ -67,8 +67,6 @@ import org.apache.solr.util.plugin.SolrCoreAware;
  * tested). Users of this update processor are encouraged to either disable it, or pause updates,
  * while any shard splitting is in progress (see <a
  * href="https://issues.apache.org/jira/browse/SOLR-8881">SOLR-8881</a> for more details.)
- *
- * @since 6.1.0
  */
 public class TolerantUpdateProcessorFactory extends UpdateRequestProcessorFactory
     implements SolrCoreAware, UpdateRequestProcessorFactory.RunAlways {

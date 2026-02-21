@@ -95,7 +95,6 @@ import org.apache.lucene.index.IndexOptions;
  * easier, more intuitive usage.
  *
  * @deprecated Please use {@link LongPoint} instead
- * @since 2.9
  */
 @Deprecated
 public final class LegacyLongField extends LegacyField {

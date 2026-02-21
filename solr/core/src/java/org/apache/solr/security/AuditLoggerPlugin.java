@@ -54,7 +54,6 @@ import org.slf4j.LoggerFactory;
  * Base class for Audit logger plugins. This interface may change in next release and is marked
  * experimental
  *
- * @since 8.1.0
  * @lucene.experimental
  */
 public abstract class AuditLoggerPlugin implements Closeable, Runnable, SolrInfoBean {

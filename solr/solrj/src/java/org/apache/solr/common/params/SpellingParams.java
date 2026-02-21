@@ -16,11 +16,7 @@
  */
 package org.apache.solr.common.params;
 
-/**
- * Parameters used for spellchecking
- *
- * @since solr 1.3
- */
+/** Parameters used for spellchecking */
 public interface SpellingParams {
 
   public static final String SPELLCHECK_PREFIX = "spellcheck.";
