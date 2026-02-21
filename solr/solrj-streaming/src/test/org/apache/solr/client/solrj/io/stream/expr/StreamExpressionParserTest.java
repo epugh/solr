@@ -19,7 +19,6 @@ package org.apache.solr.client.solrj.io.stream.expr;
 import org.apache.solr.SolrTestCase;
 import org.junit.Test;
 
-/** */
 public class StreamExpressionParserTest extends SolrTestCase {
 
   public StreamExpressionParserTest() {

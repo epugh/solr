@@ -22,7 +22,6 @@ import org.apache.solr.client.solrj.SolrResponse;
 import org.apache.solr.common.MapWriter;
 import org.apache.solr.common.util.NamedList;
 
-/** */
 public class SolrResponseBase extends SolrResponse implements MapWriter {
   private long elapsedTime = -1;
   private NamedList<Object> response = null;

@@ -46,7 +46,6 @@ import org.apache.solr.search.QParser;
 import org.apache.solr.search.function.OrdFieldSource;
 import org.apache.solr.uninverting.UninvertingReader.Type;
 
-/** */
 public class BoolField extends PrimitiveFieldType {
   @Override
   public SortField getSortField(SchemaField field, boolean reverse) {

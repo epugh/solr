@@ -26,7 +26,6 @@ import org.apache.solr.common.util.SimpleOrderedMap;
 import org.slf4j.Logger;
 import org.slf4j.MDC;
 
-/** */
 public class SolrException extends RuntimeException {
 
   private final Map<String, String> mdcContext;

@@ -48,7 +48,6 @@ import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.params.MapSolrParams;
 import org.apache.solr.common.params.ModifiableSolrParams;
 
-/** */
 public class KnnStream extends TupleStream implements Expressible {
 
   private static String[] mltParams = {

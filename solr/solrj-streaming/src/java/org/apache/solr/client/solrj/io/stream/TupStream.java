@@ -38,7 +38,6 @@ import org.apache.solr.client.solrj.io.stream.expr.StreamExpressionParameter;
 import org.apache.solr.client.solrj.io.stream.expr.StreamExpressionValue;
 import org.apache.solr.client.solrj.io.stream.expr.StreamFactory;
 
-/** */
 public class TupStream extends TupleStream implements Expressible {
 
   private static final long serialVersionUID = 1;

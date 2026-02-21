@@ -84,7 +84,6 @@ import org.apache.solr.util.plugin.PluginInfoInitialized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** */
 public class DefaultSolrHighlighter extends SolrHighlighter implements PluginInfoInitialized {
 
   /**

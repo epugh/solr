@@ -46,7 +46,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/** */
 @SuppressTempFileChecks(
     bugUrl = "https://issues.apache.org/jira/browse/SOLR-1877 Spellcheck IndexReader leak bug?")
 public class IndexBasedSpellCheckerTest extends SolrTestCaseJ4 {

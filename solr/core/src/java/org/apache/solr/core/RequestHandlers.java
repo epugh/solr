@@ -27,7 +27,6 @@ import org.apache.solr.request.SolrRequestHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** */
 public final class RequestHandlers {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

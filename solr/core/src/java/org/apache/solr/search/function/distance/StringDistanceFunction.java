@@ -25,7 +25,6 @@ import org.apache.lucene.queries.function.ValueSource;
 import org.apache.lucene.queries.function.docvalues.FloatDocValues;
 import org.apache.lucene.search.spell.StringDistance;
 
-/** */
 public class StringDistanceFunction extends ValueSource {
   protected ValueSource str1, str2;
   protected StringDistance dist;

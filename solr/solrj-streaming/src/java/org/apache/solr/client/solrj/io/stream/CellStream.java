@@ -29,7 +29,6 @@ import org.apache.solr.client.solrj.io.stream.expr.StreamExplanation;
 import org.apache.solr.client.solrj.io.stream.expr.StreamExpression;
 import org.apache.solr.client.solrj.io.stream.expr.StreamFactory;
 
-/** */
 public class CellStream extends TupleStream implements Expressible {
 
   private static final long serialVersionUID = 1;

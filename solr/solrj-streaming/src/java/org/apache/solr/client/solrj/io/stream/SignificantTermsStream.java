@@ -49,7 +49,6 @@ import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.common.util.NamedList;
 
-/** */
 public class SignificantTermsStream extends TupleStream implements Expressible {
 
   private static final long serialVersionUID = 1;

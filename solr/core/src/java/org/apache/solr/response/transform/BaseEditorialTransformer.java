@@ -24,7 +24,6 @@ import org.apache.solr.common.SolrDocument;
 import org.apache.solr.schema.FieldType;
 import org.apache.solr.search.DocIterationInfo;
 
-/** */
 public abstract class BaseEditorialTransformer extends DocTransformer {
 
   final String name;

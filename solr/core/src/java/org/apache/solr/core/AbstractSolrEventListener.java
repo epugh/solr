@@ -20,7 +20,6 @@ import org.apache.solr.common.params.EventParams;
 import org.apache.solr.common.util.NamedList;
 import org.apache.solr.search.SolrIndexSearcher;
 
-/** */
 public class AbstractSolrEventListener implements SolrEventListener {
   private final SolrCore core;
 

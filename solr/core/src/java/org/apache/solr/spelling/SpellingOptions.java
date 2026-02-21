@@ -21,7 +21,6 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.spell.SuggestMode;
 import org.apache.solr.common.params.SolrParams;
 
-/** */
 public class SpellingOptions {
 
   /** The tokens to spell check */

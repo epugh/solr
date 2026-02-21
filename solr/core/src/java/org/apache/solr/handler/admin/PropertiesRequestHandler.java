@@ -33,7 +33,6 @@ import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.response.SolrQueryResponse;
 import org.apache.solr.security.AuthorizationContext;
 
-/** */
 public class PropertiesRequestHandler extends RequestHandlerBase {
 
   private CoreContainer cc;

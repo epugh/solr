@@ -27,7 +27,6 @@ import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.search.DocIterationInfo;
 import org.apache.solr.util.SolrPluginUtils;
 
-/** */
 public class ExplainAugmenterFactory extends TransformerFactory {
   public enum Style {
     nl,

@@ -36,7 +36,6 @@ import org.apache.solr.common.util.ContentStream;
 import org.apache.solr.common.util.ContentStreamBase;
 import org.apache.solr.common.util.XML;
 
-/** */
 public class ClientUtils {
   // Standard Content types
   public static final String TEXT_XML = "application/xml; charset=UTF-8";

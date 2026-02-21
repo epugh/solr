@@ -19,7 +19,6 @@ package org.apache.solr.handler.extraction;
 import org.apache.solr.common.params.SolrParams;
 import org.apache.solr.schema.IndexSchema;
 
-/** */
 public class SolrContentHandlerFactory {
 
   public SolrContentHandlerFactory() {}

@@ -19,7 +19,6 @@ package org.apache.solr.common.params;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
-/** */
 public class DefaultSolrParams extends SolrParams {
 
   protected final SolrParams params;

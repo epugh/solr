@@ -42,7 +42,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/** */
 @LogLevel("org.apache.solr.cluster.events=DEBUG")
 public class CollectionsRepairEventListenerTest extends SolrCloudTestCase {
 

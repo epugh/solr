@@ -44,7 +44,6 @@ import org.apache.solr.common.util.SolrNamedThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** */
 public class DaemonStream extends TupleStream implements Expressible {
 
   private TupleStream tupleStream;

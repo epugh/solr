@@ -23,7 +23,6 @@ import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.schema.IndexSchema;
 import org.apache.solr.schema.SchemaField;
 
-/** */
 public class DeleteUpdateCommand extends UpdateCommand {
   public String id; // external (printable) id, for delete-by-id
   public String query; // query string for delete-by-query

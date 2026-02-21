@@ -16,7 +16,6 @@
  */
 package org.apache.solr.client.solrj.response;
 
-/** */
 public class SolrPingResponse extends SolrResponseBase {
   // nothing special now...
 }

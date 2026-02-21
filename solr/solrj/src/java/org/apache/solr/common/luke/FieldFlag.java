@@ -16,7 +16,6 @@
  */
 package org.apache.solr.common.luke;
 
-/** */
 public enum FieldFlag {
   INDEXED('I', "Indexed"),
   TOKENIZED('T', "Tokenized"),

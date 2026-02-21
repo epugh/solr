@@ -42,7 +42,6 @@ import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.common.params.UpdateParams;
 import org.apache.solr.common.util.CollectionUtil;
 
-/** */
 public class UpdateRequest extends AbstractUpdateRequest {
 
   public static final String REPFACT = "rf";

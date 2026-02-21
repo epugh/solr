@@ -30,7 +30,6 @@ import org.apache.solr.client.solrj.request.SolrQuery.SortClause;
 import org.apache.solr.common.params.CommonParams;
 import org.apache.solr.common.params.FacetParams;
 
-/** */
 public class SolrQueryTest extends SolrTestCase {
 
   public void testSolrQueryMethods() {

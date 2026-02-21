@@ -16,7 +16,6 @@
  */
 package org.apache.solr.common.params;
 
-/** */
 public interface SpatialParams {
   public static final String POINT = "pt";
   public static final String DISTANCE = "d";

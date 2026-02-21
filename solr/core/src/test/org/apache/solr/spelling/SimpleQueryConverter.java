@@ -28,7 +28,6 @@ import org.apache.lucene.analysis.tokenattributes.PayloadAttribute;
 import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
 
-/** */
 class SimpleQueryConverter extends SpellingQueryConverter {
 
   @Override

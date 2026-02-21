@@ -41,7 +41,6 @@ import org.apache.solr.client.solrj.io.stream.expr.StreamExpressionParser;
 import org.apache.solr.client.solrj.io.stream.expr.StreamExpressionValue;
 import org.apache.solr.client.solrj.io.stream.expr.StreamFactory;
 
-/** */
 public class CartesianProductStream extends TupleStream implements Expressible {
 
   private static final long serialVersionUID = 1;

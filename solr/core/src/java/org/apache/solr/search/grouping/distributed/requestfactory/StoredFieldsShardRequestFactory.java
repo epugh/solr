@@ -38,7 +38,6 @@ import org.apache.solr.schema.SchemaField;
 import org.apache.solr.search.grouping.distributed.ShardRequestFactory;
 import org.apache.solr.search.grouping.distributed.command.QueryCommandResult;
 
-/** */
 public class StoredFieldsShardRequestFactory implements ShardRequestFactory {
 
   @Override

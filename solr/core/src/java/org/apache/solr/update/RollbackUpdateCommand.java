@@ -18,7 +18,6 @@ package org.apache.solr.update;
 
 import org.apache.solr.request.SolrQueryRequest;
 
-/** */
 public class RollbackUpdateCommand extends UpdateCommand {
 
   public RollbackUpdateCommand(SolrQueryRequest req) {

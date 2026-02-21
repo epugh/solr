@@ -25,7 +25,6 @@ import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.search.DocIterationInfo;
 import org.apache.solr.util.DateMathParser;
 
-/** */
 public class ValueAugmenterFactory extends TransformerFactory {
   protected Object value = null;
   protected Object defaultValue = null;

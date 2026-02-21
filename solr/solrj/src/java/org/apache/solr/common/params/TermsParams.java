@@ -20,7 +20,6 @@ import static org.apache.solr.common.params.CommonParams.SORT;
 
 import java.util.regex.Pattern;
 
-/** */
 public interface TermsParams {
   /** The component name. Set to true to turn on the TermsComponent */
   public static final String TERMS = "terms";

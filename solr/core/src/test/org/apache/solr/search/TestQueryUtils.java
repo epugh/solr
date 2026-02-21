@@ -25,7 +25,6 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.solr.SolrTestCaseJ4;
 import org.junit.BeforeClass;
 
-/** */
 public class TestQueryUtils extends SolrTestCaseJ4 {
 
   @BeforeClass

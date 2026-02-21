@@ -39,7 +39,6 @@ import org.apache.solr.common.params.CommonParams;
 import org.apache.solr.core.SolrConfig;
 import org.apache.solr.request.SolrQueryRequest;
 
-/** */
 public class QueryUtils {
 
   /** return true if this query has no positive components */

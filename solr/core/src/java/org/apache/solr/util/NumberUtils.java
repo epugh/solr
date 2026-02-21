@@ -20,7 +20,6 @@ import java.text.NumberFormat;
 import java.util.Locale;
 import org.apache.lucene.util.BytesRef;
 
-/** */
 public class NumberUtils {
 
   public static String readableSize(long size) {

@@ -43,7 +43,6 @@ import org.apache.solr.common.util.SimpleOrderedMap;
 import org.apache.solr.common.util.Utils;
 import org.junit.Assert;
 
-/** */
 public class TestUtils extends SolrTestCaseJ4 {
 
   public void testNamedLists() {

@@ -22,7 +22,6 @@ import java.util.Map;
 import org.apache.solr.client.api.model.CoreStatusResponse;
 import org.apache.solr.client.solrj.request.json.JacksonContentWriter;
 
-/** */
 public class CoreAdminResponse extends SolrResponseBase {
 
   public Map<String, CoreStatusResponse.SingleCoreData> getCoreStatus() {

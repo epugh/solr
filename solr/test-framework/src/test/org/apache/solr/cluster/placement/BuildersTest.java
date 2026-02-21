@@ -33,7 +33,6 @@ import org.apache.solr.cluster.placement.impl.NodeMetricImpl;
 import org.apache.solr.cluster.placement.impl.ReplicaMetricImpl;
 import org.junit.Test;
 
-/** */
 public class BuildersTest extends SolrTestCaseJ4 {
 
   @Test

@@ -24,7 +24,6 @@ import org.apache.solr.common.params.TermVectorParams;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/** */
 public class TermVectorComponentTest extends SolrTestCaseJ4 {
   // ensure that we operate correctly with all valid combinations of the uniqueKey being
   // stored and/or in docValues.

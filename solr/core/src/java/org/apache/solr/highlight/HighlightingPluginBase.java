@@ -20,7 +20,6 @@ import org.apache.solr.common.params.SolrParams;
 import org.apache.solr.common.util.NamedList;
 import org.apache.solr.metrics.SolrMetricsContext;
 
-/** */
 public abstract class HighlightingPluginBase {
   protected SolrParams defaults;
   protected SolrMetricsContext solrMetricsContext;

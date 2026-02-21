@@ -50,7 +50,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/** */
 @LogLevel(
     "org.apache.solr.cloud.api.collections.ReindexCollectionCmd=DEBUG;org.apache.solr.cloud.OverseerTaskProcessor=DEBUG")
 public class ReindexCollectionTest extends SolrCloudTestCase {

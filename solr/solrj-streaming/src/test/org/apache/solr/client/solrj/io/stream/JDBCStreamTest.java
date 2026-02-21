@@ -47,7 +47,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/** */
 @SuppressPointFields(bugUrl = "https://issues.apache.org/jira/browse/SOLR-10960")
 @LuceneTestCase.SuppressCodecs({"Lucene3x", "Lucene40", "Lucene41", "Lucene42", "Lucene45"})
 @ThreadLeakLingering(linger = 0)

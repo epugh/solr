@@ -16,7 +16,6 @@
  */
 package org.apache.solr.common.params;
 
-/** */
 public interface EventParams {
   /** Event param for things like newSearcher, firstSearcher* */
   public static final String EVENT = "event";

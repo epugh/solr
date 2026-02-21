@@ -23,7 +23,6 @@ import org.apache.solr.common.SolrException;
 import org.apache.solr.common.SolrException.ErrorCode;
 import org.apache.solr.common.util.NamedList;
 
-/** */
 public abstract class SolrResponse implements Serializable, MapWriter {
 
   /** make this compatible with earlier versions */

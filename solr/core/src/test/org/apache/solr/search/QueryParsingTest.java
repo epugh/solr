@@ -23,7 +23,6 @@ import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.request.SolrQueryRequest;
 import org.junit.BeforeClass;
 
-/** */
 public class QueryParsingTest extends SolrTestCaseJ4 {
   @BeforeClass
   public static void beforeClass() throws Exception {

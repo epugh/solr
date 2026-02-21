@@ -38,7 +38,6 @@ import org.apache.solr.spelling.SolrSpellChecker;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/** */
 @SuppressTempFileChecks(
     bugUrl = "https://issues.apache.org/jira/browse/SOLR-1877 Spellcheck IndexReader leak bug?")
 public class SpellCheckComponentTest extends SolrTestCaseJ4 {

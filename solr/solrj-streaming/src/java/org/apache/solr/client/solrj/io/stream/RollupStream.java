@@ -37,7 +37,6 @@ import org.apache.solr.client.solrj.io.stream.expr.StreamFactory;
 import org.apache.solr.client.solrj.io.stream.metrics.Bucket;
 import org.apache.solr.client.solrj.io.stream.metrics.Metric;
 
-/** */
 public class RollupStream extends TupleStream implements Expressible {
 
   private static final long serialVersionUID = 1;

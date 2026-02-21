@@ -38,7 +38,6 @@ import org.apache.solr.search.SyntaxError;
 import org.apache.solr.search.grouping.Command;
 import org.apache.solr.search.grouping.collector.FilterCollector;
 
-/** */
 public class QueryCommand implements Command<QueryCommandResult> {
 
   public static class Builder {

@@ -30,7 +30,6 @@ import org.apache.solr.client.solrj.io.stream.expr.StreamExplanation;
 import org.apache.solr.client.solrj.io.stream.expr.StreamExpression;
 import org.apache.solr.client.solrj.io.stream.expr.StreamFactory;
 
-/** */
 public class EvalStream extends TupleStream implements Expressible {
 
   private TupleStream stream;

@@ -21,7 +21,6 @@ import static org.apache.solr.common.params.CommonParams.NAME;
 import java.util.Map;
 import org.apache.solr.common.ConfigNode;
 
-/** */
 public class MapPluginLoader<T extends MapInitializedPlugin> extends AbstractPluginLoader<T> {
   private final Map<String, T> registry;
 

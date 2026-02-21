@@ -26,7 +26,6 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** */
 public class StartSolrJetty {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

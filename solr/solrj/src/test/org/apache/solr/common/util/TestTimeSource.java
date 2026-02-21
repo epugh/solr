@@ -20,7 +20,6 @@ package org.apache.solr.common.util;
 import org.apache.solr.SolrTestCaseJ4;
 import org.junit.Test;
 
-/** */
 public class TestTimeSource extends SolrTestCaseJ4 {
 
   @Test

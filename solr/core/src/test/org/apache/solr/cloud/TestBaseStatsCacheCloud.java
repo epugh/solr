@@ -39,7 +39,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-/** */
 @Ignore("Abstract classes should not be executed as tests")
 public abstract class TestBaseStatsCacheCloud extends SolrCloudTestCase {
 

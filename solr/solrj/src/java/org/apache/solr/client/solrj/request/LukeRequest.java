@@ -24,7 +24,6 @@ import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.common.params.SolrParams;
 import org.apache.solr.common.util.NamedList;
 
-/** */
 public class LukeRequest extends CollectionRequiringSolrRequest<LukeResponse> {
 
   private List<String> fields;

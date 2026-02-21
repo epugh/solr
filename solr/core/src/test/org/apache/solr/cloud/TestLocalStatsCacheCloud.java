@@ -20,7 +20,6 @@ import org.apache.solr.search.stats.LocalStatsCache;
 import org.apache.solr.search.stats.StatsCache;
 import org.apache.solr.util.LogLevel;
 
-/** */
 @LogLevel("org.apache.solr.search=DEBUG")
 public class TestLocalStatsCacheCloud extends TestBaseStatsCacheCloud {
 

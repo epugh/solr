@@ -21,7 +21,6 @@ import org.apache.lucene.util.FixedBitSet;
 import org.apache.lucene.util.SuppressForbidden;
 import org.apache.solr.util.RTimer;
 
-/** */
 public class DocSetPerf {
 
   // use test instead of assert since asserts may be turned off

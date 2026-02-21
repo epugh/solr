@@ -55,7 +55,6 @@ import org.apache.solr.common.cloud.Slice;
 import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.common.util.NamedList;
 
-/** */
 public class FeaturesSelectionStream extends TupleStream implements Expressible {
 
   private static final long serialVersionUID = 1;

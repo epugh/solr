@@ -29,7 +29,6 @@ import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.response.QueryResponseWriter;
 import org.apache.solr.search.DocIterationInfo;
 
-/** */
 public class RawValueTransformerFactory extends TransformerFactory
     implements TransformerFactory.FieldRenamer {
   String applyToWT = null;

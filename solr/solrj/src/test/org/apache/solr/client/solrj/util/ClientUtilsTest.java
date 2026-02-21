@@ -24,7 +24,6 @@ import org.apache.solr.client.solrj.request.UpdateRequest;
 import org.apache.solr.client.solrj.request.XMLRequestWriter;
 import org.junit.Test;
 
-/** */
 public class ClientUtilsTest extends SolrTestCase {
 
   public void testEscapeQuery() {
