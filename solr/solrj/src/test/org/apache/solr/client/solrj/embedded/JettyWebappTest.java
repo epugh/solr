@@ -38,9 +38,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.session.DefaultSessionIdManager;
 
-/**
- * @since solr 1.3
- */
+/** */
 public class JettyWebappTest extends SolrTestCaseJ4 {
   int port = 0;
 

@@ -46,8 +46,6 @@ import org.apache.solr.common.params.ModifiableSolrParams;
  * done in batches.
  *
  * <p>Syntax: fetch(collection, stream, on="a=b", fl="c,d,e", batchSize="50")
- *
- * @since 6.3.0
  */
 public class FetchStream extends TupleStream implements Expressible {
 

@@ -18,11 +18,7 @@ package org.apache.solr.util.plugin;
 
 import org.apache.solr.core.PluginInfo;
 
-/**
- * A plugin that can be initialized with a PluginInfo
- *
- * @since solr 1.4
- */
+/** A plugin that can be initialized with a PluginInfo */
 public interface PluginInfoInitialized {
 
   public void init(PluginInfo info);

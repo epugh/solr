@@ -33,11 +33,7 @@ import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.common.params.SolrParams;
 import org.apache.solr.common.util.NamedList;
 
-/**
- * This class is experimental and subject to change.
- *
- * @since solr 1.3
- */
+/** This class is experimental and subject to change. */
 public class CoreAdminRequest extends SolrRequest<CoreAdminResponse> {
 
   protected String core = null;

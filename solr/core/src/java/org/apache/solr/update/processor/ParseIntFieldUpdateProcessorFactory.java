@@ -50,8 +50,6 @@ import org.slf4j.LoggerFactory;
  *
  * <p>See {@link Locale} for a description of acceptable language, country (optional) and variant
  * (optional) values, joined with underscore(s).
- *
- * @since 4.4.0
  */
 public class ParseIntFieldUpdateProcessorFactory extends ParseNumericFieldUpdateProcessorFactory {
 

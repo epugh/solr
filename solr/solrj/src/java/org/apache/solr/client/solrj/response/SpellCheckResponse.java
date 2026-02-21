@@ -22,11 +22,7 @@ import java.util.List;
 import java.util.Map;
 import org.apache.solr.common.util.NamedList;
 
-/**
- * Encapsulates responses from SpellCheckComponent
- *
- * @since solr 1.3
- */
+/** Encapsulates responses from SpellCheckComponent */
 public class SpellCheckResponse {
   private boolean correctlySpelled;
   private List<Collation> collations;

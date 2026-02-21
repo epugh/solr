@@ -22,11 +22,7 @@ import org.apache.lucene.search.TotalHits;
 import org.apache.lucene.util.Accountable;
 import org.apache.lucene.util.RamUsageEstimator;
 
-/**
- * <code>DocSlice</code> implements DocList as an array of docids and optional scores.
- *
- * @since solr 0.9
- */
+/** <code>DocSlice</code> implements DocList as an array of docids and optional scores. */
 public class DocSlice implements DocList, Accountable {
   private static final long BASE_RAM_BYTES_USED =
       RamUsageEstimator.shallowSizeOfInstance(DocSlice.class)

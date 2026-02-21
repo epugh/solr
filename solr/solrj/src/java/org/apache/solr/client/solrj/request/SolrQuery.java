@@ -34,8 +34,6 @@ import org.apache.solr.common.params.TermsParams;
 /**
  * This is an augmented SolrParams with get/set/add fields for common fields used in the Standard
  * and Dismax request handlers
- *
- * @since solr 1.3
  */
 public class SolrQuery extends ModifiableSolrParams {
   // duplicate of org.apache.solr.search.SortSpecParsing.DOCID which is not
@@ -595,7 +593,6 @@ public class SolrQuery extends ModifiableSolrParams {
    * Clears current sort information.
    *
    * @return the modified SolrQuery object, for easy chaining
-   * @since 4.2
    */
   public SolrQuery clearSorts() {
     sortClauses = null;
@@ -607,7 +604,6 @@ public class SolrQuery extends ModifiableSolrParams {
    * Replaces the current sort information.
    *
    * @return the modified SolrQuery object, for easy chaining
-   * @since 4.2
    */
   public SolrQuery setSorts(List<SortClause> value) {
     sortClauses = new ArrayList<>(value);
@@ -619,7 +615,6 @@ public class SolrQuery extends ModifiableSolrParams {
    * Gets a list of current sort clauses.
    *
    * @return an immutable list of current sort clauses
-   * @since 4.2
    */
   public List<SortClause> getSorts() {
     if (sortClauses == null) return Collections.emptyList();
@@ -630,7 +625,6 @@ public class SolrQuery extends ModifiableSolrParams {
    * Replaces the current sort information with a single sort clause
    *
    * @return the modified SolrQuery object, for easy chaining
-   * @since 4.2
    */
   public SolrQuery setSort(String field, ORDER order) {
     return setSort(new SortClause(field, order));
@@ -640,7 +634,6 @@ public class SolrQuery extends ModifiableSolrParams {
    * Replaces the current sort information with a single sort clause
    *
    * @return the modified SolrQuery object, for easy chaining
-   * @since 4.2
    */
   public SolrQuery setSort(SortClause sortClause) {
     clearSorts();
@@ -651,7 +644,6 @@ public class SolrQuery extends ModifiableSolrParams {
    * Adds a single sort clause to the end of the current sort information.
    *
    * @return the modified SolrQuery object, for easy chaining
-   * @since 4.2
    */
   public SolrQuery addSort(String field, ORDER order) {
     return addSort(new SortClause(field, order));
@@ -661,7 +653,6 @@ public class SolrQuery extends ModifiableSolrParams {
    * Adds a single sort clause to the end of the query.
    *
    * @return the modified SolrQuery object, for easy chaining
-   * @since 4.2
    */
   public SolrQuery addSort(SortClause sortClause) {
     if (sortClauses == null) sortClauses = new ArrayList<>();
@@ -675,7 +666,6 @@ public class SolrQuery extends ModifiableSolrParams {
    * the order of the existing field is modified; otherwise, it is added to the end.
    *
    * @return the modified SolrQuery object, for easy chaining
-   * @since 4.2
    */
   public SolrQuery addOrUpdateSort(String field, ORDER order) {
     return addOrUpdateSort(new SortClause(field, order));
@@ -687,7 +677,6 @@ public class SolrQuery extends ModifiableSolrParams {
    * is set; if it does not exist, it is appended at the end with the specified order.
    *
    * @return the modified SolrQuery object, for easy chaining
-   * @since 4.2
    */
   public SolrQuery addOrUpdateSort(SortClause sortClause) {
     if (sortClauses != null) {
@@ -707,7 +696,6 @@ public class SolrQuery extends ModifiableSolrParams {
    * Removes a single sort field from the current sort information.
    *
    * @return the modified SolrQuery object, for easy chaining
-   * @since 4.2
    */
   public SolrQuery removeSort(SortClause sortClause) {
     return removeSort(sortClause.getItem());
@@ -717,7 +705,6 @@ public class SolrQuery extends ModifiableSolrParams {
    * Removes a single sort field from the current sort information.
    *
    * @return the modified SolrQuery object, for easy chaining
-   * @since 4.2
    */
   public SolrQuery removeSort(String itemName) {
     if (sortClauses != null) {

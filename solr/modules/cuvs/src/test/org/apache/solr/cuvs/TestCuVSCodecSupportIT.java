@@ -46,8 +46,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Integration test to verify the indexing and searching using {@link
  * org.apache.solr.cuvs.CuVSCodec}
- *
- * @since 10.0.0
  */
 public class TestCuVSCodecSupportIT extends SolrTestCaseJ4 {
 

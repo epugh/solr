@@ -79,11 +79,7 @@ import org.apache.solr.uninverting.UninvertingReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Base class for all field types used by an index schema.
- *
- * @since 3.1
- */
+/** Base class for all field types used by an index schema. */
 public abstract class FieldType extends FieldProperties {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -392,7 +388,6 @@ public abstract class FieldType extends FieldProperties {
    *
    * @see #toExternal
    * @see #toInternal
-   * @since solr 1.3
    */
   public Object toObject(IndexableField f) {
     return toExternal(f); // by default use the string

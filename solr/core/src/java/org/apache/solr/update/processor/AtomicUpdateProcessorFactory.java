@@ -44,8 +44,6 @@ import org.slf4j.LoggerFactory;
  * <p>sample request: curl -X POST -H Content-Type: application/json
  * http://localhost:8983/solr/test/update/json/docs?processor=atomic;ampersand;atomic.my_newfield=add;ampersand;atomic.subject=set;ampersand;atomic.count_i=inc;ampersand;commit=true
  * --data-binary {"id": 1,"title": "titleA"} currently supports all types of atomic updates
- *
- * @since 6.6.0
  */
 public class AtomicUpdateProcessorFactory extends UpdateRequestProcessorFactory
     implements SolrCoreAware {

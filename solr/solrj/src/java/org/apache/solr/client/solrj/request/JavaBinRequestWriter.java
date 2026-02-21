@@ -28,7 +28,6 @@ import org.apache.solr.common.util.ContentStream;
  * A RequestWriter which writes requests in the javabin format
  *
  * @see org.apache.solr.client.solrj.request.RequestWriter
- * @since solr 1.4
  */
 public class JavaBinRequestWriter extends RequestWriter {
 

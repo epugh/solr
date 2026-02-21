@@ -61,11 +61,7 @@ import org.apache.solr.response.ResultContext;
 import org.apache.solr.response.SolrQueryResponse;
 import org.apache.solr.servlet.SolrRequestParsers;
 
-/**
- * SolrClient that connects directly to a CoreContainer.
- *
- * @since solr 1.3
- */
+/** SolrClient that connects directly to a CoreContainer. */
 public class EmbeddedSolrServer extends SolrClient {
 
   protected final CoreContainer coreContainer;

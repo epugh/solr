@@ -76,8 +76,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Scans posted text, looking for matching strings in the Solr index. The public static final String
  * members are request parameters. This handler is also called the "SolrTextTagger".
- *
- * @since 7.4.0
  */
 public class TaggerRequestHandler extends RequestHandlerBase {
 

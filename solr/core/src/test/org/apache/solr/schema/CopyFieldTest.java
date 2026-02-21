@@ -30,8 +30,6 @@ import org.junit.Test;
 /**
  * This is a simple test to make sure the <code>CopyField</code> works. It uses its own special
  * schema file.
- *
- * @since solr 1.4
  */
 public class CopyFieldTest extends SolrTestCaseJ4 {
   @BeforeClass

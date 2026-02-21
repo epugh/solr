@@ -33,11 +33,7 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 
-/**
- * Test for SpellCheckComponent's response in Solrj
- *
- * @since solr 1.3
- */
+/** Test for SpellCheckComponent's response in Solrj */
 public class TestSpellCheckResponse extends SolrTestCase {
 
   @ClassRule

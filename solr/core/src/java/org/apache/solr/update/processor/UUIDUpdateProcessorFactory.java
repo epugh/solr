@@ -51,7 +51,6 @@ import org.apache.solr.schema.SchemaField;
  * type of the uniqueKeyField must be anything which accepts a string or UUID value.
  *
  * @see UUID
- * @since 4.0.0
  */
 public class UUIDUpdateProcessorFactory extends UpdateRequestProcessorFactory {
 

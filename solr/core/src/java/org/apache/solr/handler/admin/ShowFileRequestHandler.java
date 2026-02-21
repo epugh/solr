@@ -88,8 +88,6 @@ import org.slf4j.LoggerFactory;
  * <pre>
  *   http://localhost:8983/solr/admin/file?file=schema.xml&amp;contentType=text/plain
  * </pre>
- *
- * @since solr 1.3
  */
 public class ShowFileRequestHandler extends RequestHandlerBase implements PermissionNameProvider {
   public static final String HIDDEN = "hidden";

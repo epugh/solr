@@ -28,7 +28,6 @@ import org.apache.solr.response.SolrQueryResponse;
  * original values.
  *
  * @see #pickSubset
- * @since 4.0.0
  */
 public abstract class FieldValueSubsetUpdateProcessorFactory
     extends FieldMutatingUpdateProcessorFactory {

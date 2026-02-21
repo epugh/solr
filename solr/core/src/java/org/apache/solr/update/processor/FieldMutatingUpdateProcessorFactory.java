@@ -94,7 +94,6 @@ import org.apache.solr.util.plugin.SolrCoreAware;
  * @see FieldMutatingUpdateProcessor
  * @see FieldValueMutatingUpdateProcessor
  * @see FieldNameSelector
- * @since 4.0.0
  */
 public abstract class FieldMutatingUpdateProcessorFactory extends UpdateRequestProcessorFactory
     implements SolrCoreAware {

@@ -231,11 +231,7 @@ public interface BackupRepository extends NamedListInitializedPlugin, Closeable 
     }
   }
 
-  /**
-   * Delete {@code files} at {@code path}
-   *
-   * @since 9.3.0
-   */
+  /** Delete {@code files} at {@code path} */
   default void delete(URI path, Collection<String> files) throws IOException {
     throw new UnsupportedOperationException();
   }
@@ -243,8 +239,6 @@ public interface BackupRepository extends NamedListInitializedPlugin, Closeable 
   /**
    * Get checksum of {@code fileName} at {@code dir}. This method only be called on Lucene index
    * files
-   *
-   * @since 8.3.0
    */
   default Checksum checksum(Directory dir, String fileName) throws IOException {
     try (IndexInput in = dir.openChecksumInput(fileName)) {
@@ -262,7 +256,6 @@ public interface BackupRepository extends NamedListInitializedPlugin, Closeable 
    * @throws IOException in case of errors
    * @throws CorruptIndexException in case checksum of the file does not match with precomputed
    *     checksum stored at the end of the file
-   * @since 8.3.0
    */
   default void copyIndexFileFrom(
       Directory sourceDir, String sourceFileName, URI destDir, String destFileName)
@@ -277,7 +270,6 @@ public interface BackupRepository extends NamedListInitializedPlugin, Closeable 
    * @param sourceRepo The source URI hosting the file to be copied.
    * @param dest The destination where the file should be copied.
    * @throws IOException in case of errors.
-   * @since 8.3.0
    */
   default void copyIndexFileTo(
       URI sourceRepo, String sourceFileName, Directory dest, String destFileName)

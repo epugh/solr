@@ -170,8 +170,6 @@ import org.slf4j.LoggerFactory;
  *   &lt;processor class="solr.RunUpdateProcessorFactory" /&gt;
  * &lt;/updateRequestProcessorChain&gt;
  * </pre>
- *
- * @since 7.3.0
  */
 public class OpenNLPExtractNamedEntitiesUpdateProcessorFactory extends UpdateRequestProcessorFactory
     implements SolrCoreAware {

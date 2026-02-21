@@ -21,11 +21,7 @@ import java.util.List;
 import java.util.Map;
 import org.apache.solr.common.util.NamedList;
 
-/**
- * A base class for all analysis responses.
- *
- * @since solr 1.4
- */
+/** A base class for all analysis responses. */
 public class AnalysisResponseBase extends SolrResponseBase {
 
   /**

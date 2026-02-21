@@ -41,8 +41,6 @@ import org.slf4j.LoggerFactory;
  * of loading a core.
  *
  * <p>It's mostly but not completely immutable; we should fix this!
- *
- * @since solr 1.3
  */
 public class CoreDescriptor {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

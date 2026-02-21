@@ -22,9 +22,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 
-/**
- * @since solr 1.3
- */
+/** */
 public class SolrInputField implements Iterable<Object>, Serializable {
   String name;
   Object value = null; // TODO SOLR-15532 investigate if this can be a Collection

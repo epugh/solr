@@ -141,8 +141,6 @@ import org.slf4j.LoggerFactory;
  *   &lt;str name="engine"&gt;rhino&lt;/str&gt;
  * &lt;/processor&gt;
  * </pre>
- *
- * @since 4.0.0
  */
 public class ScriptUpdateProcessorFactory extends UpdateRequestProcessorFactory
     implements SolrCoreAware {

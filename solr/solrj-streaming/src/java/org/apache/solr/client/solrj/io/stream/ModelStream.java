@@ -41,8 +41,6 @@ import org.apache.solr.client.solrj.io.stream.expr.StreamFactory;
  * The ModelStream retrieves a stored model from a Solr Cloud collection.
  *
  * <p>Syntax: model(collection, id="modelID")
- *
- * @since 6.3.0
  */
 public class ModelStream extends TupleStream implements Expressible {
 

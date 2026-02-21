@@ -45,11 +45,7 @@ import org.apache.solr.util.tracing.TraceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * This filter looks at the incoming URL maps them to handlers defined in solrconfig.xml
- *
- * @since solr 1.2
- */
+/** This filter looks at the incoming URL maps them to handlers defined in solrconfig.xml */
 // todo: get rid of this class entirely! Request dispatch is the container's responsibility. Much of
 // what we have here should be several separate but composable servlet Filters, wrapping multiple
 // servlets that are more focused in scope. This should become possible now that we have a

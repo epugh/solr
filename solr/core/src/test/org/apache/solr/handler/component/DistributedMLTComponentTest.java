@@ -33,7 +33,6 @@ import org.junit.Test;
 /**
  * Test for distributed MoreLikeThisComponent's
  *
- * @since solr 4.1
  * @see org.apache.solr.handler.component.MoreLikeThisComponent
  */
 public class DistributedMLTComponentTest extends BaseDistributedSearchTestCase {

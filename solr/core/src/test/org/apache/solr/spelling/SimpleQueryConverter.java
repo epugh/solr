@@ -28,9 +28,7 @@ import org.apache.lucene.analysis.tokenattributes.PayloadAttribute;
 import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
 
-/**
- * @since solr 1.3
- */
+/** */
 class SimpleQueryConverter extends SpellingQueryConverter {
 
   @Override

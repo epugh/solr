@@ -29,8 +29,6 @@ import java.util.List;
  *   <li>group.func
  *   <li>group.query
  * </ul>
- *
- * @since solr 3.4
  */
 public class GroupResponse implements Serializable {
 

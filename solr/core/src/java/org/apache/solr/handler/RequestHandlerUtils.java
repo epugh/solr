@@ -33,11 +33,7 @@ import org.apache.solr.update.CommitUpdateCommand;
 import org.apache.solr.update.RollbackUpdateCommand;
 import org.apache.solr.update.processor.UpdateRequestProcessor;
 
-/**
- * Common helper functions for RequestHandlers
- *
- * @since solr 1.2
- */
+/** Common helper functions for RequestHandlers */
 public class RequestHandlerUtils {
   /** A common way to mark the response format as experimental */
   public static void addExperimentalFormatWarning(SolrQueryResponse rsp) {
@@ -102,9 +98,7 @@ public class RequestHandlerUtils {
     cmd.failOnReadOnly = params.getBool(UpdateParams.FAIL_ON_READ_ONLY, cmd.failOnReadOnly);
   }
 
-  /**
-   * @since Solr 1.4
-   */
+  /** */
   public static boolean handleRollback(
       SolrQueryRequest req, UpdateRequestProcessor processor, SolrParams params, boolean force)
       throws IOException {
@@ -116,9 +110,7 @@ public class RequestHandlerUtils {
     return false;
   }
 
-  /**
-   * @since 6.7
-   */
+  /** */
   public static void setWt(SolrQueryRequest req, String wt) {
     SolrParams params = req.getParams();
     if (params.get(CommonParams.WT) != null) return; // wt is set by user

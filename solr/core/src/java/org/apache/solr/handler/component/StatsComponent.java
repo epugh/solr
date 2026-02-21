@@ -26,11 +26,7 @@ import org.apache.solr.common.util.SimpleOrderedMap;
 import org.apache.solr.search.DocSet;
 import org.apache.solr.util.SolrResponseUtil;
 
-/**
- * Stats component calculates simple statistics on numeric field values
- *
- * @since solr 1.4
- */
+/** Stats component calculates simple statistics on numeric field values */
 public class StatsComponent extends SearchComponent {
 
   public static final String COMPONENT_NAME = "stats";

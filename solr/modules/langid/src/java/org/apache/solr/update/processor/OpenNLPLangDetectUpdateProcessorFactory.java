@@ -46,8 +46,6 @@ import org.apache.solr.util.plugin.SolrCoreAware;
  *
  * See <a
  * href="https://solr.apache.org/guide/solr/latest/indexing-guide/language-detection.html#configuring-opennlp-language-detection">https://solr.apache.org/guide/solr/latest/indexing-guide/language-detection.html#configuring-opennlp-language-detection</a>
- *
- * @since 7.3.0
  */
 public class OpenNLPLangDetectUpdateProcessorFactory extends UpdateRequestProcessorFactory
     implements SolrCoreAware {

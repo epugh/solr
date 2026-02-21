@@ -34,11 +34,7 @@ import org.apache.commons.io.output.CloseShieldOutputStream;
 import org.apache.solr.core.CoreContainer;
 import org.apache.solr.core.SolrCore;
 
-/**
- * A simple servlet to load the Solr Admin UI
- *
- * @since solr 4.0
- */
+/** A simple servlet to load the Solr Admin UI */
 public final class LoadAdminUiServlet extends HttpServlet {
 
   // check system properties for whether the admin UI is disabled, default is false

@@ -35,7 +35,6 @@ import org.slf4j.LoggerFactory;
  * <p>Note that the query string is not analyzed in any way
  *
  * @see QueryParser
- * @since 4.0
  */
 public class SurroundQParserPlugin extends QParserPlugin {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

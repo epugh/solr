@@ -44,9 +44,7 @@ import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.common.params.SolrParams;
 import org.apache.solr.common.util.IOUtils;
 
-/**
- * @since 5.1.0
- */
+/** */
 public abstract class TupleStream implements Closeable, Serializable, MapWriter {
 
   private static final long serialVersionUID = 1;

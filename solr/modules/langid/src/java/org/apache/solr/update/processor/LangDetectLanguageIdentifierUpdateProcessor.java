@@ -38,8 +38,6 @@ import org.slf4j.LoggerFactory;
  * <p>See <a
  * href="https://solr.apache.org/guide/solr/latest/indexing-guide/language-detection.html">Detecting
  * Languages During Indexing</a> in the Solr Ref Guide
- *
- * @since 3.5
  */
 public class LangDetectLanguageIdentifierUpdateProcessor extends LanguageIdentifierUpdateProcessor {
 

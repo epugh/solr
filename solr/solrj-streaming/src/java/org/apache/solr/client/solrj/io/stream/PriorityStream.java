@@ -41,8 +41,6 @@ import org.apache.solr.client.solrj.io.stream.expr.StreamFactory;
  *
  * <p>The scheduler is designed to be wrapped by the executor function and a daemon function can be
  * used to call the executor iteratively.
- *
- * @since 6.4.0
  */
 public class PriorityStream extends TupleStream implements Expressible {
 

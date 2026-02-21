@@ -16,11 +16,7 @@
  */
 package org.apache.solr.common.params;
 
-/**
- * A collection of standard params used by Update handlers
- *
- * @since solr 1.2
- */
+/** A collection of standard params used by Update handlers */
 public interface UpdateParams {
 
   /** Open up a new searcher as part of a commit */

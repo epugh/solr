@@ -170,16 +170,12 @@ public class XmlConfigFile { // formerly simply "Config"
     return this.substituteProperties;
   }
 
-  /**
-   * @since solr 1.3
-   */
+  /** */
   public SolrResourceLoader getResourceLoader() {
     return loader;
   }
 
-  /**
-   * @since solr 1.3
-   */
+  /** */
   public String getResourceName() {
     return name;
   }

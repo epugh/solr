@@ -36,11 +36,7 @@ import org.apache.solr.common.params.SolrParams;
 import org.apache.solr.common.util.NamedList;
 import org.junit.Test;
 
-/**
- * Test for TermsComponent distributed querying
- *
- * @since solr 1.5
- */
+/** Test for TermsComponent distributed querying */
 public class DistributedTermsComponentTest extends BaseDistributedSearchTestCase {
 
   @Test

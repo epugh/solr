@@ -30,9 +30,7 @@ import org.apache.solr.common.params.CursorMarkParams;
 import org.apache.solr.common.util.NamedList;
 import org.apache.solr.common.util.SimpleOrderedMap;
 
-/**
- * @since solr 1.3
- */
+/** */
 @SuppressWarnings("unchecked")
 public class QueryResponse extends SolrResponseBase {
   // Direct pointers to known types

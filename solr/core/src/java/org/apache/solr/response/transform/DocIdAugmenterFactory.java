@@ -25,8 +25,6 @@ import org.apache.solr.search.DocIterationInfo;
  * Augments the document with a <code>[docid]</code> integer containing it's current (internal) id
  * in the lucene index. May be <code>-1</code> if this document did not come from the index (ie: a
  * RealTimeGet from the transaction log)
- *
- * @since solr 4.0
  */
 public class DocIdAugmenterFactory extends TransformerFactory {
   @Override

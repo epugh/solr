@@ -79,7 +79,6 @@ import org.apache.lucene.util.NumericUtils;
  * well as how numeric fields work under the hood.
  *
  * @deprecated Please switch to {@link org.apache.lucene.index.PointValues} instead
- * @since 2.9
  */
 @Deprecated
 public final class LegacyNumericTokenStream extends TokenStream {
@@ -94,7 +93,6 @@ public final class LegacyNumericTokenStream extends TokenStream {
    * <b>Expert:</b> Use this attribute to get the details of the currently generated token.
    *
    * @lucene.experimental
-   * @since 4.0
    */
   public interface LegacyNumericTermAttribute extends Attribute {
     /** Returns current shift value, undefined before first token */
@@ -156,7 +154,6 @@ public final class LegacyNumericTokenStream extends TokenStream {
    * org.apache.solr.legacy.LegacyNumericTokenStream.LegacyNumericTermAttribute}.
    *
    * @lucene.internal
-   * @since 4.0
    */
   public static final class LegacyNumericTermAttributeImpl extends AttributeImpl
       implements LegacyNumericTermAttribute, TermToBytesRefAttribute {

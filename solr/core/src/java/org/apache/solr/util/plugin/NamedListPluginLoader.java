@@ -19,9 +19,7 @@ package org.apache.solr.util.plugin;
 import java.util.Map;
 import org.apache.solr.common.ConfigNode;
 
-/**
- * @since solr 1.3
- */
+/** */
 public class NamedListPluginLoader<T extends NamedListInitializedPlugin>
     extends AbstractPluginLoader<T> {
   private final Map<String, T> registry;

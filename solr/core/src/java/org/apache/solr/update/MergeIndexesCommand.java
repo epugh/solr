@@ -21,11 +21,7 @@ import java.util.stream.Collectors;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.solr.request.SolrQueryRequest;
 
-/**
- * A merge indexes command encapsulated in an object.
- *
- * @since solr 1.4
- */
+/** A merge indexes command encapsulated in an object. */
 public class MergeIndexesCommand extends UpdateCommand {
   public List<DirectoryReader> readers;
 

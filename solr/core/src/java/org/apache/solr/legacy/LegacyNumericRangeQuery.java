@@ -175,7 +175,6 @@ import org.apache.lucene.util.NumericUtils;
  *     FloatPoint.newRangeQuery()}, {@link DoublePoint#newRangeQuery(String, double, double)
  *     DoublePoint.newRangeQuery()} respectively. See {@link PointValues} for background information
  *     on Points.
- * @since 2.9
  */
 @Deprecated
 public final class LegacyNumericRangeQuery<T extends Number> extends MultiTermQuery {

@@ -24,11 +24,7 @@ import org.apache.solr.SolrTestCase;
 import org.apache.solr.common.util.NamedList;
 import org.junit.Test;
 
-/**
- * Test for SpellingQueryConverter
- *
- * @since solr 1.3
- */
+/** Test for SpellingQueryConverter */
 public class SpellingQueryConverterTest extends SolrTestCase {
 
   @Test

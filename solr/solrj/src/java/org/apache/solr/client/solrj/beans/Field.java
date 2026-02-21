@@ -27,8 +27,6 @@ import java.lang.annotation.Target;
 /**
  * This class can be used to annotate a field or a setter an any class and SolrJ would help you
  * convert to SolrInputDocument and from SolrDocument
- *
- * @since solr 1.3
  */
 @Target({FIELD, METHOD})
 @Retention(RUNTIME)

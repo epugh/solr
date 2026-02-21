@@ -38,8 +38,6 @@ import org.xml.sax.helpers.DefaultHandler;
  * other transformations are made on the character content.
  *
  * <p>As of Tika 1.20, this handler ignores content within &lt;script&gt; and &lt;style&gt; tags.
- *
- * @since Apache Tika 0.10
  */
 public class ToTextContentHandler extends DefaultHandler {
 

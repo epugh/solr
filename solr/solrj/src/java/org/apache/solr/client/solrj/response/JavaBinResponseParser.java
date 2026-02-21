@@ -23,9 +23,7 @@ import java.util.Set;
 import org.apache.solr.common.util.JavaBinCodec;
 import org.apache.solr.common.util.NamedList;
 
-/**
- * @since solr 1.3
- */
+/** */
 public class JavaBinResponseParser extends ResponseParser {
   public static final String JAVABIN_CONTENT_TYPE_V2 = "application/vnd.apache.solr.javabin";
   public static final String JAVABIN_CONTENT_TYPE = "application/octet-stream";

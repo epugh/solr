@@ -34,8 +34,6 @@ import org.apache.solr.search.SyntaxError;
 /**
  * This class implements an UpdateProcessorFactory for the Classification Update Processor. It takes
  * in input a series of parameter that will be necessary to instantiate and use the Classifier
- *
- * @since 6.1.0
  */
 public class ClassificationUpdateProcessorFactory extends UpdateRequestProcessorFactory {
 

@@ -89,7 +89,6 @@ import org.apache.lucene.index.IndexOptions;
  * easier, more intuitive usage.
  *
  * @deprecated Please use {@link IntPoint} instead
- * @since 2.9
  */
 @Deprecated
 public final class LegacyIntField extends LegacyField {

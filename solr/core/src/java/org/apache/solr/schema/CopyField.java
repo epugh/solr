@@ -16,11 +16,7 @@
  */
 package org.apache.solr.schema;
 
-/**
- * <code>CopyField</code> contains all the information of a valid copy fields in an index.
- *
- * @since solr 1.4
- */
+/** <code>CopyField</code> contains all the information of a valid copy fields in an index. */
 public class CopyField {
 
   private final SchemaField source;

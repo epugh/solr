@@ -100,8 +100,6 @@ import org.slf4j.LoggerFactory;
  *   &lt;processor class="solr.RunUpdateProcessorFactory" /&gt;
  * &lt;/updateRequestProcessorChain&gt;
  * </pre>
- *
- * @since 10.0.0
  */
 public class DocumentCategorizerUpdateProcessorFactory extends UpdateRequestProcessorFactory
     implements SolrCoreAware {

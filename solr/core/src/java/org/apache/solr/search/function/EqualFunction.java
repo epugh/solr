@@ -26,8 +26,6 @@ import org.apache.lucene.queries.function.valuesource.ComparisonBoolFunction;
 /**
  * Compares two values for equality. It should work on not only numbers but strings and custom
  * things.
- *
- * @since 7.4
  */
 public class EqualFunction extends ComparisonBoolFunction {
 

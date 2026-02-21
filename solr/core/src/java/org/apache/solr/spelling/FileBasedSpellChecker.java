@@ -41,11 +41,7 @@ import org.apache.solr.search.SolrIndexSearcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * A spell checker implementation that loads words from a text file (one word per line).
- *
- * @since solr 1.3
- */
+/** A spell checker implementation that loads words from a text file (one word per line). */
 public class FileBasedSpellChecker extends AbstractLuceneSpellChecker {
 
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

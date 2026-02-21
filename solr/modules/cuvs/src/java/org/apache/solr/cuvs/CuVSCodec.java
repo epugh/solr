@@ -34,8 +34,6 @@ import org.slf4j.LoggerFactory;
 /**
  * This codec utilizes the Lucene99AcceleratedHNSWVectorsFormat from the lucene-cuvs library to
  * enable GPU-based accelerated vector search.
- *
- * @since 10.0.0
  */
 public class CuVSCodec extends FilterCodec {
 

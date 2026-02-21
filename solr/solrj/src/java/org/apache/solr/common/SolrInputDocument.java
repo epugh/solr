@@ -30,8 +30,6 @@ import org.apache.solr.common.params.CommonParams;
 /**
  * Represent the field-value information needed to construct and index a Lucene Document. Like the
  * SolrDocument, the field values should match those specified in schema.xml
- *
- * @since solr 1.3
  */
 public class SolrInputDocument extends SolrDocumentBase<SolrInputField, SolrInputDocument>
     implements Iterable<SolrInputField> {

@@ -117,8 +117,6 @@ import org.apache.solr.common.params.StreamParams;
  * </tr>
  * </tbody>
  * </table>
- *
- * @since 6.0.0
  */
 public class JDBCStream extends TupleStream implements Expressible {
 

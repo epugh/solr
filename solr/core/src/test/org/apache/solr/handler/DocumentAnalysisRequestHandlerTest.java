@@ -37,11 +37,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/**
- * A test for {@link DocumentAnalysisRequestHandler}.
- *
- * @since solr 1.4
- */
+/** A test for {@link DocumentAnalysisRequestHandler}. */
 public class DocumentAnalysisRequestHandlerTest extends AnalysisRequestHandlerTestBase {
 
   private DocumentAnalysisRequestHandler handler;

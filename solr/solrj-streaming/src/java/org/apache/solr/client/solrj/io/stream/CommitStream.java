@@ -36,11 +36,7 @@ import org.apache.solr.client.solrj.io.stream.expr.StreamFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Sends a commit message to a SolrCloud collection
- *
- * @since 6.3.0
- */
+/** Sends a commit message to a SolrCloud collection */
 public class CommitStream extends TupleStream implements Expressible {
   private static final long serialVersionUID = 1L;
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

@@ -38,8 +38,6 @@ import org.apache.solr.search.SolrIndexSearcher;
  * Add values from a ValueSource (function query etc)
  *
  * <p>NOT really sure how or if this could work...
- *
- * @since solr 4.0
  */
 public class ValueSourceAugmenter extends DocTransformer {
   private static final Object NULL_SENTINEL = new Object();

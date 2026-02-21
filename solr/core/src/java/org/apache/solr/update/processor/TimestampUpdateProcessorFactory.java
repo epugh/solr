@@ -38,7 +38,6 @@ import org.apache.solr.response.SolrQueryResponse;
  *
  * @see Date
  * @see CommonParams#NOW
- * @since 4.0.0
  */
 public class TimestampUpdateProcessorFactory extends AbstractDefaultValueUpdateProcessorFactory {
 

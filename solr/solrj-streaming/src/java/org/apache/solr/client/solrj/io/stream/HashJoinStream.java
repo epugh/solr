@@ -40,8 +40,6 @@ import org.apache.solr.client.solrj.io.stream.expr.StreamFactory;
  * calculated from. If a tuple does not contain a value (ie, null) for one of the fields the hash is
  * being computed on then that tuple will not be considered a match to anything. Ie, all fields
  * which are part of the hash must have a non-null value.
- *
- * @since 6.0.0
  */
 public class HashJoinStream extends TupleStream implements Expressible {
 

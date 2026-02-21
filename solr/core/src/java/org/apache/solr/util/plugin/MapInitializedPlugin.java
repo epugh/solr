@@ -18,11 +18,7 @@ package org.apache.solr.util.plugin;
 
 import java.util.Map;
 
-/**
- * A plugin that can be initialized with a Map&lt;String,String&gt;
- *
- * @since solr 1.3
- */
+/** A plugin that can be initialized with a Map&lt;String,String&gt; */
 public interface MapInitializedPlugin {
   void init(Map<String, String> args);
 }

@@ -66,8 +66,6 @@ import org.slf4j.LoggerFactory;
 /**
  * TODO? perhaps use: http://docs.codehaus.org/display/JETTY/ServletTester rather then open a real
  * connection?
- *
- * @since solr 1.3
  */
 @SuppressSSL(bugUrl = "https://issues.apache.org/jira/browse/SOLR-9061")
 public class TestDistributedSearch extends BaseDistributedSearchTestCase {

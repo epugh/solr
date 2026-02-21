@@ -21,11 +21,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.solr.response.transform.DocTransformer;
 
-/**
- * A class representing the return fields
- *
- * @since solr 4.0
- */
+/** A class representing the return fields */
 public abstract class ReturnFields {
   /**
    * Set of field names with their exact names from the lucene index. Class such as ResponseWriters

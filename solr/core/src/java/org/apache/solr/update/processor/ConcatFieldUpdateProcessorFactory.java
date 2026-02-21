@@ -54,8 +54,6 @@ import org.apache.solr.schema.TextField;
  * &lt;processor class="solr.FirstFieldValueUpdateProcessorFactory"&gt;
  *   &lt;str name="fieldName"&gt;primary_author&lt;/str&gt;
  * &lt;/processor&gt;</pre>
- *
- * @since 4.0.0
  */
 public final class ConcatFieldUpdateProcessorFactory extends FieldMutatingUpdateProcessorFactory {
 

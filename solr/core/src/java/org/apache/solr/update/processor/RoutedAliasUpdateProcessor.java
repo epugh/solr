@@ -64,8 +64,6 @@ import org.slf4j.LoggerFactory;
  * pointed to by the alias must be named for the alias plus underscored ('_') and a routing
  * specifier specific to the type of routed alias. These collections should not be created by the
  * user, but are created automatically by the routed alias.
- *
- * @since 7.2.0 (formerly known as TimeRoutedAliasUpdateProcessor)
  */
 public class RoutedAliasUpdateProcessor extends UpdateRequestProcessor {
 

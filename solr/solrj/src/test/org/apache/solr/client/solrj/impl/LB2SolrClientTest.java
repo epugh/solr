@@ -50,11 +50,7 @@ import org.apache.solr.util.LogLevel;
 import org.apache.solr.util.LogListener;
 import org.junit.BeforeClass;
 
-/**
- * Integration test for {@link LBSolrClient}
- *
- * @since solr 1.4
- */
+/** Integration test for {@link LBSolrClient} */
 @LogLevel("org.apache.solr.client.solrj.impl=DEBUG")
 public class LB2SolrClientTest extends SolrTestCaseJ4 {
 

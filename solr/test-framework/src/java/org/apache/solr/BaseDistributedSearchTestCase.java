@@ -91,8 +91,6 @@ import org.slf4j.LoggerFactory;
  * fixShardCount(N) available, which is identical to {@literal @}ShardsFixed(num = N) for all tests
  * without annotations in that class hierarchy. Ideally this function should be retired in favour of
  * better annotations.
- *
- * @since solr 1.5
  */
 public abstract class BaseDistributedSearchTestCase extends SolrTestCaseJ4 {
 

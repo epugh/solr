@@ -24,11 +24,7 @@ import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.common.params.SolrParams;
 import org.apache.solr.common.util.NamedList;
 
-/**
- * A request for the org.apache.solr.handler.FieldAnalysisRequestHandler.
- *
- * @since solr.14
- */
+/** A request for the org.apache.solr.handler.FieldAnalysisRequestHandler. */
 public class FieldAnalysisRequest extends CollectionRequiringSolrRequest<FieldAnalysisResponse> {
 
   private String fieldValue;

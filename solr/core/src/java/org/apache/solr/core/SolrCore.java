@@ -293,11 +293,7 @@ public class SolrCore implements SolrInfoBean, Closeable {
 
   public final SolrCore.Provider coreProvider;
 
-  /**
-   * The SolrResourceLoader used to load all resources for this core.
-   *
-   * @since solr 1.3
-   */
+  /** The SolrResourceLoader used to load all resources for this core. */
   public SolrResourceLoader getResourceLoader() {
     return resourceLoader;
   }
@@ -316,11 +312,7 @@ public class SolrCore implements SolrInfoBean, Closeable {
     return latest.getLoader();
   }
 
-  /**
-   * Gets the configuration resource name used by this core instance.
-   *
-   * @since solr 1.3
-   */
+  /** Gets the configuration resource name used by this core instance. */
   public String getConfigResource() {
     return solrConfig.getResourceName();
   }
@@ -330,11 +322,7 @@ public class SolrCore implements SolrInfoBean, Closeable {
     return solrConfig;
   }
 
-  /**
-   * Gets the schema resource name used by this core instance.
-   *
-   * @since solr 1.3
-   */
+  /** Gets the schema resource name used by this core instance. */
   public String getSchemaResource() {
     return getLatestSchema().getResourceName();
   }
@@ -583,7 +571,6 @@ public class SolrCore implements SolrInfoBean, Closeable {
    * over it.
    *
    * @return the Info Registry map which contains SolrInfoBean objects keyed by name
-   * @since solr 1.3
    */
   public Map<String, SolrInfoBean> getInfoRegistry() {
     return infoRegistry;

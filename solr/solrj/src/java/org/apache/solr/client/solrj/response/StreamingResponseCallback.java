@@ -18,11 +18,7 @@ package org.apache.solr.client.solrj.response;
 
 import org.apache.solr.common.SolrDocument;
 
-/**
- * A callback interface for streaming response
- *
- * @since solr 4.0
- */
+/** A callback interface for streaming response */
 public abstract class StreamingResponseCallback {
   /*
    * Called for each SolrDocument in the response

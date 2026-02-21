@@ -24,8 +24,6 @@ package org.apache.solr.search;
  * or inserted into a cache and should be considered shared.
  *
  * <p>Oh, if only java had "out" parameters or multiple return args...
- *
- * @since solr 0.9
  */
 public final class DocListAndSet {
   public DocList docList;

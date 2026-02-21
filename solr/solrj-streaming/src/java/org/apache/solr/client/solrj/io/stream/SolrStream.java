@@ -42,11 +42,7 @@ import org.apache.solr.common.params.StreamParams;
 import org.apache.solr.common.util.IOUtils;
 import org.apache.solr.common.util.NamedList;
 
-/**
- * Queries a single Solr instance and maps SolrDocs to a Stream of Tuples.
- *
- * @since 5.1.0
- */
+/** Queries a single Solr instance and maps SolrDocs to a Stream of Tuples. */
 public class SolrStream extends TupleStream {
 
   private static final long serialVersionUID = 1;

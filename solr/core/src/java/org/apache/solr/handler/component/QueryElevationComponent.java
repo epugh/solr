@@ -98,11 +98,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-/**
- * A component to elevate some documents to the top of the result set.
- *
- * @since solr 1.3
- */
+/** A component to elevate some documents to the top of the result set. */
 @SuppressWarnings("WeakerAccess")
 public class QueryElevationComponent extends SearchComponent implements SolrCoreAware {
 

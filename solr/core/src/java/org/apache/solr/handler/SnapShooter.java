@@ -54,8 +54,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Provides functionality equivalent to the snapshooter script This is no longer used in standard
  * replication.
- *
- * @since solr 1.4
  */
 public class SnapShooter {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

@@ -30,9 +30,7 @@ import org.apache.solr.common.util.NamedList;
 import org.apache.solr.core.SolrCore;
 import org.apache.solr.request.SolrQueryRequest;
 
-/**
- * @since solr 4.0
- */
+/** */
 public class ShardAugmenterFactory extends TransformerFactory {
   protected enum Style {
     URLS,

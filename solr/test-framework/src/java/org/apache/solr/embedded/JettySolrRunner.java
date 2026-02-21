@@ -98,11 +98,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-/**
- * Run solr using jetty
- *
- * @since solr 1.3
- */
+/** Run solr using jetty */
 public class JettySolrRunner {
 
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

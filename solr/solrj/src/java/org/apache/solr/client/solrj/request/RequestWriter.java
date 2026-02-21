@@ -30,8 +30,6 @@ import org.apache.solr.common.util.ContentStream;
  *
  * <p>A subclass can override the methods in this class to supply a custom format in which a request
  * can be sent.
- *
- * @since solr 1.4
  */
 public abstract class RequestWriter {
 

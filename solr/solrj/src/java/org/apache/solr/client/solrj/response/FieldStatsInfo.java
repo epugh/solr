@@ -25,11 +25,7 @@ import java.util.List;
 import java.util.Map;
 import org.apache.solr.common.util.NamedList;
 
-/**
- * Holds stats info
- *
- * @since solr 1.4
- */
+/** Holds stats info */
 public class FieldStatsInfo implements Serializable {
   final String name;
 

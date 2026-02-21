@@ -44,7 +44,6 @@ import org.slf4j.LoggerFactory;
  * href="https://solr.apache.org/guide/solr/latest/indexing-guide/language-detection.html">Detecting
  * Languages During Indexing</a> in reference guide
  *
- * @since 3.5
  * @lucene.experimental
  */
 public abstract class LanguageIdentifierUpdateProcessor extends UpdateRequestProcessor

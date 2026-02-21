@@ -41,7 +41,6 @@ import org.apache.solr.common.util.NamedList;
  * javabin format and vice versa.
  *
  * @see org.apache.solr.common.util.JavaBinCodec
- * @since solr 1.4
  */
 public class JavaBinUpdateRequestCodec {
 

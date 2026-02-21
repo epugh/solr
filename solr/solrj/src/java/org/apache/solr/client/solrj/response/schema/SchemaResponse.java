@@ -30,7 +30,6 @@ import org.apache.solr.common.util.NamedList;
  *
  * @see <a href="https://solr.apache.org/guide/solr/latest/indexing-guide/schema-api.html">Solr
  *     Schema API</a>
- * @since solr 5.3
  */
 public class SchemaResponse extends SolrResponseBase {
   private SchemaRepresentation schemaRepresentation;

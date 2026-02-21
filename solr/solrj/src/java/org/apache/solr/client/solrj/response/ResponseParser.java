@@ -21,11 +21,7 @@ import java.io.InputStream;
 import java.util.Collection;
 import org.apache.solr.common.util.NamedList;
 
-/**
- * SolrJ Solr response parser.
- *
- * @since solr 1.3
- */
+/** SolrJ Solr response parser. */
 public abstract class ResponseParser {
 
   /** The writer type placed onto the request as the {@code wt} param. */

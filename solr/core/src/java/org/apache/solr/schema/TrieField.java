@@ -83,7 +83,6 @@ import org.slf4j.LoggerFactory;
  * but sorting will still be possible.
  *
  * @see org.apache.solr.legacy.LegacyNumericRangeQuery
- * @since solr 1.4
  * @deprecated Trie fields are deprecated as of Solr 7.0
  * @see PointField
  */

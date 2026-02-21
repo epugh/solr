@@ -20,11 +20,7 @@ import org.apache.solr.client.solrj.MergeIndexesExampleTestBase;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.core.SolrCore;
 
-/**
- * Test for merge indexes command
- *
- * @since solr 1.4
- */
+/** Test for merge indexes command */
 public class MergeIndexesEmbeddedTest extends MergeIndexesExampleTestBase {
 
   @Override

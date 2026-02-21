@@ -37,8 +37,6 @@ import org.apache.solr.util.ConcurrentLRUCache;
  * <p>The format of the parameter is &lt;field-name&gt;:&lt;the-template-string&gt;, for example:
  * <br>
  * <b>Template.field=fname:${somefield}some_string${someotherfield}</b>
- *
- * @since 6.3.0
  */
 public class TemplateUpdateProcessorFactory extends SimpleUpdateProcessorFactory {
   private Cache<String, Resolved> templateCache =

@@ -23,11 +23,7 @@ import org.apache.solr.core.SolrCore;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.response.SolrQueryResponse;
 
-/**
- * A split index command encapsulated in an object.
- *
- * @since solr 1.4
- */
+/** A split index command encapsulated in an object. */
 public class SplitIndexCommand extends UpdateCommand {
   public final SolrQueryResponse rsp;
   public final List<String> paths;

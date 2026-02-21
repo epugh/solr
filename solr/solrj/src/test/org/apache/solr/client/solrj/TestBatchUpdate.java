@@ -36,11 +36,7 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 
-/**
- * Test for SOLR-1038
- *
- * @since solr 1.4
- */
+/** Test for SOLR-1038 */
 @SuppressSSL(bugUrl = "https://issues.apache.org/jira/browse/SOLR-5776")
 public class TestBatchUpdate extends SolrTestCaseJ4 {
 

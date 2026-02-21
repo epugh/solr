@@ -24,11 +24,7 @@ import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.schema.FieldType;
 import org.apache.solr.schema.SchemaField;
 
-/**
- * Used to mark whether a document has been elevated or not
- *
- * @since solr 4.0
- */
+/** Used to mark whether a document has been elevated or not */
 public class ElevatedMarkerFactory extends TransformerFactory {
   @Override
   public DocTransformer create(String field, SolrParams params, SolrQueryRequest req) {

@@ -36,8 +36,6 @@ import org.apache.solr.common.util.NamedList;
  *
  * <p>For indexing documents, use the SolrInputDocument that contains extra information for document
  * and field boosting.
- *
- * @since solr 1.3
  */
 public class SolrDocument extends SolrDocumentBase<Object, SolrDocument>
     implements Iterable<Map.Entry<String, Object>> {

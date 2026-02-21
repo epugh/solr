@@ -44,11 +44,7 @@ import org.apache.zookeeper.KeeperException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Zookeeper Status handler, talks to ZK using sockets and four-letter words
- *
- * @since solr 7.5
- */
+/** Zookeeper Status handler, talks to ZK using sockets and four-letter words */
 public class ZookeeperStatusHandler extends RequestHandlerBase {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

@@ -34,11 +34,7 @@ import org.apache.solr.core.CoreContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Abstract base class for testing merge indexes command
- *
- * @since solr 1.4
- */
+/** Abstract base class for testing merge indexes command */
 public abstract class MergeIndexesExampleTestBase extends SolrTestCaseJ4 {
 
   protected CoreContainer cores;

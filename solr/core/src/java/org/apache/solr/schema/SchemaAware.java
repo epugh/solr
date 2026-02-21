@@ -19,8 +19,6 @@ package org.apache.solr.schema;
 /**
  * An interface that can be extended to provide a callback mechanism for informing an {@link
  * IndexSchema} instance of changes to it, dynamically performed at runtime.
- *
- * @since SOLR-1131
  */
 public interface SchemaAware {
   /**
@@ -28,7 +26,6 @@ public interface SchemaAware {
    * (e.g., a new {@link FieldType} was added, etc.
    *
    * @param schema The {@link IndexSchema} instance that inform of the update to.
-   * @since SOLR-1131
    */
   public void inform(IndexSchema schema);
 }

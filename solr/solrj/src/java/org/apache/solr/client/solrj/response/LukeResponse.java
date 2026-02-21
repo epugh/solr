@@ -26,11 +26,7 @@ import java.util.Map;
 import org.apache.solr.common.luke.FieldFlag;
 import org.apache.solr.common.util.NamedList;
 
-/**
- * This is an incomplete representation of the data returned from Luke
- *
- * @since solr 1.3
- */
+/** This is an incomplete representation of the data returned from Luke */
 public class LukeResponse extends SolrResponseBase {
 
   public static class FieldTypeInfo implements Serializable {

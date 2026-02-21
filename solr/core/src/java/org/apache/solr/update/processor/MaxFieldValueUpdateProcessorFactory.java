@@ -44,7 +44,6 @@ import org.apache.solr.update.processor.FieldMutatingUpdateProcessor.FieldNameSe
  *
  * @see MinFieldValueUpdateProcessorFactory
  * @see Collections#max
- * @since 4.0.0
  */
 public final class MaxFieldValueUpdateProcessorFactory
     extends FieldValueSubsetUpdateProcessorFactory {

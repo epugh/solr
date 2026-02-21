@@ -19,9 +19,7 @@ package org.apache.solr.common.params;
 import java.util.Locale;
 import org.apache.solr.common.SolrException;
 
-/**
- * @since solr 1.3
- */
+/** */
 public abstract class CoreAdminParams {
   /** What Core are we talking about * */
   public static final String CORE = "core";

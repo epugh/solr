@@ -64,8 +64,6 @@ import org.apache.solr.uninverting.UninvertingReader.Type;
  * </ul>
  *
  * Note that multiple calls to the same URL will return the same sorting order.
- *
- * @since solr 1.3
  */
 public class RandomSortField extends FieldType {
   // Thomas Wang's hash32shift function, from http://www.cris.com/~Ttwang/tech/inthash.htm

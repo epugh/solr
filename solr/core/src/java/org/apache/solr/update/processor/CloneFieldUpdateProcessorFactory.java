@@ -153,7 +153,6 @@ import org.slf4j.LoggerFactory;
  * single value.
  *
  * @see FieldValueSubsetUpdateProcessorFactory
- * @since 4.0.0
  */
 public class CloneFieldUpdateProcessorFactory extends UpdateRequestProcessorFactory
     implements SolrCoreAware {

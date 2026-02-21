@@ -95,8 +95,6 @@ import org.slf4j.LoggerFactory;
  *
  * <p>Tip: you can use multiple instances of this URP in your chain with different locales or
  * default time zones if you wish to vary those settings for different format patterns.
- *
- * @since 4.4.0
  */
 public class ParseDateFieldUpdateProcessorFactory extends FieldMutatingUpdateProcessorFactory {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

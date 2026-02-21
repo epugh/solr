@@ -34,8 +34,6 @@ public class SolrException extends RuntimeException {
   /**
    * This list of valid HTTP Status error codes that Solr may return when there is a "Server Side"
    * error.
-   *
-   * @since solr 1.2
    */
   public enum ErrorCode {
     BAD_REQUEST(400),

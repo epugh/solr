@@ -37,8 +37,6 @@ import org.slf4j.LoggerFactory;
  * throw an error and halt indexing (remove anything already indexed??)
  *
  * <p>By default, this just passes the request to the next processor in the chain.
- *
- * @since solr 1.3
  */
 @NotThreadSafe
 public abstract class UpdateRequestProcessor implements Closeable {
@@ -66,9 +64,7 @@ public abstract class UpdateRequestProcessor implements Closeable {
     if (next != null) next.processCommit(cmd);
   }
 
-  /**
-   * @since Solr 1.4
-   */
+  /** */
   public void processRollback(RollbackUpdateCommand cmd) throws IOException {
     if (next != null) next.processRollback(cmd);
   }

@@ -16,11 +16,7 @@
  */
 package org.apache.solr.common.params;
 
-/**
- * Defines the request parameters used by all analysis request handlers.
- *
- * @since solr 1.4
- */
+/** Defines the request parameters used by all analysis request handlers. */
 public interface AnalysisParams {
 
   /** The prefix for all parameters. */

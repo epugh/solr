@@ -124,11 +124,7 @@ import org.apache.solr.util.stats.MetricUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * SolrIndexSearcher adds schema awareness and caching functionality over {@link IndexSearcher}.
- *
- * @since solr 0.9
- */
+/** SolrIndexSearcher adds schema awareness and caching functionality over {@link IndexSearcher}. */
 public class SolrIndexSearcher extends IndexSearcher implements Closeable, SolrInfoBean {
 
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

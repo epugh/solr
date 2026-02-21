@@ -31,8 +31,6 @@ import org.apache.solr.client.solrj.io.stream.expr.StreamFactory;
 /**
  * A simple no-operation stream. Immediately returns eof. Mostly intended for use as a placeholder
  * in {@link org.apache.solr.client.solrj.io.stream.expr.InjectionDefense}.
- *
- * @since 8.0.0
  */
 public class NoOpStream extends TupleStream implements Expressible {
 

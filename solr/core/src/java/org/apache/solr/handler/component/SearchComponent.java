@@ -24,11 +24,7 @@ import org.apache.solr.metrics.SolrMetricsContext;
 import org.apache.solr.search.facet.FacetModule;
 import org.apache.solr.util.plugin.NamedListInitializedPlugin;
 
-/**
- * TODO!
- *
- * @since solr 1.3
- */
+/** TODO! */
 public abstract class SearchComponent implements SolrInfoBean, NamedListInitializedPlugin {
   /** The name given to this component in solrconfig.xml file */
   private String name = this.getClass().getName();

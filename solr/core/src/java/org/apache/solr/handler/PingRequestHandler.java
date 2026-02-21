@@ -104,8 +104,6 @@ import org.slf4j.LoggerFactory;
  *   <li><code>http://.../ping?action=status</code> - returns a status code indicating if the
  *       healthcheck file exists ("<code>enabled</code>") or not ("<code>disabled</code>")
  * </ul>
- *
- * @since solr 1.3
  */
 public class PingRequestHandler extends RequestHandlerBase implements SolrCoreAware {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

@@ -23,8 +23,6 @@ import java.util.Iterator;
 /**
  * Represent a list of SolrDocuments returned from a search. This includes position and offset
  * information.
- *
- * @since solr 1.3
  */
 public class SolrDocumentList extends ArrayList<SolrDocument> implements MapWriter {
 

@@ -39,7 +39,6 @@ import org.apache.solr.update.AddUpdateCommand;
  *
  * @see IndexSchema#NEST_PARENT_FIELD_NAME
  * @see IndexSchema#NEST_PATH_FIELD_NAME
- * @since 7.5.0
  */
 public class NestedUpdateProcessorFactory extends UpdateRequestProcessorFactory {
 

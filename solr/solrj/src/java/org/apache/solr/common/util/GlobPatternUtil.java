@@ -172,7 +172,6 @@ public class GlobPatternUtil {
    * @param search the start to search for, not null
    * @return the first index of the search String, -1 if no match or {@code null} string input
    * @throws NullPointerException if either string is null
-   * @since 2.0
    */
   private static int checkIndexOf(final String str, final int strStartIndex, final String search) {
     final int endIndex = str.length() - search.length();
