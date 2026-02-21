@@ -1,0 +1,78 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.solr.handler.admin.api;
+
+import static org.apache.solr.common.params.CollectionAdminParams.COLLECTION;
+import static org.apache.solr.common.params.CommonParams.ACTION;
+import static org.apache.solr.handler.ClusterAPI.wrapParams;
+import static org.apache.solr.security.PermissionNameProvider.Name.COLL_EDIT_PERM;
+
+import jakarta.inject.Inject;
+import java.util.HashMap;
+import java.util.Map;
+import org.apache.solr.client.api.endpoint.MoveReplicaApi;
+import org.apache.solr.client.api.model.MoveReplicaRequestBody;
+import org.apache.solr.client.api.model.SolrJerseyResponse;
+import org.apache.solr.common.params.CollectionParams;
+import org.apache.solr.core.CoreContainer;
+import org.apache.solr.jersey.PermissionName;
+import org.apache.solr.request.SolrQueryRequest;
+import org.apache.solr.response.SolrQueryResponse;
+
+/**
+ * V2 API implementation for moving a collection replica to a different node.
+ *
+ * <p>This API (POST /v2/collections/collectionName/move-replica) is analogous to the v1
+ * /admin/collections?action=MOVEREPLICA command.
+ */
+public class MoveReplica extends AdminAPIBase implements MoveReplicaApi {
+
+  @Inject
+  public MoveReplica(
+      CoreContainer coreContainer,
+      SolrQueryRequest solrQueryRequest,
+      SolrQueryResponse solrQueryResponse) {
+    super(coreContainer, solrQueryRequest, solrQueryResponse);
+  }
+
+  @Override
+  @PermissionName(COLL_EDIT_PERM)
+  public SolrJerseyResponse moveReplica(String collectionName, MoveReplicaRequestBody requestBody)
+      throws Exception {
+    ensureRequiredParameterProvided(COLLECTION, collectionName);
+    final SolrJerseyResponse response = instantiateJerseyResponse(SolrJerseyResponse.class);
+    final Map<String, Object> v1Params = new HashMap<>();
+    v1Params.put(ACTION, CollectionParams.CollectionAction.MOVEREPLICA.toLower());
+    v1Params.put(COLLECTION, collectionName);
+    if (requestBody != null) {
+      if (requestBody.targetNode != null) v1Params.put("targetNode", requestBody.targetNode);
+      if (requestBody.replica != null) v1Params.put("replica", requestBody.replica);
+      if (requestBody.shard != null) v1Params.put("shard", requestBody.shard);
+      if (requestBody.sourceNode != null) v1Params.put("sourceNode", requestBody.sourceNode);
+      if (requestBody.waitForFinalState != null)
+        v1Params.put("waitForFinalState", requestBody.waitForFinalState);
+      if (requestBody.timeout != null) v1Params.put("timeout", requestBody.timeout);
+      if (requestBody.inPlaceMove != null) v1Params.put("inPlaceMove", requestBody.inPlaceMove);
+      if (requestBody.followAliases != null)
+        v1Params.put("followAliases", requestBody.followAliases);
+    }
+    coreContainer
+        .getCollectionsHandler()
+        .handleRequestBody(wrapParams(solrQueryRequest, v1Params), solrQueryResponse);
+    return response;
+  }
+}

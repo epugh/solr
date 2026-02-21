@@ -21,14 +21,15 @@ import static org.apache.solr.common.params.CommonParams.NAME;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Enumeration;
-import org.apache.solr.api.AnnotatedApi;
+import java.util.List;
 import org.apache.solr.api.Api;
+import org.apache.solr.api.JerseyResource;
 import org.apache.solr.common.util.NamedList;
 import org.apache.solr.common.util.SimpleOrderedMap;
 import org.apache.solr.core.CoreContainer;
 import org.apache.solr.core.NodeConfig;
 import org.apache.solr.handler.RequestHandlerBase;
-import org.apache.solr.handler.admin.api.NodePropertiesAPI;
+import org.apache.solr.handler.admin.api.NodeProperties;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.response.SolrQueryResponse;
 import org.apache.solr.security.AuthorizationContext;
@@ -82,7 +83,12 @@ public class PropertiesRequestHandler extends RequestHandlerBase {
 
   @Override
   public Collection<Api> getApis() {
-    return AnnotatedApi.getApis(new NodePropertiesAPI(this));
+    return List.of();
+  }
+
+  @Override
+  public Collection<Class<? extends JerseyResource>> getJerseyResources() {
+    return List.of(NodeProperties.class);
   }
 
   @Override

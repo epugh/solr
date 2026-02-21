@@ -116,7 +116,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import org.apache.solr.api.AnnotatedApi;
 import org.apache.solr.api.Api;
 import org.apache.solr.api.JerseyResource;
 import org.apache.solr.client.api.model.AddReplicaPropertyRequestBody;
@@ -197,16 +196,16 @@ import org.apache.solr.handler.admin.api.ListAliases;
 import org.apache.solr.handler.admin.api.ListCollectionBackups;
 import org.apache.solr.handler.admin.api.ListCollectionSnapshots;
 import org.apache.solr.handler.admin.api.ListCollections;
-import org.apache.solr.handler.admin.api.MigrateDocsAPI;
+import org.apache.solr.handler.admin.api.MigrateDocs;
 import org.apache.solr.handler.admin.api.MigrateReplicas;
-import org.apache.solr.handler.admin.api.ModifyCollectionAPI;
-import org.apache.solr.handler.admin.api.MoveReplicaAPI;
-import org.apache.solr.handler.admin.api.RebalanceLeadersAPI;
+import org.apache.solr.handler.admin.api.ModifyCollection;
+import org.apache.solr.handler.admin.api.MoveReplica;
+import org.apache.solr.handler.admin.api.RebalanceLeaders;
 import org.apache.solr.handler.admin.api.ReloadCollectionAPI;
 import org.apache.solr.handler.admin.api.RenameCollection;
 import org.apache.solr.handler.admin.api.ReplaceNode;
 import org.apache.solr.handler.admin.api.RestoreCollection;
-import org.apache.solr.handler.admin.api.SplitShardAPI;
+import org.apache.solr.handler.admin.api.SplitShard;
 import org.apache.solr.handler.admin.api.SyncShard;
 import org.apache.solr.handler.api.V2ApiUtils;
 import org.apache.solr.logging.MDCLoggingContext;
@@ -1009,7 +1008,7 @@ public class CollectionsHandler extends RequestHandlerBase implements Permission
     REBALANCELEADERS_OP(
         REBALANCELEADERS,
         (req, rsp, h) -> {
-          new RebalanceLeaders(req, rsp, h).execute();
+          new org.apache.solr.handler.admin.RebalanceLeaders(req, rsp, h).execute();
           return null;
         }),
     // XXX should this command support followAliases?
@@ -1373,18 +1372,17 @@ public class CollectionsHandler extends RequestHandlerBase implements Permission
         ListCollectionSnapshots.class,
         CreateCollectionSnapshot.class,
         DeleteCollectionSnapshot.class,
-        ClusterProperty.class);
+        ClusterProperty.class,
+        SplitShard.class,
+        MigrateDocs.class,
+        ModifyCollection.class,
+        MoveReplica.class,
+        RebalanceLeaders.class);
   }
 
   @Override
   public Collection<Api> getApis() {
-    final List<Api> apis = new ArrayList<>();
-    apis.addAll(AnnotatedApi.getApis(new SplitShardAPI(this)));
-    apis.addAll(AnnotatedApi.getApis(new MigrateDocsAPI(this)));
-    apis.addAll(AnnotatedApi.getApis(new ModifyCollectionAPI(this)));
-    apis.addAll(AnnotatedApi.getApis(new MoveReplicaAPI(this)));
-    apis.addAll(AnnotatedApi.getApis(new RebalanceLeadersAPI(this)));
-    return apis;
+    return List.of();
   }
 
   // These "copy" methods were once SolrParams.getAll but were moved here as there is no universal

@@ -27,7 +27,6 @@ import com.github.benmanes.caffeine.cache.Expiry;
 import com.github.benmanes.caffeine.cache.Ticker;
 import io.opentelemetry.api.common.Attributes;
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +36,6 @@ import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
-import org.apache.solr.api.AnnotatedApi;
 import org.apache.solr.api.Api;
 import org.apache.solr.api.JerseyResource;
 import org.apache.solr.cloud.CloudDescriptor;
@@ -60,17 +58,17 @@ import org.apache.solr.handler.admin.api.CreateCoreBackup;
 import org.apache.solr.handler.admin.api.GetNodeCommandStatus;
 import org.apache.solr.handler.admin.api.InstallCoreData;
 import org.apache.solr.handler.admin.api.MergeIndexes;
-import org.apache.solr.handler.admin.api.OverseerOperationAPI;
-import org.apache.solr.handler.admin.api.PrepareCoreRecoveryAPI;
-import org.apache.solr.handler.admin.api.RejoinLeaderElectionAPI;
+import org.apache.solr.handler.admin.api.OverseerOperation;
+import org.apache.solr.handler.admin.api.PrepareCoreRecovery;
+import org.apache.solr.handler.admin.api.RejoinLeaderElection;
 import org.apache.solr.handler.admin.api.ReloadCore;
 import org.apache.solr.handler.admin.api.RenameCore;
-import org.apache.solr.handler.admin.api.RequestApplyCoreUpdatesAPI;
-import org.apache.solr.handler.admin.api.RequestBufferUpdatesAPI;
-import org.apache.solr.handler.admin.api.RequestCoreRecoveryAPI;
-import org.apache.solr.handler.admin.api.RequestSyncShardAPI;
+import org.apache.solr.handler.admin.api.RequestApplyCoreUpdates;
+import org.apache.solr.handler.admin.api.RequestBufferUpdates;
+import org.apache.solr.handler.admin.api.RequestCoreRecovery;
+import org.apache.solr.handler.admin.api.RequestSyncShard;
 import org.apache.solr.handler.admin.api.RestoreCore;
-import org.apache.solr.handler.admin.api.SplitCoreAPI;
+import org.apache.solr.handler.admin.api.SplitCore;
 import org.apache.solr.handler.admin.api.SwapCores;
 import org.apache.solr.handler.admin.api.UnloadCore;
 import org.apache.solr.logging.MDCLoggingContext;
@@ -311,18 +309,7 @@ public class CoreAdminHandler extends RequestHandlerBase implements PermissionNa
 
   @Override
   public Collection<Api> getApis() {
-    final List<Api> apis = new ArrayList<>();
-    apis.addAll(AnnotatedApi.getApis(new RejoinLeaderElectionAPI(this)));
-    apis.addAll(AnnotatedApi.getApis(new OverseerOperationAPI(this)));
-    apis.addAll(AnnotatedApi.getApis(new SplitCoreAPI(this)));
-    // Internal APIs
-    apis.addAll(AnnotatedApi.getApis(new RequestCoreRecoveryAPI(this)));
-    apis.addAll(AnnotatedApi.getApis(new PrepareCoreRecoveryAPI(this)));
-    apis.addAll(AnnotatedApi.getApis(new RequestApplyCoreUpdatesAPI(this)));
-    apis.addAll(AnnotatedApi.getApis(new RequestSyncShardAPI(this)));
-    apis.addAll(AnnotatedApi.getApis(new RequestBufferUpdatesAPI(this)));
-
-    return apis;
+    return List.of();
   }
 
   @Override
@@ -339,7 +326,15 @@ public class CoreAdminHandler extends RequestHandlerBase implements PermissionNa
         SwapCores.class,
         RenameCore.class,
         MergeIndexes.class,
-        GetNodeCommandStatus.class);
+        GetNodeCommandStatus.class,
+        RejoinLeaderElection.class,
+        OverseerOperation.class,
+        SplitCore.class,
+        RequestCoreRecovery.class,
+        PrepareCoreRecovery.class,
+        RequestApplyCoreUpdates.class,
+        RequestSyncShard.class,
+        RequestBufferUpdates.class);
   }
 
   public interface CoreAdminOp {
