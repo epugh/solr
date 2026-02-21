@@ -208,7 +208,7 @@ public class NodeHealth extends JerseyResource implements NodeHealthApi {
         long generationDiff = leaderGeneration - followerGeneration;
 
         if (generationDiff < 0) {
-          log.warn("core:[{}], generation lag:[{}] is negative.");
+          log.warn("core:[{}], generation lag:[{}] is negative.", core, generationDiff);
         } else if (generationDiff < maxGenerationLag) {
           log.info(
               "core:[{}] generation lag is above acceptable threshold:[{}], "

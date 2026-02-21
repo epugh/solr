@@ -27,7 +27,7 @@ import org.apache.solr.handler.api.V2ApiUtils;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.response.SolrQueryResponse;
 import org.apache.solr.security.AuthorizationContext;
-import org.apache.solr.security.PermissionNameProvider.Name;
+import org.apache.solr.security.PermissionNameProvider;
 
 /**
  * @since solr 1.2
@@ -68,7 +68,7 @@ public class ThreadDumpHandler extends RequestHandlerBase {
   }
 
   @Override
-  public Name getPermissionName(AuthorizationContext request) {
-    return Name.METRICS_READ_PERM;
+  public PermissionNameProvider.Name getPermissionName(AuthorizationContext request) {
+    return PermissionNameProvider.Name.METRICS_READ_PERM;
   }
 }

@@ -30,7 +30,7 @@ import org.apache.solr.handler.api.V2ApiUtils;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.response.SolrQueryResponse;
 import org.apache.solr.security.AuthorizationContext;
-import org.apache.solr.security.PermissionNameProvider.Name;
+import org.apache.solr.security.PermissionNameProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -117,7 +117,7 @@ public class HealthCheckHandler extends RequestHandlerBase {
   }
 
   @Override
-  public Name getPermissionName(AuthorizationContext request) {
-    return Name.HEALTH_PERM;
+  public PermissionNameProvider.Name getPermissionName(AuthorizationContext request) {
+    return PermissionNameProvider.Name.HEALTH_PERM;
   }
 }
