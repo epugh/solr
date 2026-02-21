@@ -108,7 +108,6 @@ import org.apache.solr.core.backup.repository.BackupRepositoryFactory;
 import org.apache.solr.filestore.ClusterFileStore;
 import org.apache.solr.filestore.DistribFileStore;
 import org.apache.solr.filestore.FileStore;
-import org.apache.solr.handler.ClusterAPI;
 import org.apache.solr.handler.RequestHandlerBase;
 import org.apache.solr.handler.SnapShooter;
 import org.apache.solr.handler.admin.CollectionsHandler;
@@ -864,9 +863,8 @@ public class CoreContainer {
     configSetsHandler =
         createHandler(
             CONFIGSETS_HANDLER_PATH, cfg.getConfigSetsHandlerClass(), ConfigSetsHandler.class);
-    ClusterAPI clusterAPI = new ClusterAPI(collectionsHandler, configSetsHandler);
-    registerV2ApiIfEnabled(clusterAPI);
-    registerV2ApiIfEnabled(clusterAPI.commands);
+    registerV2ApiIfEnabled(org.apache.solr.handler.admin.api.Cluster.class);
+    registerV2ApiIfEnabled(org.apache.solr.handler.admin.api.ClusterNodeRoles.class);
 
     if (isZooKeeperAware()) {
       registerV2ApiIfEnabled(new SchemaDesignerAPI(this));
