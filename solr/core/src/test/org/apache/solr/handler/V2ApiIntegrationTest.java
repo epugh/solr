@@ -87,13 +87,16 @@ public class V2ApiIntegrationTest extends SolrCloudTestCase {
   @Test
   public void testException() {
     String notFoundPath = "/c/" + COLL_NAME + "/abccdef";
-    String incorrectPayload = "{rebalance-leaders: {maxAtOnce: abc, maxWaitSeconds: xyz}}";
-    testException(new XMLResponseParser(), 404, notFoundPath, incorrectPayload);
-    testException(new JsonMapResponseParser(), 404, notFoundPath, incorrectPayload);
-    testException(new JavaBinResponseParser(), 404, notFoundPath, incorrectPayload);
-    testException(new XMLResponseParser(), 400, "/c/" + COLL_NAME, incorrectPayload);
-    testException(new JavaBinResponseParser(), 400, "/c/" + COLL_NAME, incorrectPayload);
-    testException(new JsonMapResponseParser(), 400, "/c/" + COLL_NAME, incorrectPayload);
+    String anyPayload = "{}";
+    testException(new XMLResponseParser(), 404, notFoundPath, anyPayload);
+    testException(new JsonMapResponseParser(), 404, notFoundPath, anyPayload);
+    testException(new JavaBinResponseParser(), 404, notFoundPath, anyPayload);
+    // POST to a valid JAX-RS endpoint with missing required field -> 400 from Solr's own code.
+    // Uses /collections/ prefix (not /c/) because JAX-RS @Path annotations use /collections/.
+    String badRequestPath = "/collections/" + COLL_NAME + "/balance-shard-unique";
+    testException(new XMLResponseParser(), 400, badRequestPath, anyPayload);
+    testException(new JavaBinResponseParser(), 400, badRequestPath, anyPayload);
+    testException(new JsonMapResponseParser(), 400, badRequestPath, anyPayload);
   }
 
   @Test
