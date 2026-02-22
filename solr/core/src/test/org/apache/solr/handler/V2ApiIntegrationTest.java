@@ -104,10 +104,11 @@ public class V2ApiIntegrationTest extends SolrCloudTestCase {
     ModifiableSolrParams params = new ModifiableSolrParams();
     params.set("command", "XXXX");
     params.set("method", "POST");
+    // /cluster/plugin still uses old-style @EndPoint+@Command; collection-level APIs are JAX-RS
     Map<?, ?> result =
         resAsMap(
             cluster.getSolrClient(),
-            new V2Request.Builder("/c/" + COLL_NAME + "/_introspect").withParams(params).build());
+            new V2Request.Builder("/cluster/plugin/_introspect").withParams(params).build());
     assertEquals(
         "Command not found!", Utils.getObjectByPath(result, false, "/spec[0]/commands/XXXX"));
   }
@@ -191,10 +192,11 @@ public class V2ApiIntegrationTest extends SolrCloudTestCase {
 
   @Test
   public void testSingleWarning() throws Exception {
+    // /cluster/plugin still uses old-style @EndPoint+@Command; collection-level APIs are JAX-RS
     NamedList<?> resp =
         cluster
             .getSolrClient()
-            .request(new V2Request.Builder("/c/" + COLL_NAME + "/_introspect").build());
+            .request(new V2Request.Builder("/cluster/plugin/_introspect").build());
     List<?> warnings = resp.getAll("WARNING");
     assertEquals(1, warnings.size());
   }
