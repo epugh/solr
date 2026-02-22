@@ -19,9 +19,6 @@ package org.apache.solr.handler.admin;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.solr.client.solrj.SolrRequest.METHOD.POST;
-import static org.apache.solr.common.params.CommonParams.COLLECTIONS_HANDLER_PATH;
-import static org.apache.solr.common.params.CommonParams.CONFIGSETS_HANDLER_PATH;
-import static org.apache.solr.common.params.CommonParams.CORES_HANDLER_PATH;
 import static org.apache.solr.common.util.ValidatingJsonMap.NOT_NULL;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
@@ -78,14 +75,11 @@ public class TestApiFramework extends SolrTestCaseJ4 {
     CoreContainer mockCC = getCoreContainerMock(calls, out);
     PluginBag<SolrRequestHandler> containerHandlers =
         new PluginBag<>(SolrRequestHandler.class, null, false);
-    TestCollectionAPIs.MockCollectionsHandler collectionsHandler =
-        new TestCollectionAPIs.MockCollectionsHandler();
-    containerHandlers.put(COLLECTIONS_HANDLER_PATH, collectionsHandler);
-    for (Api api : collectionsHandler.getApis()) {
-      containerHandlers.getApiBag().register(api);
-    }
-    containerHandlers.put(CORES_HANDLER_PATH, new CoreAdminHandler(mockCC));
-    containerHandlers.put(CONFIGSETS_HANDLER_PATH, new ConfigSetsHandler(mockCC));
+    // Collection and core admin APIs have all been migrated to JAX-RS, so getApis() returns
+    // empty. Register a custom @EndPoint+@Command API directly to exercise the framework routing.
+    containerHandlers
+        .getApiBag()
+        .registerObject(new TestCollectionLikeApis()); // has @EndPoint on /collections/{collection}
     out.put("getRequestHandlers", containerHandlers);
 
     PluginBag<SolrRequestHandler> coreHandlers =
@@ -94,22 +88,27 @@ public class TestApiFramework extends SolrTestCaseJ4 {
     coreHandlers.put("/config", new SolrConfigHandler());
     coreHandlers.put("/admin/ping", new PingRequestHandler());
 
+    // Verify that path template variables (e.g. {collection}) are correctly extracted
     Map<String, String> parts = new HashMap<>();
-    String fullPath = "/collections/hello/shards";
+    String fullPath = "/collections/hello/test-shards";
     Api api = V2HttpCall.getApiInfo(containerHandlers, fullPath, "POST", fullPath, parts);
     assertNotNull(api);
     assertEquals("hello", parts.get("collection"));
 
+    // Verify command spec is populated correctly for a @Command-based endpoint
     parts = new HashMap<>();
     api =
-        V2HttpCall.getApiInfo(containerHandlers, "/collections/hello/shards", "POST", null, parts);
+        V2HttpCall.getApiInfo(
+            containerHandlers, "/collections/hello/test-shards", "POST", null, parts);
     assertConditions(api.getSpec(), Map.of("/methods[0]", "POST", "/commands/split", NOT_NULL));
 
+    // Verify a second endpoint at the collection root has its own command spec
     parts = new HashMap<>();
     api = V2HttpCall.getApiInfo(containerHandlers, "/collections/hello", "POST", null, parts);
     assertConditions(api.getSpec(), Map.of("/methods[0]", "POST", "/commands/modify", NOT_NULL));
     assertEquals("hello", parts.get("collection"));
 
+    // Verify introspect works and returns at least one POST method entry
     SolrQueryResponse rsp = invoke(containerHandlers, null, "/collections/_introspect", mockCC);
 
     Set<String> methodNames = new HashSet<>();
@@ -117,6 +116,23 @@ public class TestApiFramework extends SolrTestCaseJ4 {
     methodNames.add(rsp.getValues()._getStr("/spec[1]/methods[0]"));
     methodNames.add(rsp.getValues()._getStr("/spec[2]/methods[0]"));
     assertTrue(methodNames.contains("POST"));
+  }
+
+  /**
+   * A test-only @EndPoint class that mimics the old collection-level command-dispatch routing
+   * shape. Used by testFramework() to exercise the ApiBag routing and introspect machinery now that
+   * real collection APIs have been migrated to JAX-RS.
+   */
+  @EndPoint(
+      method = POST,
+      path = {"/collections/{collection}/test-shards", "/collections/{collection}"},
+      permission = PermissionNameProvider.Name.COLL_EDIT_PERM)
+  public static class TestCollectionLikeApis {
+    @Command(name = "split")
+    public void split(SolrQueryRequest req, SolrQueryResponse rsp, AddVersion payload) {}
+
+    @Command(name = "modify")
+    public void modify(SolrQueryRequest req, SolrQueryResponse rsp, AddVersion payload) {}
   }
 
   public void testPayload() {

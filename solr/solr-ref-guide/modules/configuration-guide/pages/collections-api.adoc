@@ -65,12 +65,10 @@ V2 API::
 ====
 [source,bash]
 ----
-curl -X POST http://localhost:8983/api/collections/collection1/shards -H 'Content-Type: application/json' -d '
+curl -X POST http://localhost:8983/api/collections/collection1/shards/split -H 'Content-Type: application/json' -d '
   {
-    "split": {
-      "shard": "shard1",
-      "async": "1000"
-    }
+    "shard": "shard1",
+    "async": "1000"
   }
 '
 ----
