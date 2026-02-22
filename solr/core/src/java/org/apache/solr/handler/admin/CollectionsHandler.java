@@ -200,7 +200,6 @@ import org.apache.solr.handler.admin.api.MigrateDocs;
 import org.apache.solr.handler.admin.api.MigrateReplicas;
 import org.apache.solr.handler.admin.api.ModifyCollection;
 import org.apache.solr.handler.admin.api.MoveReplica;
-import org.apache.solr.handler.admin.api.RebalanceLeaders;
 import org.apache.solr.handler.admin.api.ReloadCollectionAPI;
 import org.apache.solr.handler.admin.api.RenameCollection;
 import org.apache.solr.handler.admin.api.ReplaceNode;
@@ -1008,7 +1007,7 @@ public class CollectionsHandler extends RequestHandlerBase implements Permission
     REBALANCELEADERS_OP(
         REBALANCELEADERS,
         (req, rsp, h) -> {
-          new org.apache.solr.handler.admin.RebalanceLeaders(req, rsp, h).execute();
+          new RebalanceLeaders(req, rsp, h).execute();
           return null;
         }),
     // XXX should this command support followAliases?
@@ -1377,7 +1376,7 @@ public class CollectionsHandler extends RequestHandlerBase implements Permission
         MigrateDocs.class,
         ModifyCollection.class,
         MoveReplica.class,
-        RebalanceLeaders.class);
+        org.apache.solr.handler.admin.api.RebalanceLeaders.class);
   }
 
   @Override
