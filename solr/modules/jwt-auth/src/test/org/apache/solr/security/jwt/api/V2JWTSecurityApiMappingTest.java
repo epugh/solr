@@ -21,6 +21,8 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import java.lang.reflect.Method;
 import org.apache.solr.SolrTestCaseJ4;
+import org.apache.solr.jersey.PermissionName;
+import org.apache.solr.security.PermissionNameProvider;
 import org.junit.Test;
 
 public class V2JWTSecurityApiMappingTest extends SolrTestCaseJ4 {
@@ -32,14 +34,22 @@ public class V2JWTSecurityApiMappingTest extends SolrTestCaseJ4 {
     assertNotNull("Expected @Path annotation on ModifyJWTAuthPluginConfigAPI", pathAnnotation);
     assertEquals("/cluster/security/authentication", pathAnnotation.value());
 
-    // Verify the interface has a @POST method
+    // Verify the interface has a @POST method with @PermissionName(SECURITY_EDIT_PERM)
     boolean hasPostMethod = false;
+    boolean hasSecurityEditPerm = false;
     for (Method m : ModifyJWTAuthPluginConfigAPI.class.getDeclaredMethods()) {
       if (m.isAnnotationPresent(POST.class)) {
         hasPostMethod = true;
-        break;
+        final PermissionName permAnnotation = m.getAnnotation(PermissionName.class);
+        if (permAnnotation != null
+            && permAnnotation.value() == PermissionNameProvider.Name.SECURITY_EDIT_PERM) {
+          hasSecurityEditPerm = true;
+        }
       }
     }
     assertTrue("Expected a @POST method on ModifyJWTAuthPluginConfigAPI", hasPostMethod);
+    assertTrue(
+        "Expected @PermissionName(SECURITY_EDIT_PERM) on the @POST method of ModifyJWTAuthPluginConfigAPI",
+        hasSecurityEditPerm);
   }
 }

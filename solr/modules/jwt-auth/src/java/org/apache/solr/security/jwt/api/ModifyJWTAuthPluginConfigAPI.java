@@ -22,12 +22,15 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import org.apache.solr.client.api.model.SolrJerseyResponse;
+import org.apache.solr.jersey.PermissionName;
+import org.apache.solr.security.PermissionNameProvider;
 
 /** V2 API interface for modifying configuration for Solr's JWTAuthPlugin. */
 @Path("/cluster/security/authentication")
 public interface ModifyJWTAuthPluginConfigAPI {
 
   @POST
+  @PermissionName(PermissionNameProvider.Name.SECURITY_EDIT_PERM)
   @Operation(
       summary = "Update the JWT authentication plugin configuration.",
       tags = {"security"})
