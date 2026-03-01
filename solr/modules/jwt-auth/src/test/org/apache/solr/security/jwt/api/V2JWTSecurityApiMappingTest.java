@@ -17,49 +17,29 @@
 
 package org.apache.solr.security.jwt.api;
 
-import java.util.HashMap;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import java.lang.reflect.Method;
 import org.apache.solr.SolrTestCaseJ4;
-import org.apache.solr.api.AnnotatedApi;
-import org.apache.solr.api.Api;
-import org.apache.solr.api.ApiBag;
-import org.junit.Before;
 import org.junit.Test;
 
 public class V2JWTSecurityApiMappingTest extends SolrTestCaseJ4 {
 
-  private ApiBag apiBag;
-
-  @Before
-  public void setupApiBag() {
-    apiBag = new ApiBag(false);
-  }
-
   @Test
   public void testJwtConfigApiMapping() {
-    apiBag.registerObject(new ModifyJWTAuthPluginConfigAPI());
+    // Verify the interface has the correct @Path annotation
+    final Path pathAnnotation = ModifyJWTAuthPluginConfigAPI.class.getAnnotation(Path.class);
+    assertNotNull("Expected @Path annotation on ModifyJWTAuthPluginConfigAPI", pathAnnotation);
+    assertEquals("/cluster/security/authentication", pathAnnotation.value());
 
-    // Authc API
-    final AnnotatedApi updateAuthcConfig =
-        assertAnnotatedApiExistsFor("POST", "/cluster/security/authentication");
-    assertEquals(1, updateAuthcConfig.getCommands().size());
-    assertEquals("set-property", updateAuthcConfig.getCommands().keySet().iterator().next());
-  }
-
-  private AnnotatedApi assertAnnotatedApiExistsFor(String method, String path) {
-    final HashMap<String, String> parts = new HashMap<>();
-    final Api api = apiBag.lookup(path, method, parts);
-    if (api == null) {
-      fail("Expected to find API for path [" + path + "], but no API mapping found.");
+    // Verify the interface has a @POST method
+    boolean hasPostMethod = false;
+    for (Method m : ModifyJWTAuthPluginConfigAPI.class.getDeclaredMethods()) {
+      if (m.isAnnotationPresent(POST.class)) {
+        hasPostMethod = true;
+        break;
+      }
     }
-    if (!(api instanceof AnnotatedApi)) {
-      fail(
-          "Expected AnnotatedApi for path ["
-              + path
-              + "], but found non-annotated API ["
-              + api
-              + "]");
-    }
-
-    return (AnnotatedApi) api;
+    assertTrue("Expected a @POST method on ModifyJWTAuthPluginConfigAPI", hasPostMethod);
   }
 }

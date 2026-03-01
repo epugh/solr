@@ -44,20 +44,15 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import org.apache.solr.api.AnnotatedApi;
-import org.apache.solr.api.Api;
 import org.apache.solr.client.solrj.jetty.HttpJettySolrClient;
 import org.apache.solr.common.SolrException;
-import org.apache.solr.common.SpecProvider;
 import org.apache.solr.common.util.CommandOperation;
 import org.apache.solr.common.util.StrUtils;
 import org.apache.solr.common.util.Utils;
-import org.apache.solr.common.util.ValidatingJsonMap;
 import org.apache.solr.core.CoreContainer;
 import org.apache.solr.security.AuthenticationPlugin;
 import org.apache.solr.security.ConfigEditablePlugin;
 import org.apache.solr.security.jwt.JWTAuthPlugin.JWTAuthenticationResponse.AuthCode;
-import org.apache.solr.security.jwt.api.ModifyJWTAuthPluginConfigAPI;
 import org.apache.solr.servlet.LoadAdminUiServlet;
 import org.apache.solr.util.CryptoKeys;
 import org.eclipse.jetty.client.Request;
@@ -75,8 +70,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** Authentication plugin that finds logged in user by validating the signature of a JWT token */
-public class JWTAuthPlugin extends AuthenticationPlugin
-    implements SpecProvider, ConfigEditablePlugin {
+public class JWTAuthPlugin extends AuthenticationPlugin implements ConfigEditablePlugin {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
   private static final String PARAM_BLOCK_UNKNOWN = "blockUnknown";
   private static final String PARAM_REQUIRE_ISSUER = "requireIss";
@@ -774,12 +768,6 @@ public class JWTAuthPlugin extends AuthenticationPlugin
   @Override
   public void close() {
     jwtConsumer = null;
-  }
-
-  @Override
-  public ValidatingJsonMap getSpec() {
-    final List<Api> apis = AnnotatedApi.getApis(new ModifyJWTAuthPluginConfigAPI());
-    return apis.get(0).getSpec();
   }
 
   /**
