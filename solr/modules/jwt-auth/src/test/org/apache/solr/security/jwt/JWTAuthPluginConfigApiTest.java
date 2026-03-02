@@ -18,6 +18,7 @@ package org.apache.solr.security.jwt;
 
 import static org.apache.solr.security.jwt.JWTAuthPluginTest.JWT_TEST_PATH;
 
+import java.util.Map;
 import org.apache.http.client.HttpClient;
 import org.apache.solr.SolrTestCaseJ4;
 import org.apache.solr.client.solrj.SolrClient;
@@ -25,6 +26,7 @@ import org.apache.solr.client.solrj.SolrRequest;
 import org.apache.solr.client.solrj.apache.HttpClientUtil;
 import org.apache.solr.client.solrj.request.V2Request;
 import org.apache.solr.cloud.SolrCloudAuthTestCase;
+import org.apache.solr.security.jwt.api.JWTConfigurationPayload;
 import org.jose4j.jwk.PublicJsonWebKey;
 import org.jose4j.jwk.RsaJsonWebKey;
 import org.jose4j.jws.AlgorithmIdentifiers;
@@ -102,20 +104,24 @@ public class JWTAuthPluginConfigApiTest extends SolrCloudAuthTestCase {
           httpClient, v2AuthcUrl, "authentication/blockUnknown", "true", 20, "Bearer " + jwtTestToken);
 
       // An unauthenticated POST is rejected (no JWT token → 401)
+      JWTConfigurationPayload unauthPayload = new JWTConfigurationPayload();
+      unauthPayload.blockUnknown = false;
       V2Request unauthRequest =
           new V2Request.Builder("/cluster/security/authentication")
               .withMethod(SolrRequest.METHOD.POST)
-              .withPayload("{\"set-property\": {\"blockUnknown\": false}}")
+              .withPayload(Map.of("set-property", unauthPayload))
               .build();
       try (SolrClient unauthClient = getHttpSolrClient(baseUrl)) {
         expectThrows(Exception.class, () -> unauthClient.request(unauthRequest));
       }
 
       // An authenticated POST with a valid JWT token succeeds and the config is updated
+      JWTConfigurationPayload updatePayload = new JWTConfigurationPayload();
+      updatePayload.blockUnknown = false;
       V2Request updateRequest =
           new V2Request.Builder("/cluster/security/authentication")
               .withMethod(SolrRequest.METHOD.POST)
-              .withPayload("{\"set-property\": {\"blockUnknown\": false}}")
+              .withPayload(Map.of("set-property", updatePayload))
               .build();
       updateRequest.addHeader("Authorization", "Bearer " + jwtTestToken);
       try (SolrClient solrClient = getHttpSolrClient(baseUrl)) {
