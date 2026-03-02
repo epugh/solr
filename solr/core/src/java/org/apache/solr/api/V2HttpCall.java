@@ -76,7 +76,8 @@ public class V2HttpCall extends HttpSolrCall {
   private boolean servedByJaxRs =
       false; // A flag indicating whether the request was served by JAX-RS or the native framework
   HashMap<String, String> parts = new HashMap<>();
-  static final Set<String> knownPrefixes = Set.of("cluster", "node", "collections", "cores", "coll");
+  static final Set<String> knownPrefixes =
+      Set.of("cluster", "node", "collections", "cores", "coll");
 
   public V2HttpCall(
       SolrDispatchFilter solrDispatchFilter,

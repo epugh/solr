@@ -104,7 +104,9 @@ public class V2ApiIntegrationTest extends SolrCloudTestCase {
     Map<?, ?> result =
         resAsMap(
             cluster.getSolrClient(),
-            new V2Request.Builder("/coll/" + COLL_NAME + "/_introspect").withParams(params).build());
+            new V2Request.Builder("/coll/" + COLL_NAME + "/_introspect")
+                .withParams(params)
+                .build());
     assertEquals(
         "Command not found!", Utils.getObjectByPath(result, false, "/spec[0]/commands/XXXX"));
   }
@@ -136,7 +138,8 @@ public class V2ApiIntegrationTest extends SolrCloudTestCase {
     assertFalse(
         respString.contains(
             "<p>Problem accessing /solr/____v2/coll/collection1/get/_introspect. Reason:"));
-    assertEquals("/coll/collection1/get", Utils.getObjectByPath(resp, true, "/spec[0]/url/paths[0]"));
+    assertEquals(
+        "/coll/collection1/get", Utils.getObjectByPath(resp, true, "/spec[0]/url/paths[0]"));
     assertEquals(respString, 0, Utils.getObjectByPath(resp, true, "/responseHeader/status"));
   }
 
