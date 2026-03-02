@@ -159,7 +159,7 @@ public class TestDistributedTracing extends SolrCloudTestCase {
     assertEquals("post:/collections/{collection}/reload", finishedSpans.get(0).getName());
     assertCollectionName(finishedSpans.get(0), COLLECTION);
 
-    new V2Request.Builder("/c/" + COLLECTION + "/update/json")
+    new V2Request.Builder("/coll/" + COLLECTION + "/update/json")
         .withMethod(SolrRequest.METHOD.POST)
         .withPayload("{\n" + " \"id\" : \"9\"\n" + "}")
         .withParams(params("commit", "true"))
@@ -170,7 +170,7 @@ public class TestDistributedTracing extends SolrCloudTestCase {
     assertCollectionName(finishedSpans.get(0), COLLECTION);
 
     final V2Response v2Response =
-        new V2Request.Builder("/c/" + COLLECTION + "/select")
+        new V2Request.Builder("/coll/" + COLLECTION + "/select")
             .withMethod(SolrRequest.METHOD.GET)
             .withParams(params("q", "id:9"))
             .build()

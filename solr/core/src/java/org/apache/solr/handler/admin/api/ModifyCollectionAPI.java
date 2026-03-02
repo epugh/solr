@@ -42,7 +42,7 @@ import org.apache.solr.handler.admin.CollectionsHandler;
  * @see ModifyCollectionPayload
  */
 @EndPoint(
-    path = {"/c/{collection}", "/collections/{collection}"},
+    path = {"/coll/{collection}", "/collections/{collection}"},
     method = POST,
     permission = COLL_EDIT_PERM)
 public class ModifyCollectionAPI {
