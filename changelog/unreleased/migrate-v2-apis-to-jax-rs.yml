@@ -1,0 +1,5 @@
+# See https://github.com/apache/solr/blob/main/dev-docs/changelog.adoc
+title: Migrate NodeHealthAPI, NodeThreadsAPI, and ClusterAPI V2 endpoints from @EndPoint to JAX-RS
+type: changed
+authors:
+  - name: copilot-swe-agent[bot]

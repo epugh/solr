@@ -336,12 +336,10 @@ V2 API::
 
 [source,bash]
 ----
-curl -X POST http://localhost:8983/api/collections/techproducts -H 'Content-Type: application/json' -d '
+curl -X POST http://localhost:8983/api/collections/techproducts/move-replica -H 'Content-Type: application/json' -d '
   {
-    "move-replica":{
-      "replica":"core_node6",
-      "targetNode": "localhost:8983_solr"
-    }
+    "replica":"core_node6",
+    "targetNode": "localhost:8983_solr"
   }
 '
 ----

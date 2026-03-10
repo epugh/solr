@@ -43,8 +43,8 @@ import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.lucene.util.Version;
-import org.apache.solr.api.AnnotatedApi;
 import org.apache.solr.api.Api;
+import org.apache.solr.api.JerseyResource;
 import org.apache.solr.common.cloud.ZkStateReader;
 import org.apache.solr.common.util.EnvUtils;
 import org.apache.solr.common.util.SimpleOrderedMap;
@@ -52,7 +52,7 @@ import org.apache.solr.core.CoreContainer;
 import org.apache.solr.core.NodeConfig;
 import org.apache.solr.core.SolrCore;
 import org.apache.solr.handler.RequestHandlerBase;
-import org.apache.solr.handler.admin.api.NodeSystemInfoAPI;
+import org.apache.solr.handler.admin.api.NodeSystemInfo;
 import org.apache.solr.metrics.GpuMetricsProvider;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.response.SolrQueryResponse;
@@ -470,7 +470,12 @@ public class SystemInfoHandler extends RequestHandlerBase {
 
   @Override
   public Collection<Api> getApis() {
-    return AnnotatedApi.getApis(new NodeSystemInfoAPI(this));
+    return List.of();
+  }
+
+  @Override
+  public Collection<Class<? extends JerseyResource>> getJerseyResources() {
+    return List.of(NodeSystemInfo.class);
   }
 
   @Override

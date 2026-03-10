@@ -105,33 +105,25 @@ Description of some of the keys in the above example:
 * `**spec/url/params**`: List of supported URL request params
 * `**availableSubPaths**`: List of valid URL subpaths and the HTTP method(s) each supports
 
-Example of introspect for a POST API: `\http://localhost:8983/api/c/gettingstarted/_introspect?method=POST&command=modify`
+Example of introspect for a POST API that uses command-based dispatch: `\http://localhost:8983/api/cluster/plugin/_introspect?method=POST&command=add`
 
 [source,json]
 ----
 {
   "spec":[{
-      "documentation":"https://solr.apache.org/guide/solr/latest/configuration-guide/collections-api.html",
-      "description":"Several collection-level operations are supported with this endpoint: modify collection attributes; reload a collection; migrate documents to a different collection; rebalance collection leaders; balance properties across shards; and add or delete a replica property.",
+      "description":"Add a plugin.",
       "methods":["POST"],
-      "url":{"paths":["/collections/{collection}",
-          "/c/{collection}"]},
-      "commands":{"modify":{
-          "documentation":"https://solr.apache.org/guide/solr/latest/deployment-guide/collection-management.html#modifycollection",
-          "description":"Modifies specific attributes of a collection. Multiple attributes can be changed at one time.",
+      "url":{"paths":["/cluster/plugin"]},
+      "commands":{"add":{
           "type":"object",
           "properties":{
-            "replicationFactor":{
+            "name":{
               "type":"string",
-              "description":"The number of replicas to be created for each shard. Replicas are physical copies of each shard, acting as failover for the shard. Note that changing this value on an existing collection does not automatically add more replicas to the collection. However, it will allow add-replica commands to succeed."}}}}}],
-  "WARNING":"This response format is experimental.  It is likely to change in the future.",
-  "availableSubPaths":{
-    "/c/gettingstarted/select":["POST", "GET"],
-    "/c/gettingstarted/config":["POST", "GET"],
-    "/c/gettingstarted/schema":["POST", "GET"],
-    "/c/gettingstarted/export":["POST", "GET"],
-    "/c/gettingstarted/admin/ping":["POST", "GET"],
-    "/c/gettingstarted/update":["POST"]}
+              "description":"A unique name for the plugin."},
+            "class":{
+              "type":"string",
+              "description":"The implementation class of the plugin. If the class is in a package, use the syntax 'package:class'."}}}}}],
+  "WARNING":"This response format is experimental.  It is likely to change in the future."
 }
 ----
 
@@ -140,12 +132,12 @@ The key is the command name and the value is a JSON object describing the comman
 
 == Invocation Examples
 
-For the "gettingstarted" collection, set the replication factor and whether to automatically add replicas (see above for the introspect output for the `"modify"` command used here):
+For the "gettingstarted" collection, set the replication factor using the new JAX-RS path:
 
 [source,bash]
 ----
-$ curl http://localhost:8983/api/c/gettingstarted -H 'Content-type:application/json' -d '
-{ modify: { replicationFactor: "3" } }'
+$ curl -X POST http://localhost:8983/api/collections/gettingstarted/modify -H 'Content-type:application/json' -d '
+{ "replicationFactor": "3" }'
 
 {"responseHeader":{"status":0,"QTime":842}}
 ----
