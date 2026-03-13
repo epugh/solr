@@ -339,7 +339,7 @@ For more information about starting Solr in SolrCloud mode, see also the section
 
 `bin/solr start --user-managed` starts Solr in User Managed mode (AKA Standalone mode).  This was the default mode up until Solr 10x.
 
-For more information about the different modes, see the section xref:deployment-guide:cluster-types.adoc[].
+For more information about the different modes, see the section xref:getting-started:cluster-types.adoc[].
 
 
 ==== Running with Example Configurations

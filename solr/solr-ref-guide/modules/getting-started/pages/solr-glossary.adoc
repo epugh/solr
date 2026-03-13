@@ -184,7 +184,7 @@ In SolrCloud, a logical partition of a single <<collection,Collection>>.
 Every shard consists of at least one physical <<replica,Replica>>, but there may be multiple Replicas distributed across multiple <<node,Nodes>> for fault tolerance.
 See also <<solrclouddef,SolrCloud>>.
 
-[[solrclouddef]]xref:deployment-guide:cluster-types.adoc#solrcloud-mode[SolrCloud]::
+[[solrclouddef]]xref:cluster-types.adoc#solrcloud-mode[SolrCloud]::
 Umbrella term for a suite of functionality in Solr which allows managing a <<cluster,Cluster>> of Solr <<node,Nodes>> for scalability, fault tolerance, and high availability.
 
 [[schema]]xref:indexing-guide:schema-elements.adoc[Solr Schema (managed-schema.xml or schema.xml)]::
