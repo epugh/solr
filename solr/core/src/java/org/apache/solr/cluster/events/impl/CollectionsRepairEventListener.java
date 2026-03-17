@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -108,7 +109,7 @@ public class CollectionsRepairEventListener
         handleNodesDown((NodesDownEvent) event);
         break;
       default:
-        log.warn("Unsupported event {}, ignoring...", event);
+        log.warn("Unsupported event {}, ignoring...", event.getType());
     }
   }
 
@@ -222,7 +223,10 @@ public class CollectionsRepairEventListener
                       CollectionAdminRequest.addReplicaToShard(
                           collection, position.shard, position.type);
                   addReplica.setNode(position.node);
-                  addReplica.setAsyncId(ASYNC_ID_PREFIX + counter.incrementAndGet());
+                  //addReplica.setAsyncId(ASYNC_ID_PREFIX + counter.incrementAndGet());
+                  var i = new Random().nextInt();
+                  System.out.println("ABOUT TO GENERATE RANDOME" + i);
+                  addReplica.setAsyncId(ASYNC_ID_PREFIX + i);
                   addReplicas.add(addReplica);
                 }));
     addReplicas.forEach(

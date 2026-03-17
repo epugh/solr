@@ -31,7 +31,7 @@ Each plugin MUST have a unique name under which it's registered.
 Attempting to add a plugin with a duplicate name is an error.
 Some types of plugins use pre-defined names, and they MUST be registered under these names in order to properly function.
 
-Internally, as of Solr 9.0 plugin configurations are maintained in ZooKeeper in the `/clusterprops.json` file, under the `plugin` entry.
+Internally, plugin configurations are maintained in ZooKeeper in the `/clusterprops.json` file, under the `plugin` entry.
 The configuration is a JSON map where keys are the unique plugin names, and values are serialized `org.apache.solr.client.solrj.request.beans.PluginMeta` beans.
 
 The following common plugin properties are supported:
@@ -104,8 +104,7 @@ curl -X POST -H 'Content-type: application/json' -d '{
             "B_primary": "B_secondary"
           }
         }
-    }}'
-  http://localhost:8983/api/cluster/plugin
+    }}' http://localhost:8983/api/cluster/plugin
 ----
 
 === Types of Cluster Plugins
@@ -177,8 +176,7 @@ curl -X POST -H 'Content-type: application/json' -d '{
     "add":{
         "name": ".cluster-event-producer",
         "class": "org.apache.solr.cluster.events.impl.DefaultClusterEventProducer"
-    }}'
-  http://localhost:8983/api/cluster/plugin
+    }}' http://localhost:8983/api/cluster/plugin
 ----
 
 It can be restored to the default no-op configuration by simply removing the plugin:
@@ -187,8 +185,7 @@ It can be restored to the default no-op configuration by simply removing the plu
 ----
 curl -X POST -H 'Content-type: application/json' -d '{
     "remove": ".cluster-event-producer"
-  }'
-  http://localhost:8983/api/cluster/plugin
+  }' http://localhost:8983/api/cluster/plugin
 ----
 
 === ClusterEventListener Plugins
@@ -214,8 +211,59 @@ curl -X POST -H 'Content-type: application/json' -d '{
     "add":{
         "name": "collections-repair-listener",
         "class": "org.apache.solr.cluster.events.impl.CollectionsRepairEventListener"
-    }}'
-  http://localhost:8983/api/cluster/plugin
+    }}' http://localhost:8983/api/cluster/plugin
+----
+
+==== org.apache.solr.cluster.events.impl.AutoReplicaEventListener
+
+An implementation of listener that reacts to NODES_UP events and automatically creates replicas on newly added nodes.
+
+When nodes are added to the cluster, this listener will automatically create replicas for configured collections on those new nodes, distributing load across the cluster.
+
+Configuration parameters:
+
+`managedCollections`::
++
+[%autowidth,frame=none]
+|===
+|Optional |Default: all collections
+|===
++
+Comma-separated list of collection names to manage.
+If not specified or empty, all collections will be managed.
+
+`replicasPerShard`::
++
+[%autowidth,frame=none]
+|===
+|Optional |Default: 1
+|===
++
+Number of replicas to create per shard on new nodes.
+
+Example plugin configuration to manage all collections:
+
+[source,bash]
+----
+curl -X POST -H 'Content-type: application/json' -d '{
+    "add":{
+        "name": "auto-replica-listener",
+        "class": "org.apache.solr.cluster.events.impl.AutoReplicaEventListener"
+    }}' http://localhost:8983/api/cluster/plugin
+----
+
+Example plugin configuration to manage only specific collections:
+
+[source,bash]
+----
+curl -X POST -H 'Content-type: application/json' -d '{
+    "add":{
+        "name": "auto-replica-listener",
+        "class": "org.apache.solr.cluster.events.impl.AutoReplicaEventListener",
+        "config":{
+          "managedCollections": "collection1,collection2",
+          "replicasPerShard": 1
+    }}}' http://localhost:8983/api/cluster/plugin
 ----
 
 == Plugin Management API
@@ -242,8 +290,7 @@ curl -X POST -H 'Content-type: application/json' -d '{
         "name": "my-plugin1",
         "class": "my-package:com.example.MyPlugin",
         "version": "1.0"
-    }}'
-  http://localhost:8983/api/cluster/plugin
+    }}' http://localhost:8983/api/cluster/plugin
 ----
 
 === Update Plugin
@@ -262,8 +309,7 @@ curl -X POST -H 'Content-type: application/json' -d '{
         "class": "org.apache.solr.cluster.events.impl.CollectionsRepairEventListener",
         "config":{
           "waitForSecond": 30
-    }}}'
-  http://localhost:8983/api/cluster/plugin
+    }}}' http://localhost:8983/api/cluster/plugin
 ----
 
 === Remove Plugin
@@ -277,6 +323,5 @@ Unlike other commands the command payload here consists just of the name of the 
 ----
 curl -X POST -H 'Content-type: application/json' -d '{
     "remove": "my-plugin1"
-    }'
-  http://localhost:8983/api/cluster/plugin
+    }' http://localhost:8983/api/cluster/plugin
 ----
