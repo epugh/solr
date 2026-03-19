@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Path;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import org.apache.solr.client.solrj.SolrRequest;
@@ -207,7 +207,7 @@ public abstract class ConfigSetAdminRequest<
 
     @Override
     public Collection<ContentStream> getContentStreams() throws IOException {
-      return Collections.singletonList(stream);
+      return List.of(stream);
     }
 
     @Override

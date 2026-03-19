@@ -16,7 +16,6 @@
  */
 package org.apache.solr.handler;
 
-import static java.util.Collections.singletonMap;
 import static org.apache.solr.common.params.CommonParams.JSON;
 import static org.apache.solr.schema.IndexSchema.SchemaProps.Handler.COPY_FIELDS;
 import static org.apache.solr.schema.IndexSchema.SchemaProps.Handler.DYNAMIC_FIELDS;
@@ -198,7 +197,7 @@ public class SchemaHandler extends RequestHandlerBase
               if (parts.size() > 2) {
                 req.setParams(
                     SolrParams.wrapDefaults(
-                        new MapSolrParams(singletonMap(pathParam, parts.get(2))), req.getParams()));
+                        new MapSolrParams(Map.of(pathParam, parts.get(2))), req.getParams()));
               }
               switch (realName) {
                 case "fields":

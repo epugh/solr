@@ -1467,7 +1467,7 @@ public class UpdateLog implements PluginInfoInitialized, SolrMetricProducer {
     tlog.incref();
 
     ExecutorCompletionService<RecoveryInfo> cs = new ExecutorCompletionService<>(recoveryExecutor);
-    LogReplayer replayer = new LogReplayer(Collections.singletonList(tlog), false, true);
+    LogReplayer replayer = new LogReplayer(List.of(tlog), false, true);
 
     updateLocks.blockUpdates();
     try {
@@ -2066,7 +2066,7 @@ public class UpdateLog implements PluginInfoInitialized, SolrMetricProducer {
       throw new RuntimeException("executor is not running...");
     }
     ExecutorCompletionService<RecoveryInfo> cs = new ExecutorCompletionService<>(recoveryExecutor);
-    LogReplayer replayer = new LogReplayer(Collections.singletonList(bufferTlog), true);
+    LogReplayer replayer = new LogReplayer(List.of(bufferTlog), true);
     return cs.submit(
         () -> {
           replayer.run();

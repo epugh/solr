@@ -19,7 +19,6 @@ package org.apache.solr.client.solrj.apache;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -36,8 +35,7 @@ public class CloudSolrClientBuilderTest extends SolrTestCase {
   @Test
   public void testSingleZkHostSpecified() throws IOException {
     try (CloudSolrClient createdClient =
-        new CloudSolrClient.Builder(Collections.singletonList(ANY_ZK_HOST), Optional.of(ANY_CHROOT))
-            .build(); ) {
+        new CloudSolrClient.Builder(List.of(ANY_ZK_HOST), Optional.of(ANY_CHROOT)).build(); ) {
       try (ZkClientClusterStateProvider zkClientClusterStateProvider =
           ZkClientClusterStateProvider.from(createdClient)) {
         final String clientZkHost = zkClientClusterStateProvider.getZkHost();
@@ -81,8 +79,7 @@ public class CloudSolrClientBuilderTest extends SolrTestCase {
   @Test
   public void testByDefaultConfiguresClientToSendUpdatesOnlyToShardLeaders() throws IOException {
     try (CloudSolrClient createdClient =
-        new CloudSolrClient.Builder(Collections.singletonList(ANY_ZK_HOST), Optional.of(ANY_CHROOT))
-            .build()) {
+        new CloudSolrClient.Builder(List.of(ANY_ZK_HOST), Optional.of(ANY_CHROOT)).build()) {
       assertTrue(createdClient.isUpdatesToLeaders());
     }
   }
@@ -90,8 +87,7 @@ public class CloudSolrClientBuilderTest extends SolrTestCase {
   @Test
   public void testIsDirectUpdatesToLeadersOnlyDefault() throws IOException {
     try (CloudSolrClient createdClient =
-        new CloudSolrClient.Builder(Collections.singletonList(ANY_ZK_HOST), Optional.of(ANY_CHROOT))
-            .build()) {
+        new CloudSolrClient.Builder(List.of(ANY_ZK_HOST), Optional.of(ANY_CHROOT)).build()) {
       assertFalse(createdClient.isDirectUpdatesToLeadersOnly());
     }
   }
@@ -100,7 +96,7 @@ public class CloudSolrClientBuilderTest extends SolrTestCase {
   @SuppressWarnings({"try"})
   public void test0Timeouts() throws IOException {
     try (CloudSolrClient createdClient =
-        new CloudLegacySolrClient.Builder(Collections.singletonList(ANY_ZK_HOST), Optional.empty())
+        new CloudLegacySolrClient.Builder(List.of(ANY_ZK_HOST), Optional.empty())
             .withSocketTimeout(0, TimeUnit.MILLISECONDS)
             .withConnectionTimeout(0, TimeUnit.MILLISECONDS)
             .build()) {
@@ -111,8 +107,7 @@ public class CloudSolrClientBuilderTest extends SolrTestCase {
   @Test
   public void testDefaultCollectionPassedFromBuilderToClient() throws IOException {
     try (CloudSolrClient createdClient =
-        new CloudLegacySolrClient.Builder(
-                Collections.singletonList(ANY_ZK_HOST), Optional.of(ANY_CHROOT))
+        new CloudLegacySolrClient.Builder(List.of(ANY_ZK_HOST), Optional.of(ANY_CHROOT))
             .withDefaultCollection("aCollection")
             .build()) {
       assertEquals("aCollection", createdClient.getDefaultCollection());

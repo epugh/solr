@@ -18,7 +18,6 @@
 package org.apache.solr.security;
 
 import static java.util.Collections.singleton;
-import static java.util.Collections.singletonList;
 import static org.apache.solr.common.params.CommonParams.NAME;
 
 import java.util.Collection;
@@ -83,9 +82,7 @@ class Permission {
         } else {
           @SuppressWarnings("unchecked")
           List<String> patternStrs =
-              e.getValue() instanceof List
-                  ? (List) e.getValue()
-                  : singletonList(e.getValue().toString());
+              e.getValue() instanceof List ? (List) e.getValue() : List.of(e.getValue().toString());
           List<?> patterns =
               patternStrs.stream()
                   .map(

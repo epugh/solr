@@ -50,6 +50,7 @@ import org.apache.solr.common.NavigableObject;
 import org.apache.solr.common.params.CommonParams;
 import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.common.util.StrUtils;
+import org.apache.solr.common.util.SuppressForbidden;
 import org.apache.solr.common.util.Utils;
 import org.apache.solr.embedded.JettySolrRunner;
 import org.apache.solr.packagemanager.PackageUtils;
@@ -71,6 +72,7 @@ public class TestDistribFileStore extends SolrCloudTestCase {
   }
 
   @Test
+  @SuppressForbidden(reason = "singletonMap with null value is intentional")
   public void testFileStoreManagement() throws Exception {
     MiniSolrCloudCluster cluster =
         configureCluster(4)

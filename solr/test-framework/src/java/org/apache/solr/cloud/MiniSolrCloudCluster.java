@@ -706,8 +706,7 @@ public class MiniSolrCloudCluster {
         collectionName,
         k -> {
           CloudSolrClient solrClient =
-              new CloudLegacySolrClient.Builder(
-                      Collections.singletonList(zkServer.getZkAddress()), Optional.empty())
+              new CloudLegacySolrClient.Builder(List.of(zkServer.getZkAddress()), Optional.empty())
                   .withDefaultCollection(collectionName)
                   .withSocketTimeout(90000)
                   .withConnectionTimeout(15000)
@@ -743,7 +742,7 @@ public class MiniSolrCloudCluster {
 
   protected CloudSolrClient buildSolrClient() {
     return new CloudLegacySolrClient.Builder(
-            Collections.singletonList(getZkServer().getZkAddress()), Optional.empty())
+            List.of(getZkServer().getZkAddress()), Optional.empty())
         .withSocketTimeout(90000, TimeUnit.MILLISECONDS)
         .withConnectionTimeout(15000, TimeUnit.MILLISECONDS)
         .build(); // we choose 90 because we run in some harsh envs
@@ -757,7 +756,7 @@ public class MiniSolrCloudCluster {
    */
   public CloudLegacySolrClient.Builder basicSolrClientBuilder() {
     return new CloudLegacySolrClient.Builder(
-            Collections.singletonList(getZkServer().getZkAddress()), Optional.empty())
+            List.of(getZkServer().getZkAddress()), Optional.empty())
         .withSocketTimeout(90000) // we choose 90 because we run in some harsh envs
         .withConnectionTimeout(15000);
   }

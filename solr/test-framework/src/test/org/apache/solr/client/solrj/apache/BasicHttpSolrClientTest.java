@@ -25,7 +25,6 @@ import java.lang.invoke.MethodHandles;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -347,7 +346,7 @@ public class BasicHttpSolrClientTest extends SolrTestCaseJ4 {
   public void testGetById() throws Exception {
     DebugServlet.clear();
     try (SolrClient client = getHttpSolrClient(solrTestRule.getBaseUrl() + "/debug/foo")) {
-      Collection<String> ids = Collections.singletonList("a");
+      Collection<String> ids = List.of("a");
       expectThrows(RemoteSolrException.class, () -> client.getById("a"));
       expectThrows(RemoteSolrException.class, () -> client.getById(ids, null));
       expectThrows(RemoteSolrException.class, () -> client.getById("foo", "a"));
@@ -605,7 +604,7 @@ public class BasicHttpSolrClientTest extends SolrTestCaseJ4 {
           CookieSpec cookieSpec = new SolrPortAwareCookieSpecFactory().create(context);
           // CookieSpec cookieSpec = registry.lookup(policy).create(context);
           // Add the cookies to the request
-          List<Header> headers = cookieSpec.formatCookies(Collections.singletonList(cookie));
+          List<Header> headers = cookieSpec.formatCookies(List.of(cookie));
           for (Header header : headers) {
             request.addHeader(header);
           }
