@@ -21,8 +21,8 @@ import static org.apache.solr.update.processor.FieldMutatingUpdateProcessor.SELE
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import org.apache.solr.common.SolrException;
+import org.apache.solr.common.util.SuppressForbidden;
 import org.apache.solr.core.SolrCore;
 import org.apache.solr.update.processor.FieldMutatingUpdateProcessor.FieldNameSelector;
 
@@ -50,12 +50,13 @@ import org.apache.solr.update.processor.FieldMutatingUpdateProcessor.FieldNameSe
 public final class MinFieldValueUpdateProcessorFactory
     extends FieldValueSubsetUpdateProcessorFactory {
 
+  @SuppressForbidden(reason = "singletonList allows null field values from Collections.min")
   @Override
   public <T> Collection<T> pickSubset(Collection<T> values) {
     try {
       // Use the signature with null comparator to let the JDK deal with unsafe casts, and catch CCE
       // if needed
-      return List.of(Collections.min(values, null));
+      return Collections.singletonList(Collections.min(values, null));
     } catch (ClassCastException e) {
       throw new SolrException(
           BAD_REQUEST, "Field values are not mutually comparable: " + e.getMessage(), e);
