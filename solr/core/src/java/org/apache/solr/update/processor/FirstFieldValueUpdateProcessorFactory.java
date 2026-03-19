@@ -19,7 +19,7 @@ package org.apache.solr.update.processor;
 import static org.apache.solr.update.processor.FieldMutatingUpdateProcessor.SELECT_NO_FIELDS;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 import org.apache.solr.core.SolrCore;
 import org.apache.solr.update.processor.FieldMutatingUpdateProcessor.FieldNameSelector;
 
@@ -49,7 +49,7 @@ public final class FirstFieldValueUpdateProcessorFactory
   @Override
   public <T> Collection<T> pickSubset(Collection<T> values) {
     // trust the iterator
-    return Collections.singletonList(values.iterator().next());
+    return List.of(values.iterator().next());
   }
 
   @Override

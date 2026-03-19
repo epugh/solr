@@ -21,6 +21,7 @@ import static org.apache.solr.update.processor.FieldMutatingUpdateProcessor.SELE
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import org.apache.solr.common.SolrException;
 import org.apache.solr.core.SolrCore;
 import org.apache.solr.update.processor.FieldMutatingUpdateProcessor.FieldNameSelector;
@@ -54,7 +55,7 @@ public final class MinFieldValueUpdateProcessorFactory
     try {
       // Use the signature with null comparator to let the JDK deal with unsafe casts, and catch CCE
       // if needed
-      return Collections.singletonList(Collections.min(values, null));
+      return List.of(Collections.min(values, null));
     } catch (ClassCastException e) {
       throw new SolrException(
           BAD_REQUEST, "Field values are not mutually comparable: " + e.getMessage(), e);

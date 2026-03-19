@@ -16,8 +16,6 @@
  */
 package org.apache.solr.schema;
 
-import static java.util.Collections.singletonList;
-import static java.util.Collections.singletonMap;
 import static org.apache.solr.client.api.model.SchemaChange.OPERATION_TYPE_PROP;
 import static org.apache.solr.common.util.CommandOperation.ERR_MSGS;
 import static org.apache.solr.schema.IndexSchema.MAX_CHARS;
@@ -102,7 +100,7 @@ public class SchemaManager {
     if (schema instanceof ManagedIndexSchema && schema.isMutable()) {
       return doOperations(ops);
     } else {
-      return singletonList(singletonMap(ERR_MSGS, "schema is not editable"));
+      return List.of(Map.of(ERR_MSGS, "schema is not editable"));
     }
   }
 
@@ -127,7 +125,7 @@ public class SchemaManager {
                     op.operationType,
                     SchemaManagerUtils.convertToMap(op),
                     ERR_MSGS,
-                    singletonList(soe.getMessage())));
+                    List.of(soe.getMessage())));
           }
         }
         if (!errors.isEmpty()) break;
@@ -175,8 +173,7 @@ public class SchemaManager {
             core.getCoreContainer().reload(core.getName(), core.uniqueId);
           } catch (SolrException e) {
             log.warn(errorMsg);
-            errors =
-                singletonList(singletonMap(CommandOperation.ERR_MSGS, errorMsg + e.getMessage()));
+            errors = List.of(Map.of(CommandOperation.ERR_MSGS, errorMsg + e.getMessage()));
           }
           break;
         }
@@ -190,7 +187,7 @@ public class SchemaManager {
     }
     if (errors.isEmpty() && timeOut.hasTimedOut()) {
       log.warn("{} Timed out", errorMsg);
-      errors = singletonList(singletonMap(CommandOperation.ERR_MSGS, errorMsg + "Timed out."));
+      errors = List.of(Map.of(CommandOperation.ERR_MSGS, errorMsg + "Timed out."));
     }
     return errors;
   }
@@ -247,8 +244,7 @@ public class SchemaManager {
         try {
           FieldType fieldType =
               mgr.managedIndexSchema.newFieldType(name, className, convertToMap(addFieldTypeOp));
-          mgr.managedIndexSchema =
-              mgr.managedIndexSchema.addFieldTypes(singletonList(fieldType), false);
+          mgr.managedIndexSchema = mgr.managedIndexSchema.addFieldTypes(List.of(fieldType), false);
           return true;
         } catch (Exception e) {
           log.error("Could not add field type.", e);
@@ -305,7 +301,7 @@ public class SchemaManager {
               mgr.managedIndexSchema.newField(
                   name, type, convertToMapExcluding(addFieldOp, propsToOmit));
           mgr.managedIndexSchema =
-              mgr.managedIndexSchema.addFields(singletonList(field), Map.of(), false);
+              mgr.managedIndexSchema.addFields(List.of(field), Map.of(), false);
           return true;
         } catch (Exception e) {
           log.error("Could not add field", e);
@@ -341,7 +337,7 @@ public class SchemaManager {
               mgr.managedIndexSchema.newDynamicField(
                   name, type, convertToMapExcluding(addDynFieldOp, propsToOmit));
           mgr.managedIndexSchema =
-              mgr.managedIndexSchema.addDynamicFields(singletonList(field), Map.of(), false);
+              mgr.managedIndexSchema.addDynamicFields(List.of(field), Map.of(), false);
           return true;
         } catch (Exception e) {
           log.error("Could not add dynamic field", e);
@@ -370,8 +366,7 @@ public class SchemaManager {
         String source = ensureNotNull("source", deleteCopyField.source);
         List<String> dests = ensureNotNull("dest", deleteCopyField.destinations);
         try {
-          mgr.managedIndexSchema =
-              mgr.managedIndexSchema.deleteCopyFields(singletonMap(source, dests));
+          mgr.managedIndexSchema = mgr.managedIndexSchema.deleteCopyFields(Map.of(source, dests));
           return true;
         } catch (Exception e) {
           log.error("Could not delete copy field", e);

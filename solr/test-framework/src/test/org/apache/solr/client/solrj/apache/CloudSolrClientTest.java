@@ -24,7 +24,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -302,7 +301,7 @@ public class CloudSolrClientTest extends SolrCloudTestCase {
     // Test Multi-Threaded routed updates for UpdateRequest
     try (CloudSolrClient threadedClient =
         new RandomizingCloudSolrClientBuilder(
-                Collections.singletonList(cluster.getZkServer().getZkAddress()), Optional.empty())
+                List.of(cluster.getZkServer().getZkAddress()), Optional.empty())
             .sendUpdatesOnlyToShardLeaders()
             .withParallelUpdates(true)
             .withDefaultCollection("routing_collection")
@@ -591,7 +590,7 @@ public class CloudSolrClientTest extends SolrCloudTestCase {
 
     try (CloudSolrClient client =
         new RandomizingCloudSolrClientBuilder(
-                Collections.singletonList(cluster.getZkServer().getZkAddress()), Optional.empty())
+                List.of(cluster.getZkServer().getZkAddress()), Optional.empty())
             .withDefaultCollection(collection)
             .build()) {
       // important to have one replica on each node
@@ -657,7 +656,7 @@ public class CloudSolrClientTest extends SolrCloudTestCase {
 
     try (CloudSolrClient client =
         new RandomizingCloudSolrClientBuilder(
-                Collections.singletonList(cluster.getZkServer().getZkAddress()), Optional.empty())
+                List.of(cluster.getZkServer().getZkAddress()), Optional.empty())
             .withDefaultCollection("multicollection1")
             .build()) {
 
@@ -778,9 +777,7 @@ public class CloudSolrClientTest extends SolrCloudTestCase {
   @Test
   public void testShutdown() throws IOException {
     try (CloudSolrClient client =
-        new RandomizingCloudSolrClientBuilder(
-                Collections.singletonList(DEAD_HOST_1), Optional.empty())
-            .build()) {
+        new RandomizingCloudSolrClientBuilder(List.of(DEAD_HOST_1), Optional.empty()).build()) {
       try (ZkClientClusterStateProvider zkClientClusterStateProvider =
           ZkClientClusterStateProvider.from(client)) {
         zkClientClusterStateProvider.setZkConnectTimeout(100);
@@ -794,8 +791,7 @@ public class CloudSolrClientTest extends SolrCloudTestCase {
   public void testWrongZkChrootTest() throws IOException {
     try (CloudSolrClient client =
         new RandomizingCloudSolrClientBuilder(
-                Collections.singletonList(cluster.getZkServer().getZkAddress() + "/xyz/foo"),
-                Optional.empty())
+                List.of(cluster.getZkServer().getZkAddress() + "/xyz/foo"), Optional.empty())
             .build()) {
       try (ZkClientClusterStateProvider zkClientClusterStateProvider =
           ZkClientClusterStateProvider.from(client)) {
@@ -819,7 +815,7 @@ public class CloudSolrClientTest extends SolrCloudTestCase {
     CloseableHttpClient client = HttpClientUtil.createClient(null);
     try (CloudSolrClient solrClient =
         new RandomizingCloudSolrClientBuilder(
-                Collections.singletonList(cluster.getZkServer().getZkAddress()), Optional.empty())
+                List.of(cluster.getZkServer().getZkAddress()), Optional.empty())
             .withHttpClient(client)
             .build()) {
 
@@ -933,7 +929,7 @@ public class CloudSolrClientTest extends SolrCloudTestCase {
     // NOTE: creating our own CloudSolrClient with settings for this specific test...
     try (CloudSolrClient stale_client =
         new RandomizingCloudSolrClientBuilder(
-                Collections.singletonList(cluster.getZkServer().getZkAddress()), Optional.empty())
+                List.of(cluster.getZkServer().getZkAddress()), Optional.empty())
             .sendDirectUpdatesToAnyShardReplica()
             .withParallelUpdates(true)
             // don't let collection cache entries get expired, even on a slow machine...

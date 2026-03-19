@@ -448,7 +448,7 @@ public class QueryElevationComponent extends SearchComponent implements SolrCore
             continue;
           }
         }
-        elevationBuilder.addElevatedIds(Collections.singletonList(id));
+        elevationBuilder.addElevatedIds(List.of(id));
       }
 
       // It is allowed to define multiple times different elevations for the same query. In this

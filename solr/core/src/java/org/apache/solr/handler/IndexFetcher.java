@@ -305,7 +305,7 @@ public class IndexFetcher {
         solrCore
             .getCoreContainer()
             .getAllowListUrlChecker()
-            .checkAllowList(Collections.singletonList(leaderCoreUrl), clusterState);
+            .checkAllowList(List.of(leaderCoreUrl), clusterState);
       } catch (MalformedURLException e) {
         throw new SolrException(
             SolrException.ErrorCode.SERVER_ERROR, "Malformed 'leaderUrl' " + leaderCoreUrl, e);

@@ -94,7 +94,7 @@ public class CloudSolrClientCacheTest extends SolrTestCaseJ4 {
     }
     Map<String, Function<?, ?>> responses = new HashMap<>();
     NamedList<Object> okResponse = new NamedList<>();
-    okResponse.add("responseHeader", new NamedList<>(Collections.singletonMap("status", 0)));
+    okResponse.add("responseHeader", new NamedList<>(Map.of("status", 0)));
 
     LBHttpSolrClient mockLbclient = getMockLbHttpSolrClient(responses);
     AtomicInteger lbhttpRequestCount = new AtomicInteger();
@@ -333,7 +333,7 @@ public class CloudSolrClientCacheTest extends SolrTestCaseJ4 {
 
       @Override
       public List<String> resolveAlias(String collection) {
-        return Collections.singletonList(collection);
+        return List.of(collection);
       }
 
       @Override

@@ -23,7 +23,6 @@ import static org.apache.solr.common.util.StrUtils.splitSmart;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -103,7 +102,7 @@ public abstract class BaseHandlerApiSupport implements ApiSupport {
             if (commands.size() > 1) {
               for (ApiCommand command : commands) {
                 if (command.meta().getName().equals(req.getPath())) {
-                  commands = Collections.singletonList(command);
+                  commands = List.of(command);
                   break;
                 }
               }
@@ -134,7 +133,7 @@ public abstract class BaseHandlerApiSupport implements ApiSupport {
     final Map<String, String> pathValues = req.getPathTemplateValues();
     final Map<String, Object> map =
         co == null || !(co.getCommandData() instanceof Map)
-            ? Collections.singletonMap("", co.getCommandData())
+            ? Map.of("", co.getCommandData())
             : co.getDataMap();
     final SolrParams origParams = req.getParams();
 

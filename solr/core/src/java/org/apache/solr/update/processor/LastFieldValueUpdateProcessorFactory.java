@@ -19,7 +19,6 @@ package org.apache.solr.update.processor;
 import static org.apache.solr.update.processor.FieldMutatingUpdateProcessor.SELECT_NO_FIELDS;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.SortedSet;
 import org.apache.solr.core.SolrCore;
@@ -66,7 +65,7 @@ public final class LastFieldValueUpdateProcessorFactory
       }
     }
 
-    return Collections.singletonList(result);
+    return List.of(result);
   }
 
   @Override

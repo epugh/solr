@@ -19,7 +19,7 @@ package org.apache.solr.client.solrj.apache;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.net.URL;
-import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -98,7 +98,7 @@ public class ConnectionReuseTest extends SolrCloudTestCase {
       case 2:
         var builder =
             new RandomizingCloudSolrClientBuilder(
-                Collections.singletonList(cluster.getZkServer().getZkAddress()), Optional.empty());
+                List.of(cluster.getZkServer().getZkAddress()), Optional.empty());
         boolean shardLeadersOnly = random().nextBoolean();
         if (shardLeadersOnly) {
           builder.sendUpdatesOnlyToShardLeaders();

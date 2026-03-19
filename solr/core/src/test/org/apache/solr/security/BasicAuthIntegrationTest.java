@@ -17,7 +17,6 @@
 package org.apache.solr.security;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.util.Collections.singletonMap;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
@@ -195,7 +194,7 @@ public class BasicAuthIntegrationTest extends SolrCloudAuthTestCase {
           baseUrl + authzPrefix,
           cl,
           Utils.toJSONString(
-              singletonMap(
+              Map.of(
                   "set-permission", Map.of("collection", "x", "path", "/update/*", "role", "dev"))),
           "harry",
           "HarryIsUberCool");
@@ -208,8 +207,7 @@ public class BasicAuthIntegrationTest extends SolrCloudAuthTestCase {
           baseUrl + authzPrefix,
           cl,
           Utils.toJSONString(
-              singletonMap(
-                  "set-permission", Map.of("name", "collection-admin-edit", "role", "admin"))),
+              Map.of("set-permission", Map.of("name", "collection-admin-edit", "role", "admin"))),
           "harry",
           "HarryIsUberCool");
       verifySecurityStatus(
@@ -302,7 +300,7 @@ public class BasicAuthIntegrationTest extends SolrCloudAuthTestCase {
         fail("Request should have failed because of missing auth");
       }
 
-      SolrParams params = new MapSolrParams(Collections.singletonMap("q", "*:*"));
+      SolrParams params = new MapSolrParams(Map.of("q", "*:*"));
       // Query that fails due to missing credentials
       exp =
           expectThrows(
@@ -376,7 +374,7 @@ public class BasicAuthIntegrationTest extends SolrCloudAuthTestCase {
           new V2Request.Builder("/cluster/plugin")
               .forceV2(true)
               .POST()
-              .withPayload(singletonMap("add", plugin))
+              .withPayload(Map.of("add", plugin))
               .build();
       v2Request.setBasicAuthCredentials("harry", "HarryIsUberCool");
       v2Request.process(cluster.getSolrClient());

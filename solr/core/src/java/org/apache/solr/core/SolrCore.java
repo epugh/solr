@@ -1712,9 +1712,7 @@ public class SolrCore implements SolrInfoBean, Closeable {
 
     map.computeIfAbsent(
         RunUpdateProcessorFactory.PRE_RUN_CHAIN_NAME,
-        k ->
-            new UpdateRequestProcessorChain(
-                Collections.singletonList(new NestedUpdateProcessorFactory()), this));
+        k -> new UpdateRequestProcessorChain(List.of(new NestedUpdateProcessorFactory()), this));
 
     return map;
   }

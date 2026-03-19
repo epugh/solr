@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.nio.file.Path;
 import java.util.Base64;
-import java.util.Collections;
+import java.util.Map;
 import java.util.Properties;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -133,7 +133,7 @@ public class BasicAuthStandaloneTest extends SolrTestCaseJ4 {
       command = "{\n" + "'set-permission': {'name': 'read', 'role':'solr'}\n" + "}";
       doHttpPost(httpClient, baseUrl + authzPrefix, command, "solr", "SolrRocks");
       try {
-        solrClient.query("collection1", new MapSolrParams(Collections.singletonMap("q", "foo")));
+        solrClient.query("collection1", new MapSolrParams(Map.of("q", "foo")));
         fail("Should return a 401 response");
       } catch (Exception e) {
         // Test that the second doPost request to /security/authorization went through
