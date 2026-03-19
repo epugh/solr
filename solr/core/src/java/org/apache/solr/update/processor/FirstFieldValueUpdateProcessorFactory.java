@@ -19,7 +19,8 @@ package org.apache.solr.update.processor;
 import static org.apache.solr.update.processor.FieldMutatingUpdateProcessor.SELECT_NO_FIELDS;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
+import org.apache.solr.common.util.SuppressForbidden;
 import org.apache.solr.core.SolrCore;
 import org.apache.solr.update.processor.FieldMutatingUpdateProcessor.FieldNameSelector;
 
@@ -46,10 +47,11 @@ import org.apache.solr.update.processor.FieldMutatingUpdateProcessor.FieldNameSe
 public final class FirstFieldValueUpdateProcessorFactory
     extends FieldValueSubsetUpdateProcessorFactory {
 
+  @SuppressForbidden(reason = "singletonList allows null field values")
   @Override
   public <T> Collection<T> pickSubset(Collection<T> values) {
     // trust the iterator
-    return List.of(values.iterator().next());
+    return Collections.singletonList(values.iterator().next());
   }
 
   @Override
