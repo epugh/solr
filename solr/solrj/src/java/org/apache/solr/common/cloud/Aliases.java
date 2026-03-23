@@ -430,7 +430,11 @@ public class Aliases {
    */
   public Aliases cloneWithCollectionAliasProperties(
       String alias, String propertiesKey, String propertiesValue) {
-    return cloneWithCollectionAliasProperties(alias, Map.of(propertiesKey, propertiesValue));
+    // Use a HashMap to allow null propertiesValue (null means remove the key in the map-based
+    // overload)
+    Map<String, String> props = new LinkedHashMap<>();
+    props.put(propertiesKey, propertiesValue);
+    return cloneWithCollectionAliasProperties(alias, props);
   }
 
   /**
