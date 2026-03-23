@@ -194,7 +194,7 @@ public class SchemaHandler extends RequestHandlerBase
               String realName = parts.get(1);
 
               String pathParam = level2.get(realName); // Might be null
-              if (parts.size() > 2) {
+              if (parts.size() > 2 && pathParam != null) {
                 req.setParams(
                     SolrParams.wrapDefaults(
                         new MapSolrParams(Map.of(pathParam, parts.get(2))), req.getParams()));
