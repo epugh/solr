@@ -306,24 +306,15 @@ public class ZkSubcommandsTest extends SolrTestCaseJ4 {
   public void testUpConfigLinkConfigClearZk() throws Exception {
     Path tmpDir = createTempDir();
 
-    // test upconfig
+    // Upload the configset directly to ZK for use in subsequent linkconfig/downconfig tests.
+    // ConfigSetUploadTool now uses the Solr HTTP V2 API and requires a running Solr instance,
+    // which this ZK-only test does not provide.
     String confsetname = "confsetone";
+    final Path confDir = ExternalPaths.TECHPRODUCTS_CONFIGSET;
 
-    String[] args =
-        new String[] {
-          "upconfig",
-          "--conf-name",
-          confsetname,
-          "--conf-dir",
-          ExternalPaths.TECHPRODUCTS_CONFIGSET.toString(),
-          "-z",
-          zkServer.getZkAddress()
-        };
-
-    assertEquals(0, CLITestHelper.runTool(args, ConfigSetUploadTool.class));
+    new ZkConfigSetService(zkClient).uploadConfig(confsetname, confDir);
 
     assertTrue(zkClient.exists(ZkConfigSetService.CONFIGS_ZKNODE + "/" + confsetname));
-    final Path confDir = ExternalPaths.TECHPRODUCTS_CONFIGSET;
 
     List<String> zkFiles =
         zkClient.getChildren(ZkConfigSetService.CONFIGS_ZKNODE + "/" + confsetname, null);
@@ -334,7 +325,7 @@ public class ZkSubcommandsTest extends SolrTestCaseJ4 {
     }
 
     // test linkconfig
-    args =
+    String[] args =
         new String[] {
           "linkconfig",
           "--conf-name",

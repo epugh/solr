@@ -16,12 +16,21 @@
  */
 package org.apache.solr.cli;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.net.URI;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-import org.apache.solr.common.cloud.SolrZkClient;
+import org.apache.solr.client.solrj.SolrRequest;
+import org.apache.solr.client.solrj.request.GenericV2SolrRequest;
 import org.apache.solr.common.cloud.ZkMaintenanceUtils;
 import org.apache.solr.core.ConfigSetService;
 import org.apache.solr.util.FileTypeMagicUtil;
@@ -38,7 +47,7 @@ public class ConfigSetUploadTool extends ToolBase {
           .hasArg()
           .argName("NAME")
           .required()
-          .desc("Configset name in ZooKeeper.")
+          .desc("Configset name.")
           .get();
 
   private static final Option CONF_DIR_OPTION =
@@ -75,36 +84,58 @@ public class ConfigSetUploadTool extends ToolBase {
 
   @Override
   public void runImpl(CommandLine cli) throws Exception {
-    String zkHost = CLIUtils.getZkHost(cli);
-
     final String solrInstallDir = System.getProperty("solr.install.dir");
     Path solrInstallDirPath = Path.of(solrInstallDir);
 
     String confName = cli.getOptionValue(CONF_NAME_OPTION);
     String confDir = cli.getOptionValue(CONF_DIR_OPTION);
 
-    echoIfVerbose("\nConnecting to ZooKeeper at " + zkHost + " ...");
-    try (SolrZkClient zkClient = CLIUtils.getSolrZkClient(cli, zkHost)) {
-      final Path configsetsDirPath = CLIUtils.getConfigSetsDir(solrInstallDirPath);
-      Path confPath = ConfigSetService.getConfigsetPath(confDir, configsetsDirPath.toString());
+    final Path configsetsDirPath = CLIUtils.getConfigSetsDir(solrInstallDirPath);
+    Path confPath = ConfigSetService.getConfigsetPath(confDir, configsetsDirPath.toString());
 
-      echo(
-          "Uploading "
-              + confPath.toAbsolutePath()
-              + " for config "
-              + confName
-              + " to ZooKeeper at "
-              + zkHost);
-      FileTypeMagicUtil.assertConfigSetFolderLegal(confPath);
-      ZkMaintenanceUtils.uploadToZK(
-          zkClient,
-          confPath,
-          ZkMaintenanceUtils.CONFIGS_ZKNODE + "/" + confName,
-          ZkMaintenanceUtils.UPLOAD_FILENAME_EXCLUDE_PATTERN);
+    echo("Uploading " + confPath.toAbsolutePath() + " for config " + confName + " to Solr");
 
+    FileTypeMagicUtil.assertConfigSetFolderLegal(confPath);
+
+    try (var solrClient = CLIUtils.getSolrClient(cli)) {
+      byte[] zipData = createZipData(confPath);
+      var request = new GenericV2SolrRequest(SolrRequest.METHOD.PUT, "/configsets/" + confName);
+      request.withContent(zipData, "application/octet-stream");
+      request.process(solrClient);
     } catch (Exception e) {
       log.error("Could not complete upconfig operation for reason: ", e);
       throw (e);
     }
+  }
+
+  private static byte[] createZipData(Path confPath) throws IOException {
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    URI base = confPath.toUri();
+    Deque<Path> queue = new ArrayDeque<>();
+    queue.push(confPath);
+    try (ZipOutputStream zout = new ZipOutputStream(baos)) {
+      while (!queue.isEmpty()) {
+        Path dir = queue.pop();
+        try (var files = Files.list(dir)) {
+          for (Path file : files.toList()) {
+            String filename = file.getFileName().toString();
+            if (ZkMaintenanceUtils.UPLOAD_FILENAME_EXCLUDE_PATTERN.matcher(filename).matches()) {
+              continue;
+            }
+            String name = base.relativize(file.toUri()).getPath();
+            if (Files.isDirectory(file)) {
+              queue.push(file);
+            } else {
+              zout.putNextEntry(new ZipEntry(name));
+              try (var in = Files.newInputStream(file)) {
+                in.transferTo(zout);
+              }
+              zout.closeEntry();
+            }
+          }
+        }
+      }
+    }
+    return baos.toByteArray();
   }
 }
