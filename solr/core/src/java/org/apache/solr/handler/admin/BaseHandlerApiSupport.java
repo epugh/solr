@@ -23,6 +23,7 @@ import static org.apache.solr.common.util.StrUtils.splitSmart;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -37,6 +38,7 @@ import org.apache.solr.client.solrj.request.ApiMapping.V2EndPoint;
 import org.apache.solr.common.SolrException;
 import org.apache.solr.common.params.SolrParams;
 import org.apache.solr.common.util.CommandOperation;
+import org.apache.solr.common.util.SuppressForbidden;
 import org.apache.solr.common.util.Utils;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.response.SolrQueryResponse;
@@ -125,6 +127,8 @@ public abstract class BaseHandlerApiSupport implements ApiSupport {
   }
 
   /** Wrapper for SolrParams that wraps V2 params and exposes them as V1 params. */
+  @SuppressForbidden(
+      reason = "CommandOperation.getCommandData can return null when there is no payload")
   private static void wrapParams(
       final SolrQueryRequest req,
       final CommandOperation co,
@@ -133,7 +137,7 @@ public abstract class BaseHandlerApiSupport implements ApiSupport {
     final Map<String, String> pathValues = req.getPathTemplateValues();
     final Map<String, Object> map =
         co == null || !(co.getCommandData() instanceof Map)
-            ? Map.of("", co.getCommandData())
+            ? Collections.singletonMap("", co.getCommandData())
             : co.getDataMap();
     final SolrParams origParams = req.getParams();
 

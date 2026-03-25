@@ -180,7 +180,11 @@ public class ExportWriter implements SolrCore.RawWriter, Closeable {
           mw.put("responseHeader", Map.of("status", 400))
               .put(
                   "response",
-                  Map.of("numFound", 0, "docs", List.of(Map.of("EXCEPTION", e.getMessage()))));
+                  Map.of(
+                      "numFound",
+                      0,
+                      "docs",
+                      List.of(Map.of("EXCEPTION", String.valueOf(e.getMessage())))));
         });
     if (logException) {
       log.error("Exception", e);
