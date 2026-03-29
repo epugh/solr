@@ -16,7 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-A Solr cluster is a group of servers (_nodes_) that each run Solr.
+A Solr cluster is a group of servers that each run one or more Solr _nodes_.
 
 There are two general modes of operating a cluster of Solr nodes.
 One mode provides central coordination of the Solr nodes (<<SolrCloud Mode>>), while the other allows you to operate a cluster without this central coordination (<<User-Managed Mode>>).
@@ -29,37 +29,82 @@ First let's cover a few general concepts and then outline the differences betwee
 
 == Cluster Concepts
 
+=== Servers and Nodes
+
+A _server_ is the hardware or virtual machine that hosts Solr software.
+A _node_ is an instance of a running Solr process that services search and indexing requests.
+Large servers may run multiple Solr nodes, though typically one node per server is most common.
+
 === Shards
 
-In both cluster modes, a single logical index can be split across nodes as _shards_.
-Each shard contains a subset of overall index.
+In both cluster modes, a logical collection of documents can be divided across nodes as _shards_.
+Each shard represents a logical slice of the overall collection and contains a subset of the documents.
 
-The number of shards dictates the theoretical limit to the number of documents that can be indexed to Solr.
-It also determines the amount of parallelization possible for an individual search request.
+The number of shards determines the theoretical limit to the number of documents that can be stored.
+It also dictates the amount of parallelization possible for an individual search request.
 
 === Replicas
 
-In order to provide some failover for each shard, each shard can be copied as a _replica_.
-A replica has the same configuration as the shard and any other replicas for the same index.
+A shard is a logical concept—a slice of your collection.
+A _replica_ is the physical manifestation of that logical shard.
+It is the actual running instance that holds and serves the documents belonging to that shard.
 
-It's possible to have replicas without having created shards.
-In this case, each replica would be a full copy of the entire index, instead of being only a copy of a part of the entire index.
+A shard must have at least one replica to exist physically.
+If you have one shard with one physical copy, you have one replica.
+If you add redundancy by creating additional copies of that shard, you have multiple replicas—each is equally a replica, including the first one.
 
-The number of replicas determines the level of fault tolerance the entire cluster has in the event of a node failure.
+IMPORTANT: There is no "original shard" separate from its replicas.
+The replicas ARE how the shard exists.
+This is why we say "a shard with 2 replicas" has 2 total physical copies, not an original plus 2 additional copies.
+
+All replicas of the same shard contain the same subset of documents and share the same configuration.
+
+The number of replicas determines the level of fault tolerance the cluster has in the event of a node failure.
 It also dictates the theoretical limit on the number of concurrent search requests that can be processed under heavy load.
 
-=== Leaders
+=== Leaders and Followers
 
-Once replicas have been created, a _leader_ must be identified.
-The responsibility of the leader is to be a source-of-truth for each replica.
-When updates are made to the index, they are first processed by the leader and then by each replica (the exact mechanism for how this happens varies).
+Among the replicas for a given shard, one replica is designated as the _leader_.
+The leader serves as the source-of-truth for its shard.
+When document updates are made, they are first processed by the leader replica and then propagated to the other replicas (the exact mechanism varies by cluster mode).
 
-The replicas which are not leaders are _followers_.
+The replicas which are not leaders are called _followers_.
 
 === Cores
 
-Each replica, whether it is a leader or a follower, is called a _core_.
+In Solr's implementation, each replica is represented as a _core_.
+The term "core" is primarily an internal implementation detail—when you create a replica, Solr creates a core to represent it.
 Multiple cores can be hosted on any one node.
+
+NOTE: The term "core" can be confusing because in everyday English it implies something central and singular, but in Solr it actually refers to one of potentially many replicas distributed across the cluster.
+In most contexts, thinking of "core" as synonymous with "replica" will help clarify discussions about Solr's architecture.
+
+=== Collections and Indexes
+
+A _collection_ is the complete logical set of searchable documents that share a schema and configuration.
+In SolrCloud mode (described below), a collection encompasses all the shards and their replicas.
+
+An _index_ refers to the physical data structures written to disk by Apache Lucene.
+Each core (replica) maintains exactly one Lucene index on disk, containing the actual inverted indexes, stored fields, and other data structures that enable search.
+
+This creates a clear hierarchy from logical concepts to physical storage:
+
+[source,text]
+----
+Collection (logical grouping of all searchable documents)
+  └─> Shard 1 (logical partition)
+  │     └─> Replica 1 / Core 1 (physical instance)
+  │     │     └─> Lucene Index (disk structures)
+  │     └─> Replica 2 / Core 2 (physical instance)
+  │           └─> Lucene Index (disk structures)
+  └─> Shard 2 (logical partition)
+        └─> Replica 1 / Core 3 (physical instance)
+        │     └─> Lucene Index (disk structures)
+        └─> Replica 2 / Core 4 (physical instance)
+              └─> Lucene Index (disk structures)
+----
+
+In this example, a collection is divided into 2 shards, each shard has 2 replicas for redundancy, and each replica maintains its own Lucene index on disk.
 
 == SolrCloud Mode
 
@@ -69,45 +114,45 @@ ZooKeeper tracks each node of the cluster and the state of each core on each nod
 In this mode, configuration files are stored in ZooKeeper and not on the file system of each node.
 When configuration changes are made, they must be uploaded to ZooKeeper, which in turn makes sure each node knows changes have been made.
 
-SolrCloud introduces an additional concept, a _collection_.
-A collection is the entire group of cores that represent an index: the logical shards and the physical replicas for each shard.
-Collections all share the same configurations (schema, `solrconfig.xml`, etc.).
-This is an additional centralization of the cluster management, as operations can be performed on the entire collection at one time.
+SolrCloud manages collections as first-class entities.
+A collection represents the entire group of shards and replicas that together provide access to a corpus of documents.
+Collections share the same configurations (schema, `solrconfig.xml`, etc.).
+This centralization of cluster management means that operations can be performed on the entire collection at one time.
 
-When changes are made to configurations, a single command to reload the collection would automatically reload each individual core that is a member of the collection.
+When changes are made to configurations, a single command to reload the collection will automatically reload each individual core (replica) that is a member of the collection.
 
 Sharding is handled automatically, simply by telling Solr during collection creation how many shards you'd like the collection to have.
-Index updates are then generally balanced between each shard automatically.
+Document updates are then generally balanced between each shard automatically.
 Some degree of control over what documents are stored in which shards is also available, if needed.
 
 ZooKeeper also handles load balancing and failover.
 Incoming requests, either to index documents or for user queries, can be sent to any node of the cluster and ZooKeeper will route the request to an appropriate replica of each shard.
 
-In SolrCloud, the leader is flexible, with built-in mechanisms for automatic leader election in case of failure in the leader.
-This means another core can become the leader, and from that point forward it is the source-of-truth for all replicas.
+In SolrCloud, the leader is flexible, with built-in mechanisms for automatic leader election in case the current leader fails.
+This means another replica can become the leader, and from that point forward it is the source-of-truth for all other replicas of that shard.
 
 As long as one replica of each relevant shard is available, a user query or indexing request can still be satisfied when running in SolrCloud mode.
 
 == User-Managed Mode
 
-Solr's user-managed mode requires that cluster coordination activities that SolrCloud normally uses ZooKeeper for to be performed manually or with local scripts.
+Solr's user-managed mode requires that cluster coordination activities that SolrCloud normally uses ZooKeeper for be performed manually or with local scripts.
 
-If the corpus of documents is too large for a single-sharded index, the logic to create shards is entirely left to the user.
+If the corpus of documents is too large for a single shard, the logic to create multiple shards is entirely left to the user.
 There are no automated or programmatic ways for Solr to create shards during indexing.
 
-Routing documents to shards are handled manually, either with a simple hashing system or a simple round-robin list of shards that sends each document to a different shard.
+Routing documents to shards is handled manually, either with a simple hashing system or a simple round-robin list of shards that sends each document to a different shard.
 Document updates must be sent to the right shard or duplicate documents could result.
 
-In user-managed mode, the concept of leader and follower becomes critical.
-Identifying which node will host the leader replica and which host(s) will be replicas dictate how each node is configured.
-In this mode, all index updates are sent to the leader only.
-Once the leader has completed indexing, the replica will request the index updates and copy them from the leader.
+In user-managed mode, the distinction between leader and follower replicas becomes critical.
+Identifying which node will host the leader replica and which host(s) will have follower replicas dictates how each node is configured.
+In this mode, all document updates are sent to the leader replica only.
+Once the leader has completed indexing, each follower replica will request the index updates and copy them from the leader.
 
-Load balancing is achieved with an external tool or process, unless request traffic can be managed by the leader or one of its replicas alone.
+Load balancing is achieved with an external tool or process, unless request traffic can be managed by the leader or one of its follower replicas alone.
 
-If the leader goes down, there is no built-in failover mechanism.
-A replica could continue to serve queries if the queries were specifically directed to it.
-Changing a replica to serve as the leader would require changing `solrconfig.xml` configurations on all replicas and reloading each core.
+If the leader replica goes down, there is no built-in failover mechanism.
+A follower replica could continue to serve queries if the queries were specifically directed to it.
+Promoting a follower replica to serve as the leader would require changing `solrconfig.xml` configurations on all replicas and reloading each core.
 
-User-managed mode has no concept of a collection, so for all intents and purposes each Solr node is distinct from other nodes.
-Only some configuration parameters keep each node from behaving as independent entities.
+User-managed mode has no concept of a collection as a managed entity, so for all intents and purposes each Solr core is configured and managed independently.
+Only configuration parameters keep related cores from behaving as completely independent entities.
