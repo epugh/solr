@@ -80,6 +80,27 @@ public class ConfigSetUploadToolTest extends SolrCloudTestCase {
   }
 
   @Test
+  public void testUpconfigWithZkHost() throws Exception {
+    // Verify that -z (zk-host) also works: the tool resolves a live Solr node from ZK.
+    Path configSet = TEST_PATH().resolve("configsets");
+    Path confDir = configSet.resolve("cloud-subdirs");
+
+    String[] args =
+        new String[] {
+          "upconfig", "--conf-name", "upconfig-zk", "--conf-dir", confDir.toString(), "-z", zkAddr
+        };
+
+    assertEquals(
+        "upconfig via -z should succeed",
+        0,
+        CLITestHelper.runTool(args, ConfigSetUploadTool.class));
+
+    assertTrue(
+        "Config should exist in ZK after upload via -z",
+        zkClient.exists("/configs/upconfig-zk/schema.xml"));
+  }
+
+  @Test
   public void testUpconfigBadPath() throws Exception {
     String solrUrl = cluster.getJettySolrRunner(0).getBaseUrl().toString();
 
