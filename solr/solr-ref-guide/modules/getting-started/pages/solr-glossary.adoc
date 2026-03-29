@@ -25,7 +25,7 @@ Where possible, terms are linked to relevant parts of the Solr Reference Guide f
 
 *Jump to a letter:*
 
-<<SolrGlossary-A,A>> <<SolrGlossary-B,B>> <<SolrGlossary-C,C>> <<SolrGlossary-D,D>> <<SolrGlossary-E,E>> <<SolrGlossary-F,F>> G H <<SolrGlossary-I,I>> J K <<SolrGlossary-L,L>> <<SolrGlossary-M,M>> <<SolrGlossary-N,N>> <<SolrGlossary-O,O>> P <<SolrGlossary-Q,Q>> <<SolrGlossary-R,R>> <<SolrGlossary-S,S>> <<SolrGlossary-T,T>> U V <<SolrGlossary-W,W>> X Y <<SolrGlossary-Z,Z>>
+<<SolrGlossary-A,A>> <<SolrGlossary-B,B>> <<SolrGlossary-C,C>> <<SolrGlossary-D,D>> <<SolrGlossary-E,E>> <<SolrGlossary-F,F>> G H <<SolrGlossary-I,I>> J K <<SolrGlossary-L,L>> <<SolrGlossary-M,M>> <<SolrGlossary-N,N>> <<SolrGlossary-O,O>> P <<SolrGlossary-Q,Q>> <<SolrGlossary-R,R>> <<SolrGlossary-S,S>> <<SolrGlossary-T,T>> <<SolrGlossary-U,U>> V <<SolrGlossary-W,W>> X Y <<SolrGlossary-Z,Z>>
 
 
 [[SolrGlossary-A]]
@@ -44,10 +44,10 @@ These control the inclusion or exclusion of keywords in a query by using operato
 [[SolrGlossary-C]]
 === C
 
-[[cluster]]Cluster::
+[[cluster]]xref:cluster-types.adoc[Cluster]::
 In Solr, a cluster is a set of Solr nodes operating in coordination with each other via <<zookeeper,ZooKeeper>>, and managed as a unit.
 A cluster may contain many collections.
-See also <<solrclouddef,SolrCloud>>.
+See also xref:cluster-types.adoc[] and <<solrclouddef,SolrCloud>>.
 
 [[collection]]Collection::
 The complete logical set of searchable documents that share a schema and configuration.
@@ -240,6 +240,12 @@ Synonyms generally are terms which are near to each other in meaning and may sub
 In a search engine implementation, synonyms may be abbreviations as well as words, or terms that are not consistently hyphenated.
 Examples of synonyms in this context would be "Inc." and "Incorporated" or "iPod" and "i-pod".
 
+[[standalone]]Standalone::
+An informal term referring to Solr deployments that do not use <<solrclouddef,SolrCloud>> mode.
+This includes both single-node installations and <<usermanaged,User-Managed>> clusters.
+In source code and documentation, "Standalone" may refer to either <<usermanaged,User-Managed Mode>> or single-node deployments.
+See also xref:cluster-types.adoc[] and <<cluster,Cluster>>.
+
 [[SolrGlossary-T]]
 === T
 
@@ -251,6 +257,16 @@ See also <<idf,Inverse document frequency (IDF)>>.
 [[transactionlog]]Transaction log::
 An append-only log of write operations maintained by each <<replica,Replica>>.
 This log is required with SolrCloud implementations and is created and managed automatically by Solr.
+
+[[SolrGlossary-U]]
+=== U
+
+[[usermanaged]]xref:cluster-types.adoc#user-managed-mode[User-Managed Mode]::
+A mode of operating a Solr <<cluster,Cluster>> without the centralized coordination provided by <<zookeeper,ZooKeeper>> in <<solrclouddef,SolrCloud>> mode.
+In user-managed mode, cluster coordination activities must be performed manually or with local scripts.
+This includes shard creation, document routing, leader/follower configuration, and load balancing.
+Also known as <<standalone,Standalone>> mode.
+See also xref:cluster-types.adoc[].
 
 [[SolrGlossary-W]]
 === W
