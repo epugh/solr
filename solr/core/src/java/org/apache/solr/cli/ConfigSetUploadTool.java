@@ -99,8 +99,8 @@ public class ConfigSetUploadTool extends ToolBase {
 
     try (var solrClient = CLIUtils.getSolrClient(cli)) {
       byte[] zipData = createZipData(confPath);
-      var request =
-          new ConfigsetsApi.UploadConfigSet(confName, new ByteArrayInputStream(zipData));
+      var zipStream = new ByteArrayInputStream(zipData);
+      var request = new ConfigsetsApi.UploadConfigSet(confName, zipStream);
       request.process(solrClient);
     } catch (Exception e) {
       log.error("Could not complete upconfig operation for reason: ", e);
