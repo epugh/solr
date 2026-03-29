@@ -16,6 +16,7 @@
  */
 package org.apache.solr.cli;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
@@ -29,8 +30,7 @@ import java.util.zip.ZipOutputStream;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-import org.apache.solr.client.solrj.SolrRequest;
-import org.apache.solr.client.solrj.request.GenericV2SolrRequest;
+import org.apache.solr.client.solrj.request.ConfigsetsApi;
 import org.apache.solr.common.cloud.ZkMaintenanceUtils;
 import org.apache.solr.core.ConfigSetService;
 import org.apache.solr.util.FileTypeMagicUtil;
@@ -99,8 +99,8 @@ public class ConfigSetUploadTool extends ToolBase {
 
     try (var solrClient = CLIUtils.getSolrClient(cli)) {
       byte[] zipData = createZipData(confPath);
-      var request = new GenericV2SolrRequest(SolrRequest.METHOD.PUT, "/configsets/" + confName);
-      request.withContent(zipData, "application/octet-stream");
+      var request =
+          new ConfigsetsApi.UploadConfigSet(confName, new ByteArrayInputStream(zipData));
       request.process(solrClient);
     } catch (Exception e) {
       log.error("Could not complete upconfig operation for reason: ", e);
