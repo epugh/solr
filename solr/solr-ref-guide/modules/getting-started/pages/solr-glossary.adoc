@@ -50,21 +50,30 @@ A cluster may contain many collections.
 See also <<solrclouddef,SolrCloud>>.
 
 [[collection]]Collection::
-In Solr, one or more <<document,Documents>> grouped together in a single logical index using a single configuration and Schema.
+The complete logical set of searchable documents that share a schema and configuration.
 +
-In <<solrclouddef,SolrCloud>> a collection may be divided up into multiple logical shards, which may in turn be distributed across many nodes.
+In <<solrclouddef,SolrCloud>>, a collection may be divided up into multiple logical <<shard,shards>>, which may in turn be distributed across many <<node,nodes>> for scalability and fault tolerance.
+Each collection encompasses all the shards and their <<replica,replicas>>.
 +
-Single-node installations and user-managed clusters use instead the concept of a <<core,Core>>.
-"Collection" is most frequently used in the SolrCloud context, but as it represents a "logical index", the term may be used to refer to individual cores in a user-managed cluster as well.
+Single-node installations and user-managed clusters do not manage collections as first-class entities; instead they work directly with individual <<core,cores>>.
 +
 [[defcommit]]Commit::
 To make document changes permanent in the index.
 In the case of added documents, they would be searchable after a _commit_.
 
 [[core]]Core::
-An individual Solr instance (represents a logical index).
-Multiple cores can run on a single node.
+In Solr's implementation, a core is the physical instance that represents a <<replica,Replica>>.
+When you create a replica, Solr creates a core to represent it.
+Multiple cores can be hosted on a single <<node,Node>>.
+Each core maintains exactly one Lucene <<index,Index>> on disk.
++
+NOTE: The term "core" can be confusing because in everyday English it implies something central and singular, but in Solr it actually refers to one of potentially many replicas distributed across the cluster.
+In most contexts, thinking of "core" as synonymous with "replica" will clarify discussions about Solr's architecture.
++
 See also <<solrclouddef,SolrCloud>>.
+
+[[corpus]]Corpus::
+The set of documents available for indexing, irrespective of whether or not they are currently indexed in Solr.
 
 [[corereload]]Core reload::
 To re-initialize a Solr core after changes to the schema file, `solrconfig.xml` or other configuration files.
@@ -96,6 +105,11 @@ The arrangement of search results into categories based on indexed terms.
 [[field]]Field::
 The content to be indexed/searched along with metadata defining how the content should be processed by Solr.
 
+[[follower]]Follower::
+A <<replica,Replica>> that is not the <<leader,Leader>> for its <<shard,Shard>>.
+Follower replicas receive index updates from the leader replica and serve queries.
+See also <<solrclouddef,SolrCloud>>.
+
 [[SolrGlossary-I]]
 === I
 
@@ -104,6 +118,10 @@ A measure of the general importance of a term.
 It is calculated as the number of total Documents divided by the number of Documents that a particular word occurs in the collection.
 See http://en.wikipedia.org/wiki/Tf-idf and {lucene-javadocs}/core/org/apache/lucene/search/similarities/TFIDFSimilarity.html[the Lucene TFIDFSimilarity javadocs] for more info on TF-IDF based scoring and Lucene scoring in particular.
 See also <<termfrequency,Term frequency>>.
+
+[[index]]Index::
+The physical data structures written to disk by Apache Lucene.
+Each <<core,Core>> (<<replica,Replica>>) maintains exactly one Lucene index on disk, containing the actual inverted indexes, stored fields, and other data structures that enable search.
 
 [[invertedindex]]Inverted index::
 A way of creating a searchable index that lists every word and the documents that contain those words, similar to an index in the back of a book which lists words and the pages on which they can be found.
@@ -114,8 +132,8 @@ Since users search using terms they expect to be in documents, finding the term 
 === L
 
 [[leader]]Leader::
-A single <<replica,Replica>> for each <<shard,Shard>> that takes charge of coordinating index updates (document additions or deletions) to other replicas in the same shard.
-This is a transient responsibility assigned to a node via an election, if the current Shard Leader goes down, a new node will automatically be elected to take its place.
+A single <<replica,Replica>> for each <<shard,Shard>> that serves as the source-of-truth and coordinates index updates (document additions or deletions) to the <<follower,follower>> replicas in the same shard.
+This is a transient responsibility assigned to a replica via an election; if the current leader goes down, another replica will automatically be elected to take its place.
 See also <<solrclouddef,SolrCloud>>.
 
 [[SolrGlossary-M]]
@@ -132,8 +150,8 @@ Metadata is information about a document, such as its title, author, or location
 A search that is entered as a user would normally speak or write, as in, "What is aspirin?"
 
 [[node]]Node::
-A JVM instance running Solr.
-Also known as a Solr server.
+An instance of a running Solr process that services search and indexing requests.
+A node is a JVM instance running Solr on a <<server,Server>>.
 
 [[SolrGlossary-O]]
 === O
@@ -163,7 +181,11 @@ The ability of a search engine to retrieve _all_ of the possible matches to a us
 The appropriateness of a document to the search conducted by the user.
 
 [[replica]]Replica::
-A <<core,Core>> that acts as a physical copy of a <<shard,Shard>> in a <<solrclouddef,SolrCloud>> <<collection,Collection>>.
+The physical manifestation of a logical <<shard,Shard>>.
+A replica is the actual running instance (represented as a <<core,Core>>) that holds and serves the documents belonging to that shard.
+A shard must have at least one replica to exist physically, and may have multiple replicas for redundancy and fault tolerance.
+All replicas of the same shard contain the same subset of documents.
+See also <<solrclouddef,SolrCloud>>.
 
 [[replication]]xref:deployment-guide:user-managed-index-replication.adoc[Replication]::
 
@@ -179,9 +201,14 @@ Logic and configuration parameters that tell Solr how to handle incoming "reques
 Logic and configuration parameters used by request handlers to process query requests.
 Examples of search components include faceting, highlighting, and "more like this" functionality.
 
+[[server]]Server::
+The hardware or virtual machine that hosts Solr software.
+A server may run one or more Solr <<node,Nodes>>.
+
 [[shard]]Shard::
-In SolrCloud, a logical partition of a single <<collection,Collection>>.
-Every shard consists of at least one physical <<replica,Replica>>, but there may be multiple Replicas distributed across multiple <<node,Nodes>> for fault tolerance.
+A logical slice of a <<collection,Collection>>.
+Each shard represents a logical partition containing a subset of the collection's documents.
+A shard exists physically as one or more <<replica,Replicas>>, which may be distributed across multiple <<node,Nodes>> for fault tolerance and scalability.
 See also <<solrclouddef,SolrCloud>>.
 
 [[solrclouddef]]xref:cluster-types.adoc#solrcloud-mode[SolrCloud]::
