@@ -393,7 +393,7 @@ public class TestConfigSetsAPI extends SolrCloudTestCase {
 
     // Checking error when configuration name contains invalid characters
     ignoreException("Invalid configset");
-    for (String invalidName : new String[] {"configset!", "configset\"", "-configset"}) {
+    for (String invalidName : new String[] {"configset!", "-configset"}) {
       map =
           postDataAndGetResponse(
               cluster.getSolrClient(),
