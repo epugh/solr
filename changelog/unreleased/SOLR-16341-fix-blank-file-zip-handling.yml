@@ -1,0 +1,8 @@
+
+title: Fix blank file in configset zip upload handling by providing clearer error
+type: fixed
+authors:
+  - name: Eric Pugh
+links:
+  - name: SOLR-16341
+    url: https://issues.apache.org/jira/browse/SOLR-16341
