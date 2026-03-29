@@ -392,7 +392,6 @@ public class TestConfigSetsAPI extends SolrCloudTestCase {
         zkClient.exists("/configs/myconf/anotherDummyFile"));
 
     // Checking error when configuration name contains invalid characters
-    ignoreException("Invalid configset");
     for (String invalidName : new String[] {"configset!", "-configset"}) {
       map =
           postDataAndGetResponse(
@@ -407,7 +406,6 @@ public class TestConfigSetsAPI extends SolrCloudTestCase {
       statusCode = (long) getObjectByPath(map, Arrays.asList("responseHeader", "status"));
       assertEquals("Expected 400 for invalid configset name: " + invalidName, 400l, statusCode);
     }
-    unIgnoreException("Invalid configset");
 
     zkClient.close();
     solrClient.close();
