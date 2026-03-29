@@ -26,6 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
 import org.apache.solr.client.api.endpoint.ConfigsetsApi;
 import org.apache.solr.client.api.model.SolrJerseyResponse;
@@ -80,13 +81,22 @@ public class UploadConfigSet extends ConfigSetAPIBase implements ConfigsetsApi.U
     try (ZipInputStream zis = new ZipInputStream(requestBody, StandardCharsets.UTF_8)) {
       boolean hasEntry = false;
       ZipEntry zipEntry;
-      while ((zipEntry = zis.getNextEntry()) != null) {
-        hasEntry = true;
-        String filePath = zipEntry.getName();
-        filesToDelete.remove(filePath);
-        if (!zipEntry.isDirectory()) {
-          configSetService.uploadFileToConfig(configSetName, filePath, zis.readAllBytes(), true);
+      try {
+        while ((zipEntry = zis.getNextEntry()) != null) {
+          hasEntry = true;
+          String filePath = zipEntry.getName();
+          filesToDelete.remove(filePath);
+          if (!zipEntry.isDirectory()) {
+            configSetService.uploadFileToConfig(configSetName, filePath, zis.readAllBytes(), true);
+          }
         }
+      } catch (ZipException e) {
+        throw new SolrException(
+            SolrException.ErrorCode.BAD_REQUEST,
+            "Failed to read the uploaded zip file. The file may be malformed or use an unsupported format. "
+                + "Please recreate the zip file using standard compression tools: "
+                + e.getMessage(),
+            e);
       }
       if (!hasEntry) {
         throw new SolrException(
