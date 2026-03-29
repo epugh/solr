@@ -32,7 +32,7 @@ import org.junit.Test;
 
 /**
  * Unit tests for the V2 APIs found in {@link org.apache.solr.handler.admin.api} that use the
- * /c/{collection} path.
+ * /coll/{collection} path.
  *
  * <p>This test bears many similarities to {@link TestCollectionAPIs} which appears to test the
  * mappings indirectly by checking message sent to the ZK overseer (which is similar, but not

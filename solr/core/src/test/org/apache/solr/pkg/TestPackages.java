@@ -267,7 +267,7 @@ public class TestPackages extends SolrCloudTestCase {
     plugins.put("create-expressible", p);
 
     V2Request v2r =
-        new V2Request.Builder("/c/" + COLLECTION_NAME + "/config")
+        new V2Request.Builder("/coll/" + COLLECTION_NAME + "/config")
             .withMethod(SolrRequest.METHOD.POST)
             .withPayload(plugins)
             .forceV2(true)
@@ -501,7 +501,7 @@ public class TestPackages extends SolrCloudTestCase {
     plugins.put("create-queryparser", p);
 
     v2r =
-        new V2Request.Builder("/c/" + COLLECTION_NAME + "/config")
+        new V2Request.Builder("/coll/" + COLLECTION_NAME + "/config")
             .withMethod(SolrRequest.METHOD.POST)
             .withPayload(plugins)
             .forceV2(true)

@@ -77,9 +77,9 @@ public class TestV2Request extends SolrCloudTestCase {
     assertFalse(new V2Request.Builder("/collections/a/shards/").build().isPerCollectionRequest());
     assertTrue(new V2Request.Builder("/collections/a/update").build().isPerCollectionRequest());
     assertEquals("a", new V2Request.Builder("/collections/a/update").build().getCollection());
-    assertTrue(new V2Request.Builder("/c/a/update").build().isPerCollectionRequest());
-    assertTrue(new V2Request.Builder("/c/a/schema").build().isPerCollectionRequest());
-    assertFalse(new V2Request.Builder("/c/a").build().isPerCollectionRequest());
+    assertTrue(new V2Request.Builder("/coll/a/update").build().isPerCollectionRequest());
+    assertTrue(new V2Request.Builder("/coll/a/schema").build().isPerCollectionRequest());
+    assertFalse(new V2Request.Builder("/coll/a").build().isPerCollectionRequest());
   }
 
   @Test
@@ -113,7 +113,7 @@ public class TestV2Request extends SolrCloudTestCase {
     String requestHandlerName = "/x" + random().nextInt();
     assertSuccess(
         client,
-        new V2Request.Builder("/c/test/config")
+        new V2Request.Builder("/coll/test/config")
             .withMethod(SolrRequest.METHOD.POST)
             .withPayload(
                 "{'create-requesthandler' : { 'name' : '"
@@ -158,7 +158,7 @@ public class TestV2Request extends SolrCloudTestCase {
 
     String testServer = cluster.getZkStateReader().getBaseUrlForNodeName(testNode[0]);
     V2Request v2r =
-        new V2Request.Builder("/c/v2forward/_introspect")
+        new V2Request.Builder("/coll/v2forward/_introspect")
             .withMethod(SolrRequest.METHOD.GET)
             .build();
 

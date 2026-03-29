@@ -45,7 +45,7 @@ import org.apache.solr.handler.admin.CollectionsHandler;
  * @see SplitShardPayload
  */
 @EndPoint(
-    path = {"/c/{collection}/shards", "/collections/{collection}/shards"},
+    path = {"/coll/{collection}/shards", "/collections/{collection}/shards"},
     method = POST,
     permission = COLL_EDIT_PERM)
 public class SplitShardAPI {

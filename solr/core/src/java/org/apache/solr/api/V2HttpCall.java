@@ -74,7 +74,8 @@ public class V2HttpCall extends HttpSolrCall {
   private boolean servedByJaxRs =
       false; // A flag indicating whether the request was served by JAX-RS or the native framework
   HashMap<String, String> parts = new HashMap<>();
-  static final Set<String> knownPrefixes = Set.of("cluster", "node", "collections", "cores", "c");
+  static final Set<String> knownPrefixes =
+      Set.of("cluster", "node", "collections", "cores", "coll");
 
   public V2HttpCall(
       CoreContainer cc, HttpServletRequest request, HttpServletResponse response, boolean retry) {
@@ -128,7 +129,7 @@ public class V2HttpCall extends HttpSolrCall {
         assert core == null;
       }
 
-      if (pathSegments.size() > 1 && ("c".equals(prefix) || "collections".equals(prefix))) {
+      if (pathSegments.size() > 1 && ("coll".equals(prefix) || "collections".equals(prefix))) {
         origCorename = pathSegments.get(1);
 
         String collectionStr = queryParams.get(COLLECTION_PROP, origCorename);
@@ -163,7 +164,7 @@ public class V2HttpCall extends HttpSolrCall {
             extractRemotePath(collectionName);
             if (action == REMOTEPROXY) {
               action = ADMIN_OR_REMOTEPROXY;
-              coreUrl = coreUrl.replace("/solr/", "/solr/____v2/c/");
+              coreUrl = coreUrl.replace("/solr/", "/solr/____v2/coll/");
               normalizeAndSetPath(path.substring(prefix.length() + collectionName.length() + 2));
               path = this.path;
               return;
@@ -467,7 +468,7 @@ public class V2HttpCall extends HttpSolrCall {
     }
     TraceUtils.setDbInstance(span, coreOrColName);
 
-    // Get the templatize-ed path, ex: "/c/{collection}"
+    // Get the templatize-ed path, ex: "/coll/{collection}"
     final String path = computeEndpointPath();
     final String verb = req.getMethod().toLowerCase(Locale.ROOT);
     span.updateName(verb + ":" + path);
