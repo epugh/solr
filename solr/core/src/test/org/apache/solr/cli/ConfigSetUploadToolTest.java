@@ -43,7 +43,6 @@ public class ConfigSetUploadToolTest extends SolrCloudTestCase {
             .withUrl(zkAddr)
             .withTimeout(30000, TimeUnit.MILLISECONDS)
             .build();
-    System.setProperty("solr.solr.home", TEST_HOME().toString());
   }
 
   @AfterClass
@@ -52,7 +51,6 @@ public class ConfigSetUploadToolTest extends SolrCloudTestCase {
       zkClient.close();
       zkClient = null;
     }
-    zkAddr = null;
   }
 
   @Test
