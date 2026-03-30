@@ -26,6 +26,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
@@ -38,62 +39,62 @@ import org.apache.solr.client.api.model.SolrJerseyResponse;
 public interface SchemaDesignerApi {
 
   @GET
-  @Path("/info")
+  @Path("/{configSet}/info")
   @Operation(
       summary = "Get info about a configSet being designed.",
       tags = {"schema-designer"})
-  FlexibleSolrJerseyResponse getInfo(@QueryParam("configSet") String configSet) throws Exception;
+  FlexibleSolrJerseyResponse getInfo(@PathParam("configSet") String configSet) throws Exception;
 
   @POST
-  @Path("/prep")
+  @Path("/{configSet}/prep")
   @Operation(
       summary = "Prepare a mutable configSet copy for schema design.",
       tags = {"schema-designer"})
   FlexibleSolrJerseyResponse prepNewSchema(
-      @QueryParam("configSet") String configSet, @QueryParam("copyFrom") String copyFrom)
+      @PathParam("configSet") String configSet, @QueryParam("copyFrom") String copyFrom)
       throws Exception;
 
   @PUT
-  @Path("/cleanup")
+  @Path("/{configSet}/cleanup")
   @Operation(
       summary = "Clean up temporary resources for a schema being designed.",
       tags = {"schema-designer"})
-  SolrJerseyResponse cleanupTempSchema(@QueryParam("configSet") String configSet) throws Exception;
+  SolrJerseyResponse cleanupTempSchema(@PathParam("configSet") String configSet) throws Exception;
 
   @GET
-  @Path("/file")
+  @Path("/{configSet}/file")
   @Operation(
       summary = "Get the contents of a file in a configSet being designed.",
       tags = {"schema-designer"})
   FlexibleSolrJerseyResponse getFileContents(
-      @QueryParam("configSet") String configSet, @QueryParam("file") String file) throws Exception;
+      @PathParam("configSet") String configSet, @QueryParam("file") String file) throws Exception;
 
   @POST
-  @Path("/file")
+  @Path("/{configSet}/file")
   @Operation(
       summary = "Update the contents of a file in a configSet being designed.",
       tags = {"schema-designer"})
   FlexibleSolrJerseyResponse updateFileContents(
-      @QueryParam("configSet") String configSet, @QueryParam("file") String file) throws Exception;
+      @PathParam("configSet") String configSet, @QueryParam("file") String file) throws Exception;
 
   @GET
-  @Path("/sample")
+  @Path("/{configSet}/sample")
   @Operation(
       summary = "Get a sample value and analysis for a field.",
       tags = {"schema-designer"})
   FlexibleSolrJerseyResponse getSampleValue(
-      @QueryParam("configSet") String configSet,
+      @PathParam("configSet") String configSet,
       @QueryParam("field") String fieldName,
       @QueryParam("uniqueKeyField") String idField,
       @QueryParam("docId") String docId)
       throws Exception;
 
   @GET
-  @Path("/collectionsForConfig")
+  @Path("/{configSet}/collectionsForConfig")
   @Operation(
       summary = "List collections that use a given configSet.",
       tags = {"schema-designer"})
-  FlexibleSolrJerseyResponse listCollectionsForConfig(@QueryParam("configSet") String configSet)
+  FlexibleSolrJerseyResponse listCollectionsForConfig(@PathParam("configSet") String configSet)
       throws Exception;
 
   @GET
@@ -104,7 +105,7 @@ public interface SchemaDesignerApi {
   FlexibleSolrJerseyResponse listConfigs() throws Exception;
 
   @GET
-  @Path("/download")
+  @Path("/{configSet}/download")
   @Operation(
       summary = "Download a configSet as a ZIP archive.",
       tags = {"schema-designer"},
@@ -112,33 +113,33 @@ public interface SchemaDesignerApi {
         @Extension(properties = {@ExtensionProperty(name = RAW_OUTPUT_PROPERTY, value = "true")})
       })
   @Produces("application/zip")
-  Response downloadConfig(@QueryParam("configSet") String configSet) throws Exception;
+  Response downloadConfig(@PathParam("configSet") String configSet) throws Exception;
 
   @POST
-  @Path("/add")
+  @Path("/{configSet}/add")
   @Operation(
       summary = "Add a new field, field type, or dynamic field to the schema being designed.",
       tags = {"schema-designer"})
   FlexibleSolrJerseyResponse addSchemaObject(
-      @QueryParam("configSet") String configSet, @QueryParam("schemaVersion") Integer schemaVersion)
+      @PathParam("configSet") String configSet, @QueryParam("schemaVersion") Integer schemaVersion)
       throws Exception;
 
   @PUT
-  @Path("/update")
+  @Path("/{configSet}/update")
   @Operation(
       summary = "Update an existing field or field type in the schema being designed.",
       tags = {"schema-designer"})
   FlexibleSolrJerseyResponse updateSchemaObject(
-      @QueryParam("configSet") String configSet, @QueryParam("schemaVersion") Integer schemaVersion)
+      @PathParam("configSet") String configSet, @QueryParam("schemaVersion") Integer schemaVersion)
       throws Exception;
 
   @PUT
-  @Path("/publish")
+  @Path("/{configSet}/publish")
   @Operation(
       summary = "Publish the designed schema to a live configSet.",
       tags = {"schema-designer"})
   FlexibleSolrJerseyResponse publish(
-      @QueryParam("configSet") String configSet,
+      @PathParam("configSet") String configSet,
       @QueryParam("schemaVersion") Integer schemaVersion,
       @QueryParam("newCollection") String newCollection,
       @QueryParam("reloadCollections") @DefaultValue("false") Boolean reloadCollections,
@@ -150,12 +151,12 @@ public interface SchemaDesignerApi {
       throws Exception;
 
   @POST
-  @Path("/analyze")
+  @Path("/{configSet}/analyze")
   @Operation(
       summary = "Analyze sample documents and suggest a schema.",
       tags = {"schema-designer"})
   FlexibleSolrJerseyResponse analyze(
-      @QueryParam("configSet") String configSet,
+      @PathParam("configSet") String configSet,
       @QueryParam("schemaVersion") Integer schemaVersion,
       @QueryParam("copyFrom") String copyFrom,
       @QueryParam("uniqueKeyField") String uniqueKeyField,
@@ -166,17 +167,17 @@ public interface SchemaDesignerApi {
       throws Exception;
 
   @GET
-  @Path("/query")
+  @Path("/{configSet}/query")
   @Operation(
       summary = "Query the temporary collection used during schema design.",
       tags = {"schema-designer"})
-  FlexibleSolrJerseyResponse query(@QueryParam("configSet") String configSet) throws Exception;
+  FlexibleSolrJerseyResponse query(@PathParam("configSet") String configSet) throws Exception;
 
   @GET
-  @Path("/diff")
+  @Path("/{configSet}/diff")
   @Operation(
       summary = "Get the diff between the designed schema and the published schema.",
       tags = {"schema-designer"})
-  FlexibleSolrJerseyResponse getSchemaDiff(@QueryParam("configSet") String configSet)
+  FlexibleSolrJerseyResponse getSchemaDiff(@PathParam("configSet") String configSet)
       throws Exception;
 }

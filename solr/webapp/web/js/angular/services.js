@@ -271,7 +271,7 @@ solrAdminServices.factory('System',
 }])
 .factory('SchemaDesigner',
    ['$resource', function($resource) {
-     return $resource('/api/schema-designer/:path', {wt: 'json', path: '@path', _:Date.now()}, {
+     return $resource('/api/schema-designer/:configSet/:path', {wt: 'json', path: '@path', configSet: '@configSet', _:Date.now()}, {
        get: {method: "GET"},
        post: {method: "POST", timeout: 90000},
        put: {method: "PUT"},
