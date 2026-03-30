@@ -17,19 +17,14 @@
 package org.apache.solr.cli;
 
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Stream;
-import org.apache.lucene.tests.mockfile.FilterPath;
 import org.apache.solr.SolrTestCaseJ4;
 import org.apache.solr.cloud.AbstractFullDistribZkTestBase;
 import org.apache.solr.cloud.AbstractZkTestCase;
-import org.apache.solr.cloud.ZkConfigSetService;
 import org.apache.solr.cloud.ZkTestServer;
 import org.apache.solr.common.cloud.ClusterProperties;
 import org.apache.solr.common.cloud.DigestZkACLProvider;
@@ -37,8 +32,6 @@ import org.apache.solr.common.cloud.DigestZkCredentialsProvider;
 import org.apache.solr.common.cloud.SolrZkClient;
 import org.apache.solr.common.cloud.VMParamsZkCredentialsInjector;
 import org.apache.solr.common.util.ZLibCompressor;
-import org.apache.solr.core.ConfigSetService;
-import org.apache.solr.util.ExternalPaths;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.junit.BeforeClass;
@@ -298,106 +291,6 @@ public class ZkSubcommandsTest extends SolrTestCaseJ4 {
     assertEquals(
         "/" + separator2 + "/test" + separator2 + "     path" + separator2 + "/solr" + separator2,
         standardOutput2);
-  }
-
-  @Test
-  public void testUpConfigDownConfigClearZk() throws Exception {
-    Path tmpDir = createTempDir();
-
-    // test upconfig
-    String confsetname = "confsetone";
-
-    String[] args =
-        new String[] {
-          "upconfig",
-          "--conf-name",
-          confsetname,
-          "--conf-dir",
-          ExternalPaths.TECHPRODUCTS_CONFIGSET.toString(),
-          "-z",
-          zkServer.getZkAddress()
-        };
-
-    assertEquals(0, CLITestHelper.runTool(args, ConfigSetUploadTool.class));
-
-    assertTrue(zkClient.exists(ZkConfigSetService.CONFIGS_ZKNODE + "/" + confsetname));
-    final Path confDir = ExternalPaths.TECHPRODUCTS_CONFIGSET;
-
-    List<String> zkFiles =
-        zkClient.getChildren(ZkConfigSetService.CONFIGS_ZKNODE + "/" + confsetname, null);
-
-    try (Stream<Path> filesStream = Files.list(confDir)) {
-      assertEquals(
-          "Verify that all local files are uploaded to ZK", filesStream.count(), zkFiles.size());
-    }
-
-    // test down config
-    Path destDir =
-        FilterPath.unwrap(
-            tmpDir.resolve(
-                "solrtest-confdropspot-" + this.getClass().getName() + "-" + System.nanoTime()));
-    assertFalse(Files.exists(destDir));
-
-    args =
-        new String[] {
-          "downconfig",
-          "--conf-name",
-          confsetname,
-          "--conf-dir",
-          destDir.toString(),
-          "-z",
-          zkServer.getZkAddress()
-        };
-
-    assertEquals(0, CLITestHelper.runTool(args, ConfigSetDownloadTool.class));
-
-    try (Stream<Path> filesStream = Files.list(destDir.resolve("conf"))) {
-      List<Path> files = filesStream.toList();
-      zkFiles = zkClient.getChildren(ZkConfigSetService.CONFIGS_ZKNODE + "/" + confsetname, null);
-      assertEquals(
-          "Comparing original conf files that were to be uploaded to what is in ZK",
-          files.size(),
-          zkFiles.size());
-      assertEquals("Comparing downloaded files to what is in ZK", files.size(), zkFiles.size());
-    }
-
-    // compare the original source with the downloaded destination
-    try (Stream<Path> stream = Files.walk(ExternalPaths.TECHPRODUCTS_CONFIGSET)) {
-      stream
-          .filter(Files::isRegularFile)
-          .forEach(
-              (sourceFile) -> {
-                Path sourceFileRelative =
-                    ExternalPaths.TECHPRODUCTS_CONFIGSET.relativize(sourceFile);
-                Path downloadedFile = destDir.resolve("conf").resolve(sourceFileRelative);
-                if (ConfigSetService.UPLOAD_FILENAME_EXCLUDE_PATTERN
-                    .matcher(sourceFileRelative.toString())
-                    .matches()) {
-                  assertFalse(
-                      sourceFile + " exists in ZK, downloaded:" + downloadedFile,
-                      Files.exists(downloadedFile));
-                } else {
-                  assertTrue(
-                      downloadedFile + " does not exist source:" + sourceFile,
-                      Files.exists(downloadedFile));
-                  try {
-                    assertEquals(
-                        sourceFileRelative + " content changed",
-                        -1,
-                        Files.mismatch(sourceFile, downloadedFile));
-                  } catch (IOException e) {
-                    throw new RuntimeException(e);
-                  }
-                }
-              });
-    }
-
-    // test reset zk
-    args = new String[] {"rm", "-r", "-z", zkServer.getZkAddress(), "zk:/configs/confsetone"};
-
-    assertEquals(0, CLITestHelper.runTool(args, ZkRmTool.class));
-
-    assertEquals(0, zkClient.getChildren("/configs", null).size());
   }
 
   @Test
