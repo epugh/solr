@@ -21,6 +21,7 @@ import static org.apache.solr.client.api.util.Constants.RAW_OUTPUT_PROPERTY;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.extensions.Extension;
 import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -54,8 +55,8 @@ public interface SchemaDesignerApi {
       @PathParam("configSet") String configSet, @QueryParam("copyFrom") String copyFrom)
       throws Exception;
 
-  @PUT
-  @Path("/{configSet}/cleanup")
+  @DELETE
+  @Path("/{configSet}")
   @Operation(
       summary = "Clean up temporary resources for a schema being designed.",
       tags = {"schema-designer"})
@@ -69,7 +70,7 @@ public interface SchemaDesignerApi {
   FlexibleSolrJerseyResponse getFileContents(
       @PathParam("configSet") String configSet, @QueryParam("file") String file) throws Exception;
 
-  @POST
+  @PUT
   @Path("/{configSet}/file")
   @Operation(
       summary = "Update the contents of a file in a configSet being designed.",

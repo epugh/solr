@@ -275,6 +275,7 @@ solrAdminServices.factory('System',
        get: {method: "GET"},
        post: {method: "POST", timeout: 90000},
        put: {method: "PUT"},
+       delete: {method: "DELETE"},
        postXml: {headers: {'Content-type': 'text/xml'}, method: "POST", timeout: 90000},
        postCsv: {headers: {'Content-type': 'application/csv'}, method: "POST", timeout: 90000},
        upload: {method: "POST", transformRequest: angular.identity, headers: {'Content-Type': undefined}, timeout: 90000}

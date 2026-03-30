@@ -887,7 +887,7 @@ solrAdminApp.controller('SchemaDesignerController', function ($scope, $timeout, 
     $scope.updateWorking = true;
     $scope.updateStatusMessage = "Updating file ...";
 
-    SchemaDesigner.post(params, $scope.fileNodeText, function (data) {
+    SchemaDesigner.put(params, $scope.fileNodeText, function (data) {
       if (data.updateFileError) {
         if (data[$scope.selectedFile]) {
           $scope.fileNodeText = data[$scope.selectedFile];
