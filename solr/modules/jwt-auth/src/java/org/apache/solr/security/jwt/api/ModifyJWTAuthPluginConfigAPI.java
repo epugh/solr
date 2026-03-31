@@ -17,23 +17,24 @@
 
 package org.apache.solr.security.jwt.api;
 
-import static org.apache.solr.client.solrj.SolrRequest.METHOD.POST;
-import static org.apache.solr.security.PermissionNameProvider.Name.SECURITY_EDIT_PERM;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import org.apache.solr.client.api.model.SolrJerseyResponse;
+import org.apache.solr.jersey.PermissionName;
+import org.apache.solr.security.PermissionNameProvider;
 
-import org.apache.solr.api.Command;
-import org.apache.solr.api.EndPoint;
-import org.apache.solr.api.PayloadObj;
+/** V2 API interface for modifying configuration for Solr's JWTAuthPlugin. */
+@Path("/cluster/security/authentication")
+public interface ModifyJWTAuthPluginConfigAPI {
 
-/** V2 API for modifying configuration for Solr's JWTAuthPlugin. */
-@EndPoint(
-    path = {"/cluster/security/authentication"},
-    method = POST,
-    permission = SECURITY_EDIT_PERM)
-public class ModifyJWTAuthPluginConfigAPI {
-
-  @Command(name = "set-property")
-  public void setProperties(PayloadObj<JWTConfigurationPayload> propertyPayload) {
-    // Method stub used only to produce v2 API spec; implementation/body empty.
-    throw new IllegalStateException();
-  }
+  @POST
+  @PermissionName(PermissionNameProvider.Name.SECURITY_EDIT_PERM)
+  @Operation(
+      summary = "Update the JWT authentication plugin configuration.",
+      tags = {"security"})
+  SolrJerseyResponse updateJwtAuthPluginConfig(
+      @RequestBody(description = "JWT plugin configuration to update", required = true)
+          JWTConfigurationPayload propertyPayload);
 }

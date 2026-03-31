@@ -32,6 +32,7 @@ dependencies {
   constraintsOnly platform(libs.fasterxml.jackson.bom)
 
   implementation project(':solr:core')
+  implementation project(':solr:api')
   implementation project(':solr:solrj')
   implementation project(':solr:solrj-jetty')
 
@@ -42,6 +43,8 @@ dependencies {
   implementation libs.google.guava
   implementation libs.slf4j.api
   implementation libs.jakarta.servlet.api
+  implementation libs.jakarta.ws.rsapi
+  implementation libs.swagger3.annotations.jakarta
 
   testImplementation project(':solr:test-framework')
   testImplementation libs.apache.lucene.testframework

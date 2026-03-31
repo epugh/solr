@@ -206,8 +206,15 @@ but also allow a small set of service accounts to use `Basic` authentication whe
 
 == Editing JWT Authentication Plugin Configuration
 
-All properties mentioned above can be set or changed using the xref:basic-authentication-plugin.adoc#editing-basic-authentication-plugin-configuration[Authentication API].
+All properties mentioned above can be set or changed using the Authentication API.
 You can thus start with a simple configuration with only `class` and `blockUnknown=false` configured and then configure the rest using the API.
+
+=== API Entry Point
+
+* v1: `\http://localhost:8983/solr/admin/authentication`
+* v2: `\http://localhost:8983/api/cluster/security/authentication`
+
+This endpoint is not collection-specific, so configuration applies to the entire Solr cluster.
 
 === Set a Configuration Property
 
