@@ -22,12 +22,15 @@ import jakarta.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.invoke.MethodHandles;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
-import java.util.zip.ZipInputStream;
+import java.util.zip.ZipFile;
 import org.apache.solr.client.api.endpoint.ConfigsetsApi;
 import org.apache.solr.client.api.model.SolrJerseyResponse;
 import org.apache.solr.common.SolrException;
@@ -78,34 +81,41 @@ public class UploadConfigSet extends ConfigSetAPIBase implements ConfigsetsApi.U
       filesToDelete = new ArrayList<>();
     }
 
-    try (ZipInputStream zis = new ZipInputStream(requestBody, StandardCharsets.UTF_8)) {
-      boolean hasEntry = false;
-      ZipEntry zipEntry;
-      try {
-        while ((zipEntry = zis.getNextEntry()) != null) {
+    // Write the request body to a temp file so we can use ZipFile, which reads the central
+    // directory and correctly handles entries that use the STORED method with an EXT (data
+    // descriptor) flag — a combination that ZipInputStream cannot process.  This allows
+    // zero-byte files (e.g. created with `touch`) to be included in the uploaded configset.
+    final Path tempZip = Files.createTempFile("solr-configset-upload-", ".zip");
+    try {
+      Files.copy(requestBody, tempZip, StandardCopyOption.REPLACE_EXISTING);
+      try (ZipFile zipFile = new ZipFile(tempZip.toFile())) {
+        boolean hasEntry = false;
+        Enumeration<? extends ZipEntry> entries = zipFile.entries();
+        while (entries.hasMoreElements()) {
+          ZipEntry zipEntry = entries.nextElement();
           hasEntry = true;
           String filePath = zipEntry.getName();
           filesToDelete.remove(filePath);
           if (!zipEntry.isDirectory()) {
-            configSetService.uploadFileToConfig(configSetName, filePath, zis.readAllBytes(), true);
+            try (InputStream entryStream = zipFile.getInputStream(zipEntry)) {
+              configSetService.uploadFileToConfig(
+                  configSetName, filePath, entryStream.readAllBytes(), true);
+            }
           }
         }
-      } catch (ZipException e) {
-        StringBuilder msg =
-            new StringBuilder(
-                "Failed to read the uploaded zip file. The file may be malformed or use an unsupported ZIP feature (for example, a STORED entry with a data descriptor / EXT flag). "
-                    + "Try recreating the zip using DEFLATED compression or avoid zero-byte STORED entries with data descriptors.");
-        String underlying = e.getMessage();
-        if (underlying != null && !underlying.isEmpty()) {
-          msg.append(" Underlying error: ").append(underlying);
+        if (!hasEntry) {
+          throw new SolrException(
+              SolrException.ErrorCode.BAD_REQUEST,
+              "Either empty zipped data, or non-zipped data was uploaded. In order to upload a configSet, you must zip a non-empty directory to upload.");
         }
-        throw new SolrException(SolrException.ErrorCode.BAD_REQUEST, msg.toString(), e);
-      }
-      if (!hasEntry) {
+      } catch (ZipException e) {
         throw new SolrException(
             SolrException.ErrorCode.BAD_REQUEST,
-            "Either empty zipped data, or non-zipped data was uploaded. In order to upload a configSet, you must zip a non-empty directory to upload.");
+            "Failed to read the uploaded zip file: " + e.getMessage(),
+            e);
       }
+    } finally {
+      Files.deleteIfExists(tempZip);
     }
     deleteUnusedFiles(configSetService, configSetName, filesToDelete);
 

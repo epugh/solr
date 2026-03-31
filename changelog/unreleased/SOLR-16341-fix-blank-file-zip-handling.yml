@@ -1,5 +1,5 @@
 
-title: Fix blank file in configset zip upload handling by providing clearer error
+title: Support blank/zero-byte files in configset zip uploads
 type: fixed
 authors:
   - name: Eric Pugh

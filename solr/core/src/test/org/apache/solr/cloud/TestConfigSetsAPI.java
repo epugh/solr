@@ -1096,12 +1096,28 @@ public class TestConfigSetsAPI extends SolrCloudTestCase {
 
   @Test
   public void testUploadWithBlankFile() throws Exception {
-    // Uploads a zip containing a blank (0-byte) file using STORED method with an EXT descriptor,
-    // which Java's ZipInputStream cannot read. Verifies a 400 error is returned instead of a 500.
+    // Uploads a zip containing a blank (0-byte) file using STORED method with an EXT descriptor.
+    // Java's ZipInputStream cannot read this format, but ZipFile can.
+    // Verifies the upload succeeds and the empty file is stored in the configset.
+    final String configSetName = "blank-file-configset";
+    final String suffix = "-suffix";
     final Path zipFile = createTempZipWithStoredEntryAndExtDescriptor();
-    long res =
-        uploadGivenConfigSet(zipFile, "blank-file-configset", "-suffix", null, true, false, true);
-    assertEquals(400, res);
+    try (SolrZkClient zkClient =
+        new SolrZkClient.Builder()
+            .withUrl(cluster.getZkServer().getZkAddress())
+            .withTimeout(AbstractZkTestCase.TIMEOUT, TimeUnit.MILLISECONDS)
+            .withConnTimeOut(45000, TimeUnit.MILLISECONDS)
+            .build()) {
+      long res = uploadGivenConfigSet(zipFile, configSetName, suffix, null, true, false, true);
+      assertEquals("Upload of configset with blank file should succeed", 0L, res);
+      assertTrue(
+          "blank.txt should have been uploaded to the configset",
+          zkClient.exists("/configs/" + configSetName + suffix + "/blank.txt"));
+      assertArrayEquals(
+          "blank.txt in configset should be empty",
+          new byte[0],
+          zkClient.getData("/configs/" + configSetName + suffix + "/blank.txt", null, null));
+    }
   }
 
   private static String getSecurityJson() {
@@ -1370,10 +1386,10 @@ public class TestConfigSetsAPI extends SolrCloudTestCase {
 
   /**
    * Creates a zip file (in the temp directory) containing an empty file entry that uses the STORED
-   * compression method with the EXT descriptor flag set. Java's {@link
-   * java.util.zip.ZipInputStream} cannot read STORED entries with data descriptors and throws a
-   * {@link java.util.zip.ZipException}. Some zip tools produce this format for empty (0-byte)
-   * files, e.g., when using {@code touch conf/blank.txt} followed by {@code zip -r ...}.
+   * compression method with the EXT descriptor flag set. Some zip tools produce this format for
+   * empty (0-byte) files, e.g., when using {@code touch conf/blank.txt} followed by {@code zip -r
+   * ...}. Java's {@link java.util.zip.ZipInputStream} cannot read this combination, but {@link
+   * java.util.zip.ZipFile} handles it correctly by reading from the central directory.
    */
   private Path createTempZipWithStoredEntryAndExtDescriptor() throws IOException {
     final Path zipFile = createTempFile("configset-blank", "zip");
