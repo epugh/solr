@@ -91,12 +91,15 @@ public class UploadConfigSet extends ConfigSetAPIBase implements ConfigsetsApi.U
           }
         }
       } catch (ZipException e) {
-        throw new SolrException(
-            SolrException.ErrorCode.BAD_REQUEST,
-            "Failed to read the uploaded zip file. The file may be malformed or use an unsupported format. "
-                + "Please recreate the zip file using standard compression tools: "
-                + e.getMessage(),
-            e);
+        StringBuilder msg =
+            new StringBuilder(
+                "Failed to read the uploaded zip file. The file may be malformed or use an unsupported ZIP feature (for example, a STORED entry with a data descriptor / EXT flag). "
+                    + "Try recreating the zip using DEFLATED compression or avoid zero-byte STORED entries with data descriptors.");
+        String underlying = e.getMessage();
+        if (underlying != null && !underlying.isEmpty()) {
+          msg.append(" Underlying error: ").append(underlying);
+        }
+        throw new SolrException(SolrException.ErrorCode.BAD_REQUEST, msg.toString(), e);
       }
       if (!hasEntry) {
         throw new SolrException(
