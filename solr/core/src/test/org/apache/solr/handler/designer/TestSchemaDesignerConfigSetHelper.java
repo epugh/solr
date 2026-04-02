@@ -19,7 +19,7 @@ package org.apache.solr.handler.designer;
 
 import static org.apache.solr.common.util.Utils.toJavabin;
 import static org.apache.solr.handler.admin.ConfigSetsHandler.DEFAULT_CONFIGSET_NAME;
-import static org.apache.solr.handler.designer.SchemaDesignerAPI.getMutableId;
+import static org.apache.solr.handler.designer.SchemaDesigner.getMutableId;
 import static org.apache.solr.schema.IndexSchema.NEST_PATH_FIELD_NAME;
 import static org.apache.solr.schema.IndexSchema.ROOT_FIELD_NAME;
 
@@ -76,7 +76,7 @@ public class TestSchemaDesignerConfigSetHelper extends SolrCloudTestCase
     assertNotNull(cluster);
     cc = cluster.getJettySolrRunner(0).getCoreContainer();
     assertNotNull(cc);
-    helper = new SchemaDesignerConfigSetHelper(cc, SchemaDesignerAPI.newSchemaSuggester());
+    helper = new SchemaDesignerConfigSetHelper(cc, SchemaDesigner.newSchemaSuggester());
   }
 
   @Test
@@ -179,7 +179,7 @@ public class TestSchemaDesignerConfigSetHelper extends SolrCloudTestCase
     assertTrue(
         cluster
             .getZkClient()
-            .exists(SchemaDesignerAPI.getConfigSetZkPath(mutableId, "lang/stopwords_en.txt")));
+            .exists(SchemaDesigner.getConfigSetZkPath(mutableId, "lang/stopwords_en.txt")));
     assertNotNull(schema.getFieldTypeByName("text_fr"));
     assertNotNull(schema.getFieldOrNull("*_txt_fr"));
     assertNull(schema.getFieldOrNull("*_txt_ga"));
@@ -202,7 +202,7 @@ public class TestSchemaDesignerConfigSetHelper extends SolrCloudTestCase
     assertTrue(
         cluster
             .getZkClient()
-            .exists(SchemaDesignerAPI.getConfigSetZkPath(mutableId, "lang/stopwords_en.txt")));
+            .exists(SchemaDesigner.getConfigSetZkPath(mutableId, "lang/stopwords_en.txt")));
     assertNotNull(schema.getFieldTypeByName("text_fr"));
     assertNotNull(schema.getFieldOrNull("*_txt_fr"));
     assertNull(schema.getFieldOrNull("*_txt_ga"));

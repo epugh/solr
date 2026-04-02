@@ -19,7 +19,7 @@ package org.apache.solr.handler.designer;
 
 import static org.apache.solr.common.params.CommonParams.JSON_MIME;
 import static org.apache.solr.handler.admin.ConfigSetsHandler.DEFAULT_CONFIGSET_NAME;
-import static org.apache.solr.handler.designer.SchemaDesignerAPI.getMutableId;
+import static org.apache.solr.handler.designer.SchemaDesigner.getMutableId;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -59,10 +59,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.noggit.JSONUtil;
 
-public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDesignerConstants {
+public class TestSchemaDesigner extends SolrCloudTestCase implements SchemaDesignerConstants {
 
   private CoreContainer cc;
-  private SchemaDesignerAPI schemaDesignerAPI;
+  private SchemaDesigner schemaDesigner;
   private SolrQueryRequest mockReq;
 
   @BeforeClass
@@ -88,11 +88,11 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
     cc = cluster.getJettySolrRunner(0).getCoreContainer();
     assertNotNull(cc);
     mockReq = mock(SolrQueryRequest.class);
-    schemaDesignerAPI =
-        new SchemaDesignerAPI(
+    schemaDesigner =
+        new SchemaDesigner(
             cc,
-            SchemaDesignerAPI.newSchemaSuggester(),
-            SchemaDesignerAPI.newSampleDocumentsLoader(),
+            SchemaDesigner.newSchemaSuggester(),
+            SchemaDesigner.newSampleDocumentsLoader(),
             mockReq);
   }
 
@@ -113,7 +113,7 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
 
     // POST /schema-designer/analyze
     FlexibleSolrJerseyResponse response =
-        schemaDesignerAPI.analyze(configSet, null, null, null, List.of("en"), false, null, null);
+        schemaDesigner.analyze(configSet, null, null, null, List.of("en"), false, null, null);
     assertNotNull(response.unknownProperties().get(CONFIG_SET_PARAM));
     assertNotNull(response.unknownProperties().get(SCHEMA_VERSION_PARAM));
     assertEquals(2, response.unknownProperties().get("numDocs"));
@@ -121,7 +121,7 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
     reqParams.clear();
     reqParams.set(CONFIG_SET_PARAM, configSet);
     when(mockReq.getContentStreams()).thenReturn(null);
-    schemaDesignerAPI.cleanupTempSchema(configSet);
+    schemaDesigner.cleanupTempSchema(configSet);
 
     String mutableId = getMutableId(configSet);
     assertFalse(cc.getZkController().getClusterState().hasCollection(mutableId));
@@ -153,7 +153,7 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
     String configSet = "techproducts";
 
     // GET /schema-designer/info
-    FlexibleSolrJerseyResponse response = schemaDesignerAPI.getInfo(configSet);
+    FlexibleSolrJerseyResponse response = schemaDesigner.getInfo(configSet);
     // response should just be the default values
     Map<String, Object> expSettings =
         Map.of(
@@ -166,7 +166,7 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
     assertEquals(schemaVersion, -1); // shouldn't exist yet
 
     // Use the prep endpoint to prepare the new schema
-    response = schemaDesignerAPI.prepNewSchema(configSet, null);
+    response = schemaDesigner.prepNewSchema(configSet, null);
     assertNotNull(response.unknownProperties().get(CONFIG_SET_PARAM));
     assertNotNull(response.unknownProperties().get(SCHEMA_VERSION_PARAM));
     schemaVersion = (Integer) response.unknownProperties().get(SCHEMA_VERSION_PARAM);
@@ -185,7 +185,7 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
 
       // POST /schema-designer/analyze
       response =
-          schemaDesignerAPI.analyze(
+          schemaDesigner.analyze(
               configSet, schemaVersion, null, null, List.of("en"), false, null, null);
 
       assertNotNull(response.unknownProperties().get(CONFIG_SET_PARAM));
@@ -200,7 +200,7 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
 
     // get info (from the temp)
     // GET /schema-designer/info
-    response = schemaDesignerAPI.getInfo(configSet);
+    response = schemaDesigner.getInfo(configSet);
     expSettings =
         Map.of(
             ENABLE_DYNAMIC_FIELDS_PARAM, false,
@@ -219,7 +219,7 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
     when(mockReq.getContentStreams()).thenReturn(null);
 
     // GET /schema-designer/query
-    response = schemaDesignerAPI.query(configSet);
+    response = schemaDesigner.query(configSet);
     assertNotNull(response.unknownProperties().get("responseHeader"));
     @SuppressWarnings("unchecked")
     Map<String, Object> queryResponse =
@@ -233,11 +233,11 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
 
     // publish schema to a config set that can be used by real collections
     String collection = "techproducts";
-    schemaDesignerAPI.publish(configSet, schemaVersion, collection, true, 1, 1, true, true, true);
+    schemaDesigner.publish(configSet, schemaVersion, collection, true, 1, 1, true, true, true);
     assertNotNull(cc.getZkController().zkStateReader.getCollection(collection));
 
     // listCollectionsForConfig
-    response = schemaDesignerAPI.listCollectionsForConfig(configSet);
+    response = schemaDesigner.listCollectionsForConfig(configSet);
     List<String> collections = (List<String>) response.unknownProperties().get("collections");
     assertNotNull(collections);
     assertTrue(collections.contains(collection));
@@ -245,7 +245,7 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
     // now try to create another temp, which should fail since designer is disabled for this
     // configSet now
     try {
-      schemaDesignerAPI.prepNewSchema(configSet, null);
+      schemaDesigner.prepNewSchema(configSet, null);
       fail("Prep should fail for locked schema " + configSet);
     } catch (SolrException solrExc) {
       assertEquals(SolrException.ErrorCode.BAD_REQUEST.code, solrExc.code());
@@ -272,7 +272,7 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
 
     // POST /schema-designer/analyze
     FlexibleSolrJerseyResponse response =
-        schemaDesignerAPI.analyze(configSet, null, null, null, null, true, null, null);
+        schemaDesigner.analyze(configSet, null, null, null, null, true, null, null);
 
     assertNotNull(response.unknownProperties().get(CONFIG_SET_PARAM));
     assertNotNull(response.unknownProperties().get(SCHEMA_VERSION_PARAM));
@@ -292,7 +292,7 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
     String configSet = "testJson";
 
     // Use the prep endpoint to prepare the new schema
-    FlexibleSolrJerseyResponse response = schemaDesignerAPI.prepNewSchema(configSet, null);
+    FlexibleSolrJerseyResponse response = schemaDesigner.prepNewSchema(configSet, null);
     assertNotNull(response.unknownProperties().get(CONFIG_SET_PARAM));
     assertNotNull(response.unknownProperties().get(SCHEMA_VERSION_PARAM));
 
@@ -315,7 +315,7 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
     when(mockReq.getContentStreams()).thenReturn(Collections.singletonList(stream));
 
     // POST /schema-designer/analyze
-    response = schemaDesignerAPI.analyze(configSet, null, null, null, null, null, null, null);
+    response = schemaDesigner.analyze(configSet, null, null, null, null, null, null, null);
 
     assertNotNull(response.unknownProperties().get(CONFIG_SET_PARAM));
     assertNotNull(response.unknownProperties().get(SCHEMA_VERSION_PARAM));
@@ -341,7 +341,7 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
       }
     }
     assertNotNull("solrconfig.xml not found in files!", file);
-    response = schemaDesignerAPI.getFileContents(configSet, file);
+    response = schemaDesigner.getFileContents(configSet, file);
     String solrconfigXml = (String) response.unknownProperties().get(file);
     assertNotNull(solrconfigXml);
 
@@ -350,7 +350,7 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
         .thenReturn(
             Collections.singletonList(
                 new ContentStreamBase.StringStream(solrconfigXml, "application/xml")));
-    response = schemaDesignerAPI.updateFileContents(configSet, file);
+    response = schemaDesigner.updateFileContents(configSet, file);
     schemaVersion = (Integer) response.unknownProperties().get(SCHEMA_VERSION_PARAM);
 
     // update solrconfig.xml with some invalid XML mess
@@ -360,14 +360,14 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
                 new ContentStreamBase.StringStream("<config/>", "application/xml")));
 
     // this should fail b/c the updated solrconfig.xml is invalid
-    response = schemaDesignerAPI.updateFileContents(configSet, file);
+    response = schemaDesigner.updateFileContents(configSet, file);
     assertNotNull(response.unknownProperties().get("updateFileError"));
 
     // remove dynamic fields and change the language to "en" only
     when(mockReq.getContentStreams()).thenReturn(null);
     // POST /schema-designer/analyze
     response =
-        schemaDesignerAPI.analyze(
+        schemaDesigner.analyze(
             configSet, schemaVersion, null, null, List.of("en"), false, false, null);
 
     expSettings =
@@ -387,7 +387,7 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
 
     // add the dynamic fields back and change the languages too
     response =
-        schemaDesignerAPI.analyze(
+        schemaDesigner.analyze(
             configSet, schemaVersion, null, null, Arrays.asList("en", "fr"), true, false, null);
 
     expSettings =
@@ -407,7 +407,7 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
 
     // add back all the default languages (using "*" wildcard -> empty list)
     response =
-        schemaDesignerAPI.analyze(
+        schemaDesigner.analyze(
             configSet, schemaVersion, null, null, List.of("*"), false, null, null);
 
     expSettings =
@@ -432,7 +432,7 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
     String fieldName = "series_t";
 
     // GET /schema-designer/sample
-    response = schemaDesignerAPI.getSampleValue(configSet, fieldName, idField, docId);
+    response = schemaDesigner.getSampleValue(configSet, fieldName, idField, docId);
     assertNotNull(response.unknownProperties().get(idField));
     assertNotNull(response.unknownProperties().get(fieldName));
     assertNotNull(response.unknownProperties().get("analysis"));
@@ -446,7 +446,7 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
     when(mockReq.getContentStreams()).thenReturn(Collections.singletonList(stream));
 
     // POST /schema-designer/add
-    response = schemaDesignerAPI.addSchemaObject(configSet, schemaVersion);
+    response = schemaDesigner.addSchemaObject(configSet, schemaVersion);
     assertNotNull(response.unknownProperties().get("add-field"));
     schemaVersion = (Integer) response.unknownProperties().get(SCHEMA_VERSION_PARAM);
     assertNotNull(response.unknownProperties().get("fields"));
@@ -459,7 +459,7 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
     when(mockReq.getContentStreams()).thenReturn(Collections.singletonList(stream));
 
     // PUT /schema-designer/update
-    response = schemaDesignerAPI.updateSchemaObject(configSet, schemaVersion);
+    response = schemaDesigner.updateSchemaObject(configSet, schemaVersion);
     assertNotNull(response.unknownProperties().get("field"));
     schemaVersion = (Integer) response.unknownProperties().get(SCHEMA_VERSION_PARAM);
 
@@ -469,7 +469,7 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
     when(mockReq.getContentStreams()).thenReturn(Collections.singletonList(stream));
 
     // POST /schema-designer/add
-    response = schemaDesignerAPI.addSchemaObject(configSet, schemaVersion);
+    response = schemaDesigner.addSchemaObject(configSet, schemaVersion);
     final String expectedTypeName = "test_txt";
     assertEquals(expectedTypeName, response.unknownProperties().get("add-field-type"));
     schemaVersion = (Integer) response.unknownProperties().get(SCHEMA_VERSION_PARAM);
@@ -487,7 +487,7 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
     when(mockReq.getContentStreams()).thenReturn(Collections.singletonList(stream));
 
     // POST /schema-designer/update
-    response = schemaDesignerAPI.updateSchemaObject(configSet, schemaVersion);
+    response = schemaDesigner.updateSchemaObject(configSet, schemaVersion);
     schemaVersion = (Integer) response.unknownProperties().get(SCHEMA_VERSION_PARAM);
 
     // query to see how the schema decisions impact retrieval / ranking
@@ -499,7 +499,7 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
     when(mockReq.getContentStreams()).thenReturn(null);
 
     // GET /schema-designer/query
-    response = schemaDesignerAPI.query(configSet);
+    response = schemaDesigner.query(configSet);
     assertNotNull(response.unknownProperties().get("responseHeader"));
     @SuppressWarnings("unchecked")
     Map<String, Object> queryResponse2 =
@@ -511,12 +511,12 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
 
     // publish schema to a config set that can be used by real collections
     String collection = "test123";
-    schemaDesignerAPI.publish(configSet, schemaVersion, collection, true, 1, 1, true, true, false);
+    schemaDesigner.publish(configSet, schemaVersion, collection, true, 1, 1, true, true, false);
 
     assertNotNull(cc.getZkController().zkStateReader.getCollection(collection));
 
     // listCollectionsForConfig
-    response = schemaDesignerAPI.listCollectionsForConfig(configSet);
+    response = schemaDesigner.listCollectionsForConfig(configSet);
     List<String> collections = (List<String>) response.unknownProperties().get("collections");
     assertNotNull(collections);
     assertTrue(collections.contains(collection));
@@ -539,7 +539,7 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
     String configSet = "fieldUpdates";
 
     // Use the prep endpoint to prepare the new schema
-    FlexibleSolrJerseyResponse response = schemaDesignerAPI.prepNewSchema(configSet, null);
+    FlexibleSolrJerseyResponse response = schemaDesigner.prepNewSchema(configSet, null);
     assertNotNull(response.unknownProperties().get(CONFIG_SET_PARAM));
     assertNotNull(response.unknownProperties().get(SCHEMA_VERSION_PARAM));
     int schemaVersion = (Integer) response.unknownProperties().get(SCHEMA_VERSION_PARAM);
@@ -551,7 +551,7 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
     when(mockReq.getContentStreams()).thenReturn(Collections.singletonList(stream));
 
     // POST /schema-designer/add
-    response = schemaDesignerAPI.addSchemaObject(configSet, schemaVersion);
+    response = schemaDesigner.addSchemaObject(configSet, schemaVersion);
     assertNotNull(response.unknownProperties().get("add-field"));
 
     final String fieldName = "keywords";
@@ -571,22 +571,22 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
 
     String mutableId = getMutableId(configSet);
     SchemaDesignerConfigSetHelper configSetHelper =
-        new SchemaDesignerConfigSetHelper(cc, SchemaDesignerAPI.newSchemaSuggester());
-    ManagedIndexSchema schema = schemaDesignerAPI.loadLatestSchema(mutableId);
+        new SchemaDesignerConfigSetHelper(cc, SchemaDesigner.newSchemaSuggester());
+    ManagedIndexSchema schema = schemaDesigner.loadLatestSchema(mutableId);
 
     // make it required
     Map<String, Object> updateField =
         Map.of("name", fieldName, "type", field.get("type"), "required", true);
     configSetHelper.updateField(configSet, updateField, schema);
 
-    schema = schemaDesignerAPI.loadLatestSchema(mutableId);
+    schema = schemaDesigner.loadLatestSchema(mutableId);
     SchemaField schemaField = schema.getField(fieldName);
     assertTrue(schemaField.isRequired());
 
     updateField =
         Map.of("name", fieldName, "type", field.get("type"), "required", false, "stored", false);
     configSetHelper.updateField(configSet, updateField, schema);
-    schema = schemaDesignerAPI.loadLatestSchema(mutableId);
+    schema = schemaDesigner.loadLatestSchema(mutableId);
     schemaField = schema.getField(fieldName);
     assertFalse(schemaField.isRequired());
     assertFalse(schemaField.stored());
@@ -604,7 +604,7 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
             "multiValued",
             true);
     configSetHelper.updateField(configSet, updateField, schema);
-    schema = schemaDesignerAPI.loadLatestSchema(mutableId);
+    schema = schemaDesigner.loadLatestSchema(mutableId);
     schemaField = schema.getField(fieldName);
     assertFalse(schemaField.isRequired());
     assertFalse(schemaField.stored());
@@ -612,7 +612,7 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
 
     updateField = Map.of("name", fieldName, "type", "strings", "copyDest", "_text_");
     configSetHelper.updateField(configSet, updateField, schema);
-    schema = schemaDesignerAPI.loadLatestSchema(mutableId);
+    schema = schemaDesigner.loadLatestSchema(mutableId);
     schemaField = schema.getField(fieldName);
     assertTrue(schemaField.multiValued());
     assertEquals("strings", schemaField.getType().getTypeName());
@@ -627,14 +627,14 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
     String configSet = "testDiff";
 
     // Use the prep endpoint to prepare the new schema
-    FlexibleSolrJerseyResponse response = schemaDesignerAPI.prepNewSchema(configSet, null);
+    FlexibleSolrJerseyResponse response = schemaDesigner.prepNewSchema(configSet, null);
     assertNotNull(response.unknownProperties().get(CONFIG_SET_PARAM));
     assertNotNull(response.unknownProperties().get(SCHEMA_VERSION_PARAM));
     int schemaVersion = (Integer) response.unknownProperties().get(SCHEMA_VERSION_PARAM);
 
     // publish schema to a config set that can be used by real collections
     String collection = "diff456";
-    schemaDesignerAPI.publish(configSet, schemaVersion, collection, true, 1, 1, true, true, false);
+    schemaDesigner.publish(configSet, schemaVersion, collection, true, 1, 1, true, true, false);
 
     assertNotNull(cc.getZkController().zkStateReader.getCollection(collection));
 
@@ -643,7 +643,7 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
     reqParams.set(CONFIG_SET_PARAM, configSet);
     when(mockReq.getParams()).thenReturn(reqParams);
     when(mockReq.getContentStreams()).thenReturn(null);
-    response = schemaDesignerAPI.analyze(configSet, null, null, null, null, true, false, null);
+    response = schemaDesigner.analyze(configSet, null, null, null, null, true, false, null);
 
     // Update id field to not use docValues
     List<SimpleOrderedMap<Object>> fields =
@@ -666,7 +666,7 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
         new ContentStreamBase.StringStream(JSONUtil.toJSON(mapParams), JSON_MIME);
     when(mockReq.getContentStreams()).thenReturn(Collections.singletonList(stringStream));
 
-    response = schemaDesignerAPI.updateSchemaObject(configSet, schemaVersion);
+    response = schemaDesigner.updateSchemaObject(configSet, schemaVersion);
 
     // Add a new field
     schemaVersion = (Integer) response.unknownProperties().get(SCHEMA_VERSION_PARAM);
@@ -675,7 +675,7 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
     fileStream.setContentType(JSON_MIME);
     when(mockReq.getContentStreams()).thenReturn(Collections.singletonList(fileStream));
     // POST /schema-designer/add
-    response = schemaDesignerAPI.addSchemaObject(configSet, schemaVersion);
+    response = schemaDesigner.addSchemaObject(configSet, schemaVersion);
     assertNotNull(response.unknownProperties().get("add-field"));
 
     // Add a new field type
@@ -684,11 +684,11 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
     fileStream.setContentType(JSON_MIME);
     when(mockReq.getContentStreams()).thenReturn(Collections.singletonList(fileStream));
     // POST /schema-designer/add
-    response = schemaDesignerAPI.addSchemaObject(configSet, schemaVersion);
+    response = schemaDesigner.addSchemaObject(configSet, schemaVersion);
     assertNotNull(response.unknownProperties().get("add-field-type"));
 
     // Let's do a diff now
-    response = schemaDesignerAPI.getSchemaDiff(configSet);
+    response = schemaDesigner.getSchemaDiff(configSet);
 
     Map<String, Object> diff = (Map<String, Object>) response.unknownProperties().get("diff");
 
@@ -736,24 +736,24 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
     String configSet = "queryIndexErrTest";
 
     // Prep the schema and analyze sample docs so the temp collection and stored docs exist
-    schemaDesignerAPI.prepNewSchema(configSet, null);
+    schemaDesigner.prepNewSchema(configSet, null);
     ContentStreamBase.StringStream stream =
         new ContentStreamBase.StringStream("[{\"id\":\"doc1\",\"title\":\"test doc\"}]", JSON_MIME);
     ModifiableSolrParams reqParams = new ModifiableSolrParams();
     reqParams.set(CONFIG_SET_PARAM, configSet);
     when(mockReq.getParams()).thenReturn(reqParams);
     when(mockReq.getContentStreams()).thenReturn(Collections.singletonList(stream));
-    schemaDesignerAPI.analyze(configSet, null, null, null, null, null, null, null);
+    schemaDesigner.analyze(configSet, null, null, null, null, null, null, null);
 
     // Build a fresh API instance whose indexedVersion cache is empty (so it always
     // attempts to re-index before running the query), and which simulates indexing errors.
     Map<Object, Throwable> fakeErrors = new HashMap<>();
     fakeErrors.put("doc1", new RuntimeException("simulated indexing failure"));
-    SchemaDesignerAPI apiWithErrors =
-        new SchemaDesignerAPI(
+    SchemaDesigner apiWithErrors =
+        new SchemaDesigner(
             cc,
-            SchemaDesignerAPI.newSchemaSuggester(),
-            SchemaDesignerAPI.newSampleDocumentsLoader(),
+            SchemaDesigner.newSchemaSuggester(),
+            SchemaDesigner.newSampleDocumentsLoader(),
             mockReq) {
           @Override
           protected Map<Object, Throwable> indexSampleDocsWithRebuildOnAnalysisError(
@@ -781,22 +781,21 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
   @Test
   public void testRequireSchemaVersionRejectsNegativeValues() throws Exception {
     String configSet = "schemaVersionValidation";
-    schemaDesignerAPI.prepNewSchema(configSet, null);
+    schemaDesigner.prepNewSchema(configSet, null);
 
     // null schemaVersion must be rejected
     SolrException nullEx =
-        expectThrows(SolrException.class, () -> schemaDesignerAPI.addSchemaObject(configSet, null));
+        expectThrows(SolrException.class, () -> schemaDesigner.addSchemaObject(configSet, null));
     assertEquals(SolrException.ErrorCode.BAD_REQUEST.code, nullEx.code());
 
     // negative schemaVersion must be rejected (was previously bypassing validation)
     SolrException negEx =
-        expectThrows(SolrException.class, () -> schemaDesignerAPI.addSchemaObject(configSet, -1));
+        expectThrows(SolrException.class, () -> schemaDesigner.addSchemaObject(configSet, -1));
     assertEquals(SolrException.ErrorCode.BAD_REQUEST.code, negEx.code());
 
     // same contract must hold for updateSchemaObject
     SolrException updateNegEx =
-        expectThrows(
-            SolrException.class, () -> schemaDesignerAPI.updateSchemaObject(configSet, -1));
+        expectThrows(SolrException.class, () -> schemaDesigner.updateSchemaObject(configSet, -1));
     assertEquals(SolrException.ErrorCode.BAD_REQUEST.code, updateNegEx.code());
   }
 

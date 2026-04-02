@@ -86,7 +86,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** All V2 APIs have a prefix of /api/schema-designer/ */
-public class SchemaDesignerAPI extends JerseyResource
+public class SchemaDesigner extends JerseyResource
     implements SchemaDesignerApi, SchemaDesignerConstants {
 
   private static final Set<String> excludeConfigSetNames = Set.of(DEFAULT_CONFIGSET_NAME);
@@ -102,15 +102,15 @@ public class SchemaDesignerAPI extends JerseyResource
   private final SolrQueryRequest solrQueryRequest;
 
   @Inject
-  public SchemaDesignerAPI(CoreContainer coreContainer, SolrQueryRequest solrQueryRequest) {
+  public SchemaDesigner(CoreContainer coreContainer, SolrQueryRequest solrQueryRequest) {
     this(
         coreContainer,
-        SchemaDesignerAPI.newSchemaSuggester(),
-        SchemaDesignerAPI.newSampleDocumentsLoader(),
+        SchemaDesigner.newSchemaSuggester(),
+        SchemaDesigner.newSampleDocumentsLoader(),
         solrQueryRequest);
   }
 
-  SchemaDesignerAPI(
+  SchemaDesigner(
       CoreContainer coreContainer,
       SchemaSuggester schemaSuggester,
       SampleDocumentsLoader sampleDocLoader,
