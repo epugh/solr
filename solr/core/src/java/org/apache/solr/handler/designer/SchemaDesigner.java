@@ -50,6 +50,12 @@ import java.util.stream.Collectors;
 import org.apache.solr.api.JerseyResource;
 import org.apache.solr.client.api.endpoint.SchemaDesignerApi;
 import org.apache.solr.client.api.model.FlexibleSolrJerseyResponse;
+import org.apache.solr.client.api.model.SchemaDesignerCollectionsResponse;
+import org.apache.solr.client.api.model.SchemaDesignerConfigsResponse;
+import org.apache.solr.client.api.model.SchemaDesignerInfoResponse;
+import org.apache.solr.client.api.model.SchemaDesignerPublishResponse;
+import org.apache.solr.client.api.model.SchemaDesignerResponse;
+import org.apache.solr.client.api.model.SchemaDesignerSchemaDiffResponse;
 import org.apache.solr.client.api.model.SolrJerseyResponse;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.CloudSolrClient;
@@ -154,13 +160,14 @@ public class SchemaDesigner extends JerseyResource
 
   @Override
   @PermissionName(CONFIG_READ_PERM)
-  public FlexibleSolrJerseyResponse getInfo(String configSet) throws Exception {
+  public SchemaDesignerInfoResponse getInfo(String configSet) throws Exception {
     requireNotEmpty(CONFIG_SET_PARAM, configSet);
 
-    Map<String, Object> responseMap = new HashMap<>();
-    responseMap.put(CONFIG_SET_PARAM, configSet);
+    SchemaDesignerInfoResponse response =
+        instantiateJerseyResponse(SchemaDesignerInfoResponse.class);
+    response.configSet = configSet;
     boolean exists = configExists(configSet);
-    responseMap.put("published", exists);
+    response.published = exists;
 
     // mutable config may not exist yet as this is just an info check to gather some basic info the
     // UI needs
@@ -171,26 +178,24 @@ public class SchemaDesigner extends JerseyResource
     SolrConfig srcConfig = exists ? configSetHelper.loadSolrConfig(configSet) : null;
     SolrConfig solrConfig =
         configExists(mutableId) ? configSetHelper.loadSolrConfig(mutableId) : srcConfig;
-    addSettingsToResponse(settingsDAO.getSettings(solrConfig), responseMap);
+    addSettingsToResponse(settingsDAO.getSettings(solrConfig), response);
 
-    responseMap.put(SCHEMA_VERSION_PARAM, configSetHelper.getCurrentSchemaVersion(mutableId));
-    responseMap.put(
-        "collections", exists ? configSetHelper.listCollectionsForConfig(configSet) : List.of());
+    response.schemaVersion = configSetHelper.getCurrentSchemaVersion(mutableId);
+    response.collections = exists ? configSetHelper.listCollectionsForConfig(configSet) : List.of();
 
     // don't fail if loading sample docs fails
     try {
-      responseMap.put("numDocs", configSetHelper.retrieveSampleDocs(configSet).size());
+      response.numDocs = configSetHelper.retrieveSampleDocs(configSet).size();
     } catch (Exception exc) {
       log.warn("Failed to load sample docs from blob store for {}", configSet, exc);
     }
 
-    return buildFlexibleResponse(responseMap);
+    return response;
   }
 
   @Override
   @PermissionName(CONFIG_EDIT_PERM)
-  public FlexibleSolrJerseyResponse prepNewSchema(String configSet, String copyFrom)
-      throws Exception {
+  public SchemaDesignerResponse prepNewSchema(String configSet, String copyFrom) throws Exception {
     requireNotEmpty(CONFIG_SET_PARAM, configSet);
     validateNewConfigSetName(configSet);
 
@@ -209,7 +214,7 @@ public class SchemaDesigner extends JerseyResource
 
     settingsDAO.persistIfChanged(mutableId, settings);
 
-    return buildFlexibleResponse(buildResponse(configSet, schema, settings, null));
+    return buildSchemaDesignerResponse(configSet, schema, settings, null);
   }
 
   @Override
@@ -240,8 +245,7 @@ public class SchemaDesigner extends JerseyResource
 
   @Override
   @PermissionName(CONFIG_EDIT_PERM)
-  public FlexibleSolrJerseyResponse updateFileContents(String configSet, String file)
-      throws Exception {
+  public SchemaDesignerResponse updateFileContents(String configSet, String file) throws Exception {
     requireNotEmpty(CONFIG_SET_PARAM, configSet);
     requireNotEmpty("file", file);
 
@@ -275,10 +279,11 @@ public class SchemaDesigner extends JerseyResource
       // solrconfig.xml update failed, but haven't impacted the configSet yet, so just return the
       // error directly
       Throwable causedBy = SolrException.getRootCause(updateFileError);
-      Map<String, Object> response = new HashMap<>();
-      response.put("updateFileError", causedBy.getMessage());
-      response.put(file, new String(data, StandardCharsets.UTF_8));
-      return buildFlexibleResponse(response);
+      SchemaDesignerResponse errorResponse =
+          instantiateJerseyResponse(SchemaDesignerResponse.class);
+      errorResponse.updateFileError = causedBy.getMessage();
+      errorResponse.field = new String(data, StandardCharsets.UTF_8);
+      return errorResponse;
     }
 
     // apply the update and reload the temp collection / re-index sample docs
@@ -308,10 +313,10 @@ public class SchemaDesigner extends JerseyResource
       }
     }
 
-    Map<String, Object> response = buildResponse(configSet, schema, null, docs);
+    SchemaDesignerResponse response = buildSchemaDesignerResponse(configSet, schema, null, docs);
 
     if (analysisErrorHolder[0] != null) {
-      response.put(ANALYSIS_ERROR, analysisErrorHolder[0]);
+      response.analysisError = analysisErrorHolder[0];
     }
 
     addErrorToResponse(
@@ -321,7 +326,7 @@ public class SchemaDesigner extends JerseyResource
         response,
         "Failed to re-index sample documents after update to the " + file + " file");
 
-    return buildFlexibleResponse(response);
+    return response;
   }
 
   @Override
@@ -369,19 +374,23 @@ public class SchemaDesigner extends JerseyResource
 
   @Override
   @PermissionName(CONFIG_READ_PERM)
-  public FlexibleSolrJerseyResponse listCollectionsForConfig(String configSet) {
+  public SchemaDesignerCollectionsResponse listCollectionsForConfig(String configSet) {
     requireNotEmpty(CONFIG_SET_PARAM, configSet);
-    return buildFlexibleResponse(
-        Collections.singletonMap(
-            "collections", configSetHelper.listCollectionsForConfig(configSet)));
+    SchemaDesignerCollectionsResponse response =
+        instantiateJerseyResponse(SchemaDesignerCollectionsResponse.class);
+    response.collections = configSetHelper.listCollectionsForConfig(configSet);
+    return response;
   }
 
   // CONFIG_EDIT_PERM is required here since this endpoint is used by the UI to determine if the
   // user has access to the Schema Designer UI
   @Override
   @PermissionName(CONFIG_EDIT_PERM)
-  public FlexibleSolrJerseyResponse listConfigs() throws Exception {
-    return buildFlexibleResponse(Collections.singletonMap("configSets", listEnabledConfigs()));
+  public SchemaDesignerConfigsResponse listConfigs() throws Exception {
+    SchemaDesignerConfigsResponse response =
+        instantiateJerseyResponse(SchemaDesignerConfigsResponse.class);
+    response.configSets = listEnabledConfigs();
+    return response;
   }
 
   protected Map<String, Integer> listEnabledConfigs() throws IOException {
@@ -402,7 +411,7 @@ public class SchemaDesigner extends JerseyResource
 
   @Override
   @PermissionName(CONFIG_EDIT_PERM)
-  public FlexibleSolrJerseyResponse addSchemaObject(String configSet, Integer schemaVersion)
+  public SchemaDesignerResponse addSchemaObject(String configSet, Integer schemaVersion)
       throws Exception {
     requireNotEmpty(CONFIG_SET_PARAM, configSet);
     requireSchemaVersion(schemaVersion);
@@ -415,15 +424,16 @@ public class SchemaDesigner extends JerseyResource
     String action = addJson.keySet().iterator().next();
 
     ManagedIndexSchema schema = loadLatestSchema(mutableId);
-    Map<String, Object> response =
-        buildResponse(configSet, schema, null, configSetHelper.retrieveSampleDocs(configSet));
-    response.put(action, objectName);
-    return buildFlexibleResponse(response);
+    SchemaDesignerResponse response =
+        buildSchemaDesignerResponse(
+            configSet, schema, null, configSetHelper.retrieveSampleDocs(configSet));
+    setSchemaObjectField(response, action, objectName);
+    return response;
   }
 
   @Override
   @PermissionName(CONFIG_EDIT_PERM)
-  public FlexibleSolrJerseyResponse updateSchemaObject(String configSet, Integer schemaVersion)
+  public SchemaDesignerResponse updateSchemaObject(String configSet, Integer schemaVersion)
       throws Exception {
     requireNotEmpty(CONFIG_SET_PARAM, configSet);
     requireSchemaVersion(schemaVersion);
@@ -477,27 +487,28 @@ public class SchemaDesigner extends JerseyResource
       }
     }
 
-    Map<String, Object> response = buildResponse(configSet, schema, settings, docs);
-    response.put("updateType", updateType);
+    SchemaDesignerResponse response =
+        buildSchemaDesignerResponse(configSet, schema, settings, docs);
+    response.updateType = updateType;
     if (FIELD_PARAM.equals(updateType)) {
-      response.put(updateType, fieldToMap(schema.getField(name), schema));
+      response.field = fieldToMap(schema.getField(name), schema);
     } else if ("type".equals(updateType)) {
-      response.put(updateType, schema.getFieldTypeByName(name).getNamedPropertyValues(true));
+      response.type = schema.getFieldTypeByName(name).getNamedPropertyValues(true);
     }
 
     if (analysisErrorHolder[0] != null) {
-      response.put(ANALYSIS_ERROR, analysisErrorHolder[0]);
+      response.analysisError = analysisErrorHolder[0];
     }
 
     addErrorToResponse(mutableId, solrExc, errorsDuringIndexing, response, updateError);
 
-    response.put("rebuild", needsRebuild);
-    return buildFlexibleResponse(response);
+    response.rebuild = needsRebuild;
+    return response;
   }
 
   @Override
   @PermissionName(CONFIG_EDIT_PERM)
-  public FlexibleSolrJerseyResponse publish(
+  public SchemaDesignerPublishResponse publish(
       String configSet,
       Integer schemaVersion,
       String newCollection,
@@ -588,21 +599,22 @@ public class SchemaDesigner extends JerseyResource
     settings.setDisabled(disableDesigner);
     settingsDAO.persistIfChanged(configSet, settings);
 
-    Map<String, Object> response = new HashMap<>();
-    response.put(CONFIG_SET_PARAM, configSet);
-    response.put(SCHEMA_VERSION_PARAM, configSetHelper.getCurrentSchemaVersion(configSet));
+    SchemaDesignerPublishResponse response =
+        instantiateJerseyResponse(SchemaDesignerPublishResponse.class);
+    response.configSet = configSet;
+    response.schemaVersion = configSetHelper.getCurrentSchemaVersion(configSet);
     if (StrUtils.isNotNullOrEmpty(newCollection)) {
-      response.put(NEW_COLLECTION_PARAM, newCollection);
+      response.newCollection = newCollection;
     }
 
-    addErrorToResponse(newCollection, null, errorsDuringIndexing, response, null);
+    addErrorToResponse(newCollection, null, errorsDuringIndexing, response);
 
-    return buildFlexibleResponse(response);
+    return response;
   }
 
   @Override
   @PermissionName(CONFIG_EDIT_PERM)
-  public FlexibleSolrJerseyResponse analyze(
+  public SchemaDesignerResponse analyze(
       String configSet,
       Integer schemaVersion,
       String copyFrom,
@@ -733,14 +745,14 @@ public class SchemaDesigner extends JerseyResource
       CollectionAdminRequest.reloadCollection(mutableId).process(cloudClient());
     }
 
-    Map<String, Object> response =
-        buildResponse(configSet, loadLatestSchema(mutableId), settings, docs);
-    response.put("sampleSource", sampleDocuments.getSource());
+    SchemaDesignerResponse response =
+        buildSchemaDesignerResponse(configSet, loadLatestSchema(mutableId), settings, docs);
+    response.sampleSource = sampleDocuments.getSource();
     if (analysisErrorHolder[0] != null) {
-      response.put(ANALYSIS_ERROR, analysisErrorHolder[0]);
+      response.analysisError = analysisErrorHolder[0];
     }
     addErrorToResponse(mutableId, null, errorsDuringIndexing, response, null);
-    return buildFlexibleResponse(response);
+    return response;
   }
 
   @Override
@@ -825,18 +837,18 @@ public class SchemaDesigner extends JerseyResource
    */
   @Override
   @PermissionName(CONFIG_READ_PERM)
-  public FlexibleSolrJerseyResponse getSchemaDiff(String configSet) throws Exception {
+  public SchemaDesignerSchemaDiffResponse getSchemaDiff(String configSet) throws Exception {
     requireNotEmpty(CONFIG_SET_PARAM, configSet);
 
     SchemaDesignerSettings settings = getMutableSchemaForConfigSet(configSet, -1, null);
     // diff the published if found, else use the original source schema
     String sourceSchema = configExists(configSet) ? configSet : settings.getCopyFrom();
-    Map<String, Object> response = new HashMap<>();
-    response.put(
-        "diff", ManagedSchemaDiff.diff(loadLatestSchema(sourceSchema), settings.getSchema()));
-    response.put("diff-source", sourceSchema);
+    SchemaDesignerSchemaDiffResponse response =
+        instantiateJerseyResponse(SchemaDesignerSchemaDiffResponse.class);
+    response.diff = ManagedSchemaDiff.diff(loadLatestSchema(sourceSchema), settings.getSchema());
+    response.diffSource = sourceSchema;
     addSettingsToResponse(settings, response);
-    return buildFlexibleResponse(response);
+    return response;
   }
 
   protected SampleDocuments loadSampleDocuments(String configSet) throws IOException {
@@ -1128,7 +1140,7 @@ public class SchemaDesigner extends JerseyResource
     return numFound;
   }
 
-  Map<String, Object> buildResponse(
+  SchemaDesignerResponse buildSchemaDesignerResponse(
       String configSet,
       final ManagedIndexSchema schema,
       SchemaDesignerSettings settings,
@@ -1138,50 +1150,44 @@ public class SchemaDesigner extends JerseyResource
     int currentVersion = configSetHelper.getCurrentSchemaVersion(mutableId);
     indexedVersion.put(mutableId, currentVersion);
 
-    // response is a map of data structures to support the schema designer
-    Map<String, Object> response = new HashMap<>();
+    SchemaDesignerResponse response = instantiateJerseyResponse(SchemaDesignerResponse.class);
 
     DocCollection coll = zkStateReader().getCollection(mutableId);
     Collection<Slice> activeSlices = coll.getActiveSlices();
     if (!activeSlices.isEmpty()) {
-      String coreName = activeSlices.stream().findAny().orElseThrow().getLeader().getCoreName();
-      response.put("core", coreName);
+      response.core = activeSlices.stream().findAny().orElseThrow().getLeader().getCoreName();
     }
 
-    response.put(UNIQUE_KEY_FIELD_PARAM, schema.getUniqueKeyField().getName());
-
-    response.put(CONFIG_SET_PARAM, configSet);
+    response.uniqueKeyField = schema.getUniqueKeyField().getName();
+    response.configSet = configSet;
     // important: pass the designer the current schema zk version for MVCC
-    response.put(SCHEMA_VERSION_PARAM, currentVersion);
-    response.put(TEMP_COLLECTION_PARAM, mutableId);
-    response.put("collectionsForConfig", configSetHelper.listCollectionsForConfig(configSet));
+    response.schemaVersion = currentVersion;
+    response.tempCollection = mutableId;
+    response.collectionsForConfig = configSetHelper.listCollectionsForConfig(configSet);
     // Guess at a schema for each field found in the sample docs
     // Collect all fields across all docs with mapping to values
-    response.put(
-        "fields",
+    response.fields =
         schema.getFields().values().stream()
             .map(f -> fieldToMap(f, schema))
             .sorted(Comparator.comparing(map -> ((String) map.get("name"))))
-            .collect(Collectors.toList()));
+            .collect(Collectors.toList());
 
     if (settings == null) {
       settings = settingsDAO.getSettings(mutableId);
     }
     addSettingsToResponse(settings, response);
 
-    response.put(
-        "dynamicFields",
+    response.dynamicFields =
         Arrays.stream(schema.getDynamicFieldPrototypes())
             .map(e -> e.getNamedPropertyValues(true))
             .sorted(Comparator.comparing(map -> ((String) map.get("name"))))
-            .collect(Collectors.toList()));
+            .collect(Collectors.toList());
 
-    response.put(
-        "fieldTypes",
+    response.fieldTypes =
         schema.getFieldTypes().values().stream()
             .map(fieldType -> fieldType.getNamedPropertyValues(true))
             .sorted(Comparator.comparing(map -> ((String) map.get("name"))))
-            .collect(Collectors.toList()));
+            .collect(Collectors.toList());
 
     // files
     SolrZkClient zkClient = zkStateReader().getZkClient();
@@ -1208,23 +1214,36 @@ public class SchemaDesigner extends JerseyResource
 
     List<String> sortedFiles = new ArrayList<>(stripPrefix);
     Collections.sort(sortedFiles);
-    response.put("files", sortedFiles);
+    response.files = sortedFiles;
 
     // info about the sample docs
     if (docs != null) {
       final String uniqueKeyField = schema.getUniqueKeyField().getName();
-      response.put(
-          "docIds",
+      response.docIds =
           docs.stream()
               .map(d -> (String) d.getFieldValue(uniqueKeyField))
               .filter(Objects::nonNull)
               .limit(100)
-              .collect(Collectors.toList()));
+              .collect(Collectors.toList());
     }
 
-    response.put("numDocs", docs != null ? docs.size() : -1);
+    response.numDocs = docs != null ? docs.size() : -1;
 
     return response;
+  }
+
+  /** Sets the named schema-object field on {@code response} based on the action type. */
+  private static void setSchemaObjectField(
+      SchemaDesignerResponse response, String action, Object value) {
+    switch (action) {
+      case "field", "add-field" -> response.field = value;
+      case "type", "add-type" -> response.type = value;
+      case "dynamicField", "add-dynamic-field" -> response.dynamicField = value;
+      case "fieldType", "add-field-type" -> response.fieldType = value;
+      default -> {
+        /* unknown action type — silently ignore */
+      }
+    }
   }
 
   protected void addErrorToResponse(
@@ -1251,6 +1270,66 @@ public class SchemaDesigner extends JerseyResource
     response.putIfAbsent("updateErrorCode", 400);
     if (errorsDuringIndexing != null) {
       response.put(ERROR_DETAILS, errorsDuringIndexing);
+    }
+  }
+
+  protected void addErrorToResponse(
+      String collection,
+      SolrException solrExc,
+      Map<Object, Throwable> errorsDuringIndexing,
+      SchemaDesignerResponse response,
+      String updateError) {
+
+    if (solrExc == null && (errorsDuringIndexing == null || errorsDuringIndexing.isEmpty())) {
+      return; // no errors
+    }
+
+    if (updateError != null) {
+      response.updateError = updateError;
+    }
+
+    if (solrExc != null) {
+      response.updateErrorCode = solrExc.code();
+      if (response.updateError == null) {
+        response.updateError = solrExc.getMessage();
+      }
+    }
+
+    if (response.updateError == null) {
+      response.updateError = "Index sample documents into " + collection + " failed!";
+    }
+    if (response.updateErrorCode == null) {
+      response.updateErrorCode = 400;
+    }
+    if (errorsDuringIndexing != null) {
+      response.errorDetails = errorsDuringIndexing;
+    }
+  }
+
+  /** Overload for {@link SchemaDesignerPublishResponse} error fields. */
+  protected void addErrorToResponse(
+      String collection,
+      SolrException solrExc,
+      Map<Object, Throwable> errorsDuringIndexing,
+      SchemaDesignerPublishResponse response) {
+
+    if (solrExc == null && (errorsDuringIndexing == null || errorsDuringIndexing.isEmpty())) {
+      return; // no errors
+    }
+
+    if (solrExc != null) {
+      response.updateErrorCode = solrExc.code();
+      response.updateError = solrExc.getMessage();
+    }
+
+    if (response.updateError == null) {
+      response.updateError = "Index sample documents into " + collection + " failed!";
+    }
+    if (response.updateErrorCode == null) {
+      response.updateErrorCode = 400;
+    }
+    if (errorsDuringIndexing != null) {
+      response.errorDetails = errorsDuringIndexing;
     }
   }
 
@@ -1294,6 +1373,39 @@ public class SchemaDesigner extends JerseyResource
     if (copyFrom != null) {
       response.put(COPY_FROM_PARAM, copyFrom);
     }
+  }
+
+  void addSettingsToResponse(
+      SchemaDesignerSettings settings, final SchemaDesignerInfoResponse response) {
+    response.languages = settings.getLanguages();
+    response.enableFieldGuessing = settings.fieldGuessingEnabled();
+    response.enableDynamicFields = settings.dynamicFieldsEnabled();
+    response.enableNestedDocs = settings.nestedDocsEnabled();
+    response.disabled = settings.isDisabled();
+    settings.getPublishedVersion().ifPresent(v -> response.publishedVersion = v);
+    response.copyFrom = settings.getCopyFrom();
+  }
+
+  void addSettingsToResponse(
+      SchemaDesignerSettings settings, final SchemaDesignerSchemaDiffResponse response) {
+    response.languages = settings.getLanguages();
+    response.enableFieldGuessing = settings.fieldGuessingEnabled();
+    response.enableDynamicFields = settings.dynamicFieldsEnabled();
+    response.enableNestedDocs = settings.nestedDocsEnabled();
+    response.disabled = settings.isDisabled();
+    settings.getPublishedVersion().ifPresent(v -> response.publishedVersion = v);
+    response.copyFrom = settings.getCopyFrom();
+  }
+
+  void addSettingsToResponse(
+      SchemaDesignerSettings settings, final SchemaDesignerResponse response) {
+    response.languages = settings.getLanguages();
+    response.enableFieldGuessing = settings.fieldGuessingEnabled();
+    response.enableDynamicFields = settings.dynamicFieldsEnabled();
+    response.enableNestedDocs = settings.nestedDocsEnabled();
+    response.disabled = settings.isDisabled();
+    settings.getPublishedVersion().ifPresent(v -> response.publishedVersion = v);
+    response.copyFrom = settings.getCopyFrom();
   }
 
   protected String checkMutable(String configSet, int clientSchemaVersion) throws IOException {
