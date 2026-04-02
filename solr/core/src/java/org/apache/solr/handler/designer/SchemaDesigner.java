@@ -1235,6 +1235,9 @@ public class SchemaDesigner extends JerseyResource
   /** Sets the named schema-object field on {@code response} based on the action type. */
   private static void setSchemaObjectField(
       SchemaDesignerResponse response, String action, Object value) {
+    // Handles both bare camelCase names used internally ('field', 'fieldType') and the
+    // kebab-case prefixed names that come directly from Schema API request JSON
+    // ('add-field', 'add-field-type', 'add-dynamic-field').
     switch (action) {
       case "field", "add-field" -> response.field = value;
       case "type", "add-type" -> response.type = value;

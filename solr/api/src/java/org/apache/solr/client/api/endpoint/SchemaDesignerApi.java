@@ -27,6 +27,12 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
 import java.util.List;
 import org.apache.solr.client.api.model.FlexibleSolrJerseyResponse;
+import org.apache.solr.client.api.model.SchemaDesignerCollectionsResponse;
+import org.apache.solr.client.api.model.SchemaDesignerConfigsResponse;
+import org.apache.solr.client.api.model.SchemaDesignerInfoResponse;
+import org.apache.solr.client.api.model.SchemaDesignerPublishResponse;
+import org.apache.solr.client.api.model.SchemaDesignerResponse;
+import org.apache.solr.client.api.model.SchemaDesignerSchemaDiffResponse;
 import org.apache.solr.client.api.model.SolrJerseyResponse;
 
 /** V2 API definitions for the Solr Schema Designer. */
@@ -38,14 +44,14 @@ public interface SchemaDesignerApi {
   @Operation(
       summary = "Get info about a configSet being designed.",
       tags = {"schema-designer"})
-  FlexibleSolrJerseyResponse getInfo(@PathParam("configSet") String configSet) throws Exception;
+  SchemaDesignerInfoResponse getInfo(@PathParam("configSet") String configSet) throws Exception;
 
   @POST
   @Path("/{configSet}/prep")
   @Operation(
       summary = "Prepare a mutable configSet copy for schema design.",
       tags = {"schema-designer"})
-  FlexibleSolrJerseyResponse prepNewSchema(
+  SchemaDesignerResponse prepNewSchema(
       @PathParam("configSet") String configSet, @QueryParam("copyFrom") String copyFrom)
       throws Exception;
 
@@ -69,7 +75,7 @@ public interface SchemaDesignerApi {
   @Operation(
       summary = "Update the contents of a file in a configSet being designed.",
       tags = {"schema-designer"})
-  FlexibleSolrJerseyResponse updateFileContents(
+  SchemaDesignerResponse updateFileContents(
       @PathParam("configSet") String configSet, @QueryParam("file") String file) throws Exception;
 
   @GET
@@ -89,7 +95,7 @@ public interface SchemaDesignerApi {
   @Operation(
       summary = "List collections that use a given configSet.",
       tags = {"schema-designer"})
-  FlexibleSolrJerseyResponse listCollectionsForConfig(@PathParam("configSet") String configSet)
+  SchemaDesignerCollectionsResponse listCollectionsForConfig(@PathParam("configSet") String configSet)
       throws Exception;
 
   @GET
@@ -97,14 +103,14 @@ public interface SchemaDesignerApi {
   @Operation(
       summary = "List all configSets available for schema design.",
       tags = {"schema-designer"})
-  FlexibleSolrJerseyResponse listConfigs() throws Exception;
+  SchemaDesignerConfigsResponse listConfigs() throws Exception;
 
   @POST
   @Path("/{configSet}/add")
   @Operation(
       summary = "Add a new field, field type, or dynamic field to the schema being designed.",
       tags = {"schema-designer"})
-  FlexibleSolrJerseyResponse addSchemaObject(
+  SchemaDesignerResponse addSchemaObject(
       @PathParam("configSet") String configSet, @QueryParam("schemaVersion") Integer schemaVersion)
       throws Exception;
 
@@ -113,7 +119,7 @@ public interface SchemaDesignerApi {
   @Operation(
       summary = "Update an existing field or field type in the schema being designed.",
       tags = {"schema-designer"})
-  FlexibleSolrJerseyResponse updateSchemaObject(
+  SchemaDesignerResponse updateSchemaObject(
       @PathParam("configSet") String configSet, @QueryParam("schemaVersion") Integer schemaVersion)
       throws Exception;
 
@@ -122,7 +128,7 @@ public interface SchemaDesignerApi {
   @Operation(
       summary = "Publish the designed schema to a live configSet.",
       tags = {"schema-designer"})
-  FlexibleSolrJerseyResponse publish(
+  SchemaDesignerPublishResponse publish(
       @PathParam("configSet") String configSet,
       @QueryParam("schemaVersion") Integer schemaVersion,
       @QueryParam("newCollection") String newCollection,
@@ -139,7 +145,7 @@ public interface SchemaDesignerApi {
   @Operation(
       summary = "Analyze sample documents and suggest a schema.",
       tags = {"schema-designer"})
-  FlexibleSolrJerseyResponse analyze(
+  SchemaDesignerResponse analyze(
       @PathParam("configSet") String configSet,
       @QueryParam("schemaVersion") Integer schemaVersion,
       @QueryParam("copyFrom") String copyFrom,
@@ -162,6 +168,6 @@ public interface SchemaDesignerApi {
   @Operation(
       summary = "Get the diff between the designed schema and the published schema.",
       tags = {"schema-designer"})
-  FlexibleSolrJerseyResponse getSchemaDiff(@PathParam("configSet") String configSet)
+  SchemaDesignerSchemaDiffResponse getSchemaDiff(@PathParam("configSet") String configSet)
       throws Exception;
 }
