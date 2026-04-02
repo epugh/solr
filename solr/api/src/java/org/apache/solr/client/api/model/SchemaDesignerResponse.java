@@ -142,15 +142,11 @@ public class SchemaDesignerResponse extends SolrJerseyResponse {
   @JsonProperty("type")
   public Object type;
 
-  /**
-   * The added dynamic-field name; set by {@code addSchemaObject} when adding a dynamic field.
-   */
+  /** The added dynamic-field name; set by {@code addSchemaObject} when adding a dynamic field. */
   @JsonProperty("dynamicField")
   public Object dynamicField;
 
-  /**
-   * The added field-type name; set by {@code addSchemaObject} when adding a field type.
-   */
+  /** The added field-type name; set by {@code addSchemaObject} when adding a field type. */
   @JsonProperty("fieldType")
   public Object fieldType;
 
@@ -162,9 +158,16 @@ public class SchemaDesignerResponse extends SolrJerseyResponse {
   public Boolean rebuild;
 
   /**
-   * Error message when a file update (e.g. {@code solrconfig.xml}) fails validation; set by
-   * {@code updateFileContents}.
+   * Error message when a file update (e.g. {@code solrconfig.xml}) fails validation; set by {@code
+   * updateFileContents}.
    */
   @JsonProperty("updateFileError")
   public String updateFileError;
+
+  /**
+   * The raw file content returned when a file update fails validation; set by {@code
+   * updateFileContents} so the UI can display the attempted content alongside the error.
+   */
+  @JsonProperty("fileContent")
+  public String fileContent;
 }

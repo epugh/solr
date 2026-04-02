@@ -282,7 +282,7 @@ public class SchemaDesigner extends JerseyResource
       SchemaDesignerResponse errorResponse =
           instantiateJerseyResponse(SchemaDesignerResponse.class);
       errorResponse.updateFileError = causedBy.getMessage();
-      errorResponse.field = new String(data, StandardCharsets.UTF_8);
+      errorResponse.fileContent = new String(data, StandardCharsets.UTF_8);
       return errorResponse;
     }
 

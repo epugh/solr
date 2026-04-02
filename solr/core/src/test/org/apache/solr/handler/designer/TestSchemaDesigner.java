@@ -652,6 +652,7 @@ public class TestSchemaDesigner extends SolrCloudTestCase implements SchemaDesig
     response = schemaDesigner.analyze(configSet, null, null, null, null, true, false, null);
 
     // Update id field to not use docValues
+    @SuppressWarnings("unchecked")
     List<SimpleOrderedMap<Object>> fields =
         (List<SimpleOrderedMap<Object>>) (List<?>) response.fields;
     SimpleOrderedMap<Object> idFieldMap =

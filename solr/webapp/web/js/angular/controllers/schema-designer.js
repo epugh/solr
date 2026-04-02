@@ -889,8 +889,8 @@ solrAdminApp.controller('SchemaDesignerController', function ($scope, $timeout, 
 
     SchemaDesigner.put(params, $scope.fileNodeText, function (data) {
       if (data.updateFileError) {
-        if (data[$scope.selectedFile]) {
-          $scope.fileNodeText = data[$scope.selectedFile];
+        if (data.fileContent) {
+          $scope.fileNodeText = data.fileContent;
         }
         $scope.updateFileError = data.updateFileError;
       } else {

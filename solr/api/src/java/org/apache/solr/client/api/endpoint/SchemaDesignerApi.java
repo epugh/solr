@@ -95,8 +95,8 @@ public interface SchemaDesignerApi {
   @Operation(
       summary = "List collections that use a given configSet.",
       tags = {"schema-designer"})
-  SchemaDesignerCollectionsResponse listCollectionsForConfig(@PathParam("configSet") String configSet)
-      throws Exception;
+  SchemaDesignerCollectionsResponse listCollectionsForConfig(
+      @PathParam("configSet") String configSet) throws Exception;
 
   @GET
   @Path("/configs")
