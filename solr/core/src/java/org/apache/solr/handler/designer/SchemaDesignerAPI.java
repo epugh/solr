@@ -24,7 +24,6 @@ import static org.apache.solr.security.PermissionNameProvider.Name.CONFIG_READ_P
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.StreamingOutput;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -76,6 +75,7 @@ import org.apache.solr.common.util.StrUtils;
 import org.apache.solr.core.CoreContainer;
 import org.apache.solr.core.SolrConfig;
 import org.apache.solr.core.SolrResourceLoader;
+import org.apache.solr.handler.configsets.DownloadConfigSet;
 import org.apache.solr.jersey.PermissionName;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.schema.ManagedIndexSchema;
@@ -408,7 +408,7 @@ public class SchemaDesignerAPI extends JerseyResource
     requireNotEmpty(CONFIG_SET_PARAM, configSet);
     String mutableId = getMutableId(configSet);
 
-    // find the configSet to download
+    // find the configSet to download: prefer the mutable designer copy, fall back to production
     SolrZkClient zkClient = zkStateReader().getZkClient();
     String configId = mutableId;
     try {
@@ -424,14 +424,8 @@ public class SchemaDesignerAPI extends JerseyResource
       throw new IOException("Error reading config from ZK", SolrZkClient.checkInterrupted(e));
     }
 
-    final byte[] zipBytes = configSetHelper.downloadAndZipConfigSet(configId);
-    // Sanitize configSet to safe filename characters to prevent header injection
-    final String safeConfigSet = configSet.replaceAll("[^a-zA-Z0-9_\\-.]", "_");
-    final String fileName = safeConfigSet + "_configset.zip";
-    return Response.ok((StreamingOutput) outputStream -> outputStream.write(zipBytes))
-        .type("application/zip")
-        .header("Content-Disposition", "attachment; filename=\"" + fileName + "\"")
-        .build();
+    return DownloadConfigSet.buildZipResponse(
+        coreContainer.getConfigSetService(), configId, configSet);
   }
 
   @Override

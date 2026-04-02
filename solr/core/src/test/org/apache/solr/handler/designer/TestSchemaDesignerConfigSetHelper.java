@@ -38,6 +38,7 @@ import org.apache.solr.common.util.Utils;
 import org.apache.solr.core.CoreContainer;
 import org.apache.solr.core.SolrConfig;
 import org.apache.solr.filestore.FileStore;
+import org.apache.solr.handler.configsets.DownloadConfigSet;
 import org.apache.solr.schema.FieldType;
 import org.apache.solr.schema.ManagedIndexSchema;
 import org.apache.solr.schema.SchemaField;
@@ -113,13 +114,14 @@ public class TestSchemaDesignerConfigSetHelper extends SolrCloudTestCase
             configSet, schema, List.of(), true, DEFAULT_CONFIGSET_NAME);
     assertEquals(2, schema.getSchemaZkVersion());
 
-    byte[] zipped = helper.downloadAndZipConfigSet(mutableId);
+    byte[] zipped = DownloadConfigSet.zipConfigSet(cc.getConfigSetService(), mutableId);
     assertTrue(zipped != null && zipped.length > 0);
   }
 
   @Test
   public void testDownloadAndZip() throws IOException {
-    byte[] zipped = helper.downloadAndZipConfigSet(DEFAULT_CONFIGSET_NAME);
+    byte[] zipped =
+        DownloadConfigSet.zipConfigSet(cc.getConfigSetService(), DEFAULT_CONFIGSET_NAME);
     ZipInputStream stream = new ZipInputStream(new ByteArrayInputStream(zipped));
 
     boolean foundSolrConfig = false;

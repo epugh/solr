@@ -16,7 +16,11 @@
  */
 package org.apache.solr.client.api.endpoint;
 
+import static org.apache.solr.client.api.util.Constants.RAW_OUTPUT_PROPERTY;
+
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.extensions.Extension;
+import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -24,7 +28,9 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import org.apache.solr.client.api.model.CloneConfigsetRequestBody;
@@ -69,6 +75,25 @@ public interface ConfigsetsApi {
     @Operation(summary = "Delete an existing configset.", tags = "configsets")
     SolrJerseyResponse deleteConfigSet(@PathParam("configSetName") String configSetName)
         throws Exception;
+  }
+
+  /**
+   * V2 API definition for downloading an existing configset as a ZIP archive.
+   *
+   * <p>Equivalent to GET /api/configsets/{configSetName}/download
+   */
+  @Path("/configsets/{configSetName}")
+  interface Download {
+    @GET
+    @Path("/download")
+    @Operation(
+        summary = "Download a configset as a ZIP archive.",
+        tags = {"configsets"},
+        extensions = {
+          @Extension(properties = {@ExtensionProperty(name = RAW_OUTPUT_PROPERTY, value = "true")})
+        })
+    @Produces("application/zip")
+    Response downloadConfigSet(@PathParam("configSetName") String configSetName) throws Exception;
   }
 
   /**
