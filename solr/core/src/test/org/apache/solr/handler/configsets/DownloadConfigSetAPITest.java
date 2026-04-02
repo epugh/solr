@@ -18,23 +18,17 @@
 package org.apache.solr.handler.configsets;
 
 import static org.apache.solr.SolrTestCaseJ4.assumeWorkingMockito;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import jakarta.ws.rs.core.Response;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.apache.solr.SolrTestCase;
 import org.apache.solr.common.SolrException;
-import org.apache.solr.core.ConfigSetService;
 import org.apache.solr.core.CoreContainer;
-import org.apache.solr.request.SolrQueryRequest;
-import org.apache.solr.response.SolrQueryResponse;
+import org.apache.solr.core.FileSystemConfigSetService;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -43,9 +37,8 @@ import org.junit.Test;
 public class DownloadConfigSetAPITest extends SolrTestCase {
 
   private CoreContainer mockCoreContainer;
-  private ConfigSetService mockConfigSetService;
-  private SolrQueryRequest mockRequest;
-  private SolrQueryResponse mockResponse;
+  private FileSystemConfigSetService configSetService;
+  private Path configSetBase;
 
   @BeforeClass
   public static void ensureWorkingMockito() {
@@ -53,17 +46,24 @@ public class DownloadConfigSetAPITest extends SolrTestCase {
   }
 
   @Before
-  public void setUpMocks() {
+  public void initConfigSetService() throws Exception {
+    configSetBase = createTempDir("configsets");
+    // Use an anonymous subclass to access the protected testing constructor
+    configSetService = new FileSystemConfigSetService(configSetBase) {};
     mockCoreContainer = mock(CoreContainer.class);
-    mockConfigSetService = mock(ConfigSetService.class);
-    mockRequest = mock(SolrQueryRequest.class);
-    mockResponse = mock(SolrQueryResponse.class);
-    when(mockCoreContainer.getConfigSetService()).thenReturn(mockConfigSetService);
+    when(mockCoreContainer.getConfigSetService()).thenReturn(configSetService);
+  }
+
+  /** Creates a configset directory with a single file so the API can find and zip it. */
+  private void createConfigSet(String name, String fileName, String content) throws Exception {
+    Path dir = configSetBase.resolve(name);
+    Files.createDirectories(dir);
+    Files.writeString(dir.resolve(fileName), content, StandardCharsets.UTF_8);
   }
 
   @Test
   public void testMissingConfigSetNameThrowsBadRequest() {
-    final var api = new DownloadConfigSet(mockCoreContainer, mockRequest, mockResponse);
+    final var api = new DownloadConfigSet(mockCoreContainer, null, null);
     final var ex = assertThrows(SolrException.class, () -> api.downloadConfigSet(null, null));
     assertEquals(SolrException.ErrorCode.BAD_REQUEST.code, ex.code());
 
@@ -72,33 +72,18 @@ public class DownloadConfigSetAPITest extends SolrTestCase {
   }
 
   @Test
-  public void testNonExistentConfigSetThrowsNotFound() throws Exception {
-    when(mockConfigSetService.checkConfigExists("missing")).thenReturn(false);
-
-    final var api = new DownloadConfigSet(mockCoreContainer, mockRequest, mockResponse);
+  public void testNonExistentConfigSetThrowsNotFound() {
+    // "missing" was never created in configSetBase, so checkConfigExists returns false
+    final var api = new DownloadConfigSet(mockCoreContainer, null, null);
     final var ex = assertThrows(SolrException.class, () -> api.downloadConfigSet("missing", null));
     assertEquals(SolrException.ErrorCode.NOT_FOUND.code, ex.code());
   }
 
-  /** Stubs {@code configSetService.downloadConfig(configSetId, dir)} to write one file. */
-  private void stubDownloadConfig(String configSetId, String fileName, String content)
-      throws IOException {
-    doAnswer(
-            inv -> {
-              Path dir = inv.getArgument(1);
-              Files.writeString(dir.resolve(fileName), content, StandardCharsets.UTF_8);
-              return null;
-            })
-        .when(mockConfigSetService)
-        .downloadConfig(eq(configSetId), any(Path.class));
-  }
-
   @Test
   public void testSuccessfulDownloadReturnsZipResponse() throws Exception {
-    when(mockConfigSetService.checkConfigExists("myconfig")).thenReturn(true);
-    stubDownloadConfig("myconfig", "solrconfig.xml", "<config/>");
+    createConfigSet("myconfig", "solrconfig.xml", "<config/>");
 
-    final var api = new DownloadConfigSet(mockCoreContainer, mockRequest, mockResponse);
+    final var api = new DownloadConfigSet(mockCoreContainer, null, null);
     final Response response = api.downloadConfigSet("myconfig", null);
 
     assertNotNull(response);
@@ -111,28 +96,29 @@ public class DownloadConfigSetAPITest extends SolrTestCase {
 
   @Test
   public void testFilenameIsSanitized() throws Exception {
-    final String unsafeName = "my/config<name>";
-    when(mockConfigSetService.checkConfigExists(unsafeName)).thenReturn(true);
-    stubDownloadConfig(unsafeName, "schema.xml", "<schema/>");
+    // A name with spaces gets sanitized: spaces → underscores in the Content-Disposition filename
+    final String nameWithSpaces = "my config name";
+    createConfigSet(nameWithSpaces, "schema.xml", "<schema/>");
 
-    final var api = new DownloadConfigSet(mockCoreContainer, mockRequest, mockResponse);
-    final Response response = api.downloadConfigSet(unsafeName, null);
+    final var api = new DownloadConfigSet(mockCoreContainer, null, null);
+    final Response response = api.downloadConfigSet(nameWithSpaces, null);
 
     assertNotNull(response);
     final String disposition = response.getHeaderString("Content-Disposition");
+    assertTrue(
+        "filename must contain the sanitized (underscored) version of the name",
+        disposition.contains("my_config_name_configset.zip"));
     assertFalse(
-        "filename must not contain unsafe characters",
-        disposition.contains("/") || disposition.contains("<") || disposition.contains(">"));
-    assertTrue(disposition.contains("_configset.zip"));
+        "filename must not retain spaces from the original configset name",
+        disposition.contains("my config name"));
   }
 
   @Test
   public void testDisplayNameOverridesFilename() throws Exception {
     final String mutableId = "._designer_films";
-    when(mockConfigSetService.checkConfigExists(mutableId)).thenReturn(true);
-    stubDownloadConfig(mutableId, "schema.xml", "<schema/>");
+    createConfigSet(mutableId, "schema.xml", "<schema/>");
 
-    final var api = new DownloadConfigSet(mockCoreContainer, mockRequest, mockResponse);
+    final var api = new DownloadConfigSet(mockCoreContainer, null, null);
     final Response response = api.downloadConfigSet(mutableId, "films");
 
     assertNotNull(response);
@@ -147,11 +133,11 @@ public class DownloadConfigSetAPITest extends SolrTestCase {
   }
 
   @Test
-  public void testBuildZipResponseUsesDisplayName() throws IOException {
-    stubDownloadConfig("_designer_films", "schema.xml", "<schema/>");
+  public void testBuildZipResponseUsesDisplayName() throws Exception {
+    createConfigSet("_designer_films", "schema.xml", "<schema/>");
 
     final Response response =
-        DownloadConfigSet.buildZipResponse(mockConfigSetService, "_designer_films", "films");
+        DownloadConfigSet.buildZipResponse(configSetService, "_designer_films", "films");
 
     assertNotNull(response);
     assertEquals(200, response.getStatus());

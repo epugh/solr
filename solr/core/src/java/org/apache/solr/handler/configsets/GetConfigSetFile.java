@@ -70,7 +70,13 @@ public class GetConfigSetFile extends ConfigSetAPIBase implements ConfigsetsApi.
 
   private byte[] downloadFileFromConfig(String configSetName, String filePath) throws IOException {
     try {
-      return configSetService.downloadFileFromConfig(configSetName, filePath);
+      final byte[] data = configSetService.downloadFileFromConfig(configSetName, filePath);
+      if (data == null) {
+        throw new SolrException(
+            SolrException.ErrorCode.NOT_FOUND,
+            "File '" + filePath + "' not found in configset '" + configSetName + "'");
+      }
+      return data;
     } catch (IOException e) {
       throw new SolrException(
           SolrException.ErrorCode.NOT_FOUND,

@@ -21,15 +21,14 @@ import static org.apache.solr.SolrTestCaseJ4.assumeWorkingMockito;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.apache.solr.SolrTestCase;
 import org.apache.solr.client.api.model.ConfigSetFileContentsResponse;
 import org.apache.solr.common.SolrException;
-import org.apache.solr.core.ConfigSetService;
 import org.apache.solr.core.CoreContainer;
-import org.apache.solr.request.SolrQueryRequest;
-import org.apache.solr.response.SolrQueryResponse;
+import org.apache.solr.core.FileSystemConfigSetService;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -38,9 +37,8 @@ import org.junit.Test;
 public class GetConfigSetFileAPITest extends SolrTestCase {
 
   private CoreContainer mockCoreContainer;
-  private ConfigSetService mockConfigSetService;
-  private SolrQueryRequest mockRequest;
-  private SolrQueryResponse mockResponse;
+  private FileSystemConfigSetService configSetService;
+  private Path configSetBase;
 
   @BeforeClass
   public static void ensureWorkingMockito() {
@@ -48,17 +46,25 @@ public class GetConfigSetFileAPITest extends SolrTestCase {
   }
 
   @Before
-  public void setUpMocks() {
+  public void initConfigSetService() throws Exception {
+    configSetBase = createTempDir("configsets");
+    // Use an anonymous subclass to access the protected testing constructor
+    configSetService = new FileSystemConfigSetService(configSetBase) {};
     mockCoreContainer = mock(CoreContainer.class);
-    mockConfigSetService = mock(ConfigSetService.class);
-    mockRequest = mock(SolrQueryRequest.class);
-    mockResponse = mock(SolrQueryResponse.class);
-    when(mockCoreContainer.getConfigSetService()).thenReturn(mockConfigSetService);
+    when(mockCoreContainer.getConfigSetService()).thenReturn(configSetService);
+  }
+
+  /** Creates a configset directory with one file. */
+  private void createConfigSetWithFile(String configSetName, String filePath, String content)
+      throws Exception {
+    Path dir = configSetBase.resolve(configSetName);
+    Files.createDirectories(dir);
+    Files.writeString(dir.resolve(filePath), content, StandardCharsets.UTF_8);
   }
 
   @Test
   public void testMissingConfigSetNameThrowsBadRequest() {
-    final var api = new GetConfigSetFile(mockCoreContainer, mockRequest, mockResponse);
+    final var api = new GetConfigSetFile(mockCoreContainer, null, null);
     final var ex =
         assertThrows(SolrException.class, () -> api.getConfigSetFile(null, "schema.xml"));
     assertEquals(SolrException.ErrorCode.BAD_REQUEST.code, ex.code());
@@ -69,7 +75,7 @@ public class GetConfigSetFileAPITest extends SolrTestCase {
 
   @Test
   public void testMissingFilePathThrowsBadRequest() {
-    final var api = new GetConfigSetFile(mockCoreContainer, mockRequest, mockResponse);
+    final var api = new GetConfigSetFile(mockCoreContainer, null, null);
     final var ex = assertThrows(SolrException.class, () -> api.getConfigSetFile("myconfig", null));
     assertEquals(SolrException.ErrorCode.BAD_REQUEST.code, ex.code());
 
@@ -78,10 +84,9 @@ public class GetConfigSetFileAPITest extends SolrTestCase {
   }
 
   @Test
-  public void testNonExistentConfigSetThrowsNotFound() throws Exception {
-    when(mockConfigSetService.checkConfigExists("missing")).thenReturn(false);
-
-    final var api = new GetConfigSetFile(mockCoreContainer, mockRequest, mockResponse);
+  public void testNonExistentConfigSetThrowsNotFound() {
+    // "missing" was never created in configSetBase, so checkConfigExists returns false
+    final var api = new GetConfigSetFile(mockCoreContainer, null, null);
     final var ex =
         assertThrows(SolrException.class, () -> api.getConfigSetFile("missing", "schema.xml"));
     assertEquals(SolrException.ErrorCode.NOT_FOUND.code, ex.code());
@@ -92,12 +97,9 @@ public class GetConfigSetFileAPITest extends SolrTestCase {
     final String configSetName = "myconfig";
     final String filePath = "schema.xml";
     final String fileContent = "<schema/>";
+    createConfigSetWithFile(configSetName, filePath, fileContent);
 
-    when(mockConfigSetService.checkConfigExists(configSetName)).thenReturn(true);
-    when(mockConfigSetService.downloadFileFromConfig(configSetName, filePath))
-        .thenReturn(fileContent.getBytes(StandardCharsets.UTF_8));
-
-    final var api = new GetConfigSetFile(mockCoreContainer, mockRequest, mockResponse);
+    final var api = new GetConfigSetFile(mockCoreContainer, null, null);
     final ConfigSetFileContentsResponse response = api.getConfigSetFile(configSetName, filePath);
 
     assertNotNull(response);
@@ -108,11 +110,10 @@ public class GetConfigSetFileAPITest extends SolrTestCase {
   @Test
   public void testFileNotFoundInConfigSetThrowsNotFound() throws Exception {
     final String configSetName = "myconfig";
-    when(mockConfigSetService.checkConfigExists(configSetName)).thenReturn(true);
-    when(mockConfigSetService.downloadFileFromConfig(configSetName, "missing.xml"))
-        .thenThrow(new IOException("not found"));
+    // Create the configset directory but do NOT add the requested file
+    Files.createDirectories(configSetBase.resolve(configSetName));
 
-    final var api = new GetConfigSetFile(mockCoreContainer, mockRequest, mockResponse);
+    final var api = new GetConfigSetFile(mockCoreContainer, null, null);
     final var ex =
         assertThrows(SolrException.class, () -> api.getConfigSetFile(configSetName, "missing.xml"));
     assertEquals(SolrException.ErrorCode.NOT_FOUND.code, ex.code());
@@ -122,12 +123,9 @@ public class GetConfigSetFileAPITest extends SolrTestCase {
   public void testEmptyFileReturnsEmptyContent() throws Exception {
     final String configSetName = "myconfig";
     final String filePath = "empty.xml";
+    createConfigSetWithFile(configSetName, filePath, "");
 
-    when(mockConfigSetService.checkConfigExists(configSetName)).thenReturn(true);
-    when(mockConfigSetService.downloadFileFromConfig(configSetName, filePath))
-        .thenReturn(new byte[0]);
-
-    final var api = new GetConfigSetFile(mockCoreContainer, mockRequest, mockResponse);
+    final var api = new GetConfigSetFile(mockCoreContainer, null, null);
     final ConfigSetFileContentsResponse response = api.getConfigSetFile(configSetName, filePath);
 
     assertNotNull(response);
