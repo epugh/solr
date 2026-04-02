@@ -281,6 +281,12 @@ solrAdminServices.factory('System',
        upload: {method: "POST", transformRequest: angular.identity, headers: {'Content-Type': undefined}, timeout: 90000}
      })
 }])
+.factory('Configsets',
+   ['$resource', function($resource) {
+     return $resource('/api/configsets/:configSetName/:endpoint', {wt: 'json', configSetName: '@configSetName', endpoint: '@endpoint', _:Date.now()}, {
+       get: {method: "GET"}
+     })
+}])
 .factory('Security',
     ['$resource', function($resource) {
           return $resource('/api/cluster/security/:path', {wt: 'json', path: '@path', _:Date.now()}, {

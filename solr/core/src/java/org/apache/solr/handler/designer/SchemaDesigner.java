@@ -226,24 +226,6 @@ public class SchemaDesigner extends JerseyResource
   }
 
   @Override
-  @PermissionName(CONFIG_READ_PERM)
-  public FlexibleSolrJerseyResponse getFileContents(String configSet, String file)
-      throws Exception {
-    requireNotEmpty(CONFIG_SET_PARAM, configSet);
-    requireNotEmpty("file", file);
-    String filePath = getConfigSetZkPath(getMutableId(configSet), file);
-    byte[] data;
-    try {
-      data = zkStateReader().getZkClient().getData(filePath, null, null);
-    } catch (KeeperException | InterruptedException e) {
-      throw new IOException("Error reading file: " + filePath, SolrZkClient.checkInterrupted(e));
-    }
-    String stringData =
-        data != null && data.length > 0 ? new String(data, StandardCharsets.UTF_8) : "";
-    return buildFlexibleResponse(Collections.singletonMap(file, stringData));
-  }
-
-  @Override
   @PermissionName(CONFIG_EDIT_PERM)
   public SchemaDesignerResponse updateFileContents(String configSet, String file) throws Exception {
     requireNotEmpty(CONFIG_SET_PARAM, configSet);

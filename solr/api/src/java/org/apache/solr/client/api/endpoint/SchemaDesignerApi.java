@@ -62,14 +62,6 @@ public interface SchemaDesignerApi {
       tags = {"schema-designer"})
   SolrJerseyResponse cleanupTempSchema(@PathParam("configSet") String configSet) throws Exception;
 
-  @GET
-  @Path("/{configSet}/file")
-  @Operation(
-      summary = "Get the contents of a file in a configSet being designed.",
-      tags = {"schema-designer"})
-  FlexibleSolrJerseyResponse getFileContents(
-      @PathParam("configSet") String configSet, @QueryParam("file") String file) throws Exception;
-
   @PUT
   @Path("/{configSet}/file")
   @Operation(

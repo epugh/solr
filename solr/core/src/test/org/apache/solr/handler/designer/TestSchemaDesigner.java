@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
+import org.apache.solr.client.api.model.ConfigSetFileContentsResponse;
 import org.apache.solr.client.api.model.FlexibleSolrJerseyResponse;
 import org.apache.solr.client.api.model.SchemaDesignerCollectionsResponse;
 import org.apache.solr.client.api.model.SchemaDesignerInfoResponse;
@@ -53,7 +54,9 @@ import org.apache.solr.common.util.ContentStreamBase;
 import org.apache.solr.common.util.SimpleOrderedMap;
 import org.apache.solr.core.CoreContainer;
 import org.apache.solr.handler.TestSampleDocumentsLoader;
+import org.apache.solr.handler.configsets.GetConfigSetFile;
 import org.apache.solr.request.SolrQueryRequest;
+import org.apache.solr.response.SolrQueryResponse;
 import org.apache.solr.schema.ManagedIndexSchema;
 import org.apache.solr.schema.SchemaField;
 import org.apache.solr.util.ExternalPaths;
@@ -346,8 +349,11 @@ public class TestSchemaDesigner extends SolrCloudTestCase implements SchemaDesig
       }
     }
     assertNotNull("solrconfig.xml not found in files!", file);
-    FlexibleSolrJerseyResponse fileContentsResp = schemaDesigner.getFileContents(configSet, file);
-    String solrconfigXml = (String) fileContentsResp.unknownProperties().get(file);
+    GetConfigSetFile getFileApi = new GetConfigSetFile(cc, mockReq, mock(SolrQueryResponse.class));
+    String fileMutableId = getMutableId(configSet);
+    ConfigSetFileContentsResponse fileContentsResp =
+        getFileApi.getConfigSetFile(fileMutableId, file);
+    String solrconfigXml = fileContentsResp.content;
     assertNotNull(solrconfigXml);
 
     // Update solrconfig.xml

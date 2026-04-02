@@ -30,10 +30,12 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import org.apache.solr.client.api.model.CloneConfigsetRequestBody;
+import org.apache.solr.client.api.model.ConfigSetFileContentsResponse;
 import org.apache.solr.client.api.model.ListConfigsetsResponse;
 import org.apache.solr.client.api.model.SolrJerseyResponse;
 
@@ -96,6 +98,24 @@ public interface ConfigsetsApi {
     Response downloadConfigSet(
         @PathParam("configSetName") String configSetName,
         @QueryParam("displayName") String displayName)
+        throws Exception;
+  }
+
+  /**
+   * V2 API definition for reading a single file from an existing configset.
+   *
+   * <p>Equivalent to GET /api/configsets/{configSetName}/file?path=...
+   */
+  @Path("/configsets/{configSetName}")
+  interface GetFile {
+    @GET
+    @Path("/file")
+    @Produces(MediaType.TEXT_PLAIN)
+    @Operation(
+        summary = "Get the contents of a file in a configset.",
+        tags = {"configsets"})
+    ConfigSetFileContentsResponse getConfigSetFile(
+        @PathParam("configSetName") String configSetName, @QueryParam("path") String filePath)
         throws Exception;
   }
 
