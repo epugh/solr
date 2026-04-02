@@ -64,10 +64,10 @@ public class DownloadConfigSetAPITest extends SolrTestCase {
   @Test
   public void testMissingConfigSetNameThrowsBadRequest() {
     final var api = new DownloadConfigSet(mockCoreContainer, mockRequest, mockResponse);
-    final var ex = assertThrows(SolrException.class, () -> api.downloadConfigSet(null));
+    final var ex = assertThrows(SolrException.class, () -> api.downloadConfigSet(null, null));
     assertEquals(SolrException.ErrorCode.BAD_REQUEST.code, ex.code());
 
-    final var ex2 = assertThrows(SolrException.class, () -> api.downloadConfigSet(""));
+    final var ex2 = assertThrows(SolrException.class, () -> api.downloadConfigSet("", null));
     assertEquals(SolrException.ErrorCode.BAD_REQUEST.code, ex2.code());
   }
 
@@ -76,7 +76,7 @@ public class DownloadConfigSetAPITest extends SolrTestCase {
     when(mockConfigSetService.checkConfigExists("missing")).thenReturn(false);
 
     final var api = new DownloadConfigSet(mockCoreContainer, mockRequest, mockResponse);
-    final var ex = assertThrows(SolrException.class, () -> api.downloadConfigSet("missing"));
+    final var ex = assertThrows(SolrException.class, () -> api.downloadConfigSet("missing", null));
     assertEquals(SolrException.ErrorCode.NOT_FOUND.code, ex.code());
   }
 
@@ -99,7 +99,7 @@ public class DownloadConfigSetAPITest extends SolrTestCase {
     stubDownloadConfig("myconfig", "solrconfig.xml", "<config/>");
 
     final var api = new DownloadConfigSet(mockCoreContainer, mockRequest, mockResponse);
-    final Response response = api.downloadConfigSet("myconfig");
+    final Response response = api.downloadConfigSet("myconfig", null);
 
     assertNotNull(response);
     assertEquals(200, response.getStatus());
@@ -116,7 +116,7 @@ public class DownloadConfigSetAPITest extends SolrTestCase {
     stubDownloadConfig(unsafeName, "schema.xml", "<schema/>");
 
     final var api = new DownloadConfigSet(mockCoreContainer, mockRequest, mockResponse);
-    final Response response = api.downloadConfigSet(unsafeName);
+    final Response response = api.downloadConfigSet(unsafeName, null);
 
     assertNotNull(response);
     final String disposition = response.getHeaderString("Content-Disposition");
@@ -124,6 +124,26 @@ public class DownloadConfigSetAPITest extends SolrTestCase {
         "filename must not contain unsafe characters",
         disposition.contains("/") || disposition.contains("<") || disposition.contains(">"));
     assertTrue(disposition.contains("_configset.zip"));
+  }
+
+  @Test
+  public void testDisplayNameOverridesFilename() throws Exception {
+    final String mutableId = "._designer_films";
+    when(mockConfigSetService.checkConfigExists(mutableId)).thenReturn(true);
+    stubDownloadConfig(mutableId, "schema.xml", "<schema/>");
+
+    final var api = new DownloadConfigSet(mockCoreContainer, mockRequest, mockResponse);
+    final Response response = api.downloadConfigSet(mutableId, "films");
+
+    assertNotNull(response);
+    assertEquals(200, response.getStatus());
+    final String disposition = response.getHeaderString("Content-Disposition");
+    assertTrue(
+        "Content-Disposition should use the displayName 'films'",
+        disposition.contains("films_configset.zip"));
+    assertFalse(
+        "Content-Disposition must not expose the internal mutable-ID prefix",
+        disposition.contains("._designer_"));
   }
 
   @Test

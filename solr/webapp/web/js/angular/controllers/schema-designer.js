@@ -1523,10 +1523,12 @@ solrAdminApp.controller('SchemaDesignerController', function ($scope, $timeout, 
 
   $scope.downloadConfig = function () {
     // have to use an AJAX request so we can supply the Authorization header
+    var mutableId = "._designer_" + $scope.currentSchema;
+    var downloadUrl = "/api/configsets/" + encodeURIComponent(mutableId) + "/download?displayName=" + encodeURIComponent($scope.currentSchema);
     if (sessionStorage.getItem("auth.header")) {
       var fileName = $scope.currentSchema+"_configset.zip";
       var xhr = new XMLHttpRequest();
-      xhr.open("GET", "/api/schema-designer/"+$scope.currentSchema+"/download", true);
+      xhr.open("GET", downloadUrl, true);
       xhr.setRequestHeader('Authorization', sessionStorage.getItem("auth.header"));
       xhr.responseType = 'blob';
       xhr.addEventListener('load',function() {
@@ -1543,7 +1545,7 @@ solrAdminApp.controller('SchemaDesignerController', function ($scope, $timeout, 
       })
       xhr.send();
     } else {
-      location.href = "/api/schema-designer/"+$scope.currentSchema+"/download";
+      location.href = downloadUrl;
     }
   };
 

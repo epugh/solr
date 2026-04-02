@@ -54,7 +54,7 @@ public class DownloadConfigSet extends ConfigSetAPIBase implements ConfigsetsApi
 
   @Override
   @PermissionName(CONFIG_READ_PERM)
-  public Response downloadConfigSet(String configSetName) throws Exception {
+  public Response downloadConfigSet(String configSetName, String displayName) throws Exception {
     if (StrUtils.isNullOrEmpty(configSetName)) {
       throw new SolrException(
           SolrException.ErrorCode.BAD_REQUEST, "No configset name provided to download");
@@ -63,7 +63,9 @@ public class DownloadConfigSet extends ConfigSetAPIBase implements ConfigsetsApi
       throw new SolrException(
           SolrException.ErrorCode.NOT_FOUND, "ConfigSet " + configSetName + " not found!");
     }
-    return buildZipResponse(configSetService, configSetName, configSetName);
+    final String resolvedDisplayName =
+        StrUtils.isNullOrEmpty(displayName) ? configSetName : displayName;
+    return buildZipResponse(configSetService, configSetName, resolvedDisplayName);
   }
 
   /**

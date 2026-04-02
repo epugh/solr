@@ -23,7 +23,6 @@ import static org.apache.solr.security.PermissionNameProvider.Name.CONFIG_EDIT_P
 import static org.apache.solr.security.PermissionNameProvider.Name.CONFIG_READ_PERM;
 
 import jakarta.inject.Inject;
-import jakarta.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,7 +74,6 @@ import org.apache.solr.common.util.StrUtils;
 import org.apache.solr.core.CoreContainer;
 import org.apache.solr.core.SolrConfig;
 import org.apache.solr.core.SolrResourceLoader;
-import org.apache.solr.handler.configsets.DownloadConfigSet;
 import org.apache.solr.jersey.PermissionName;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.schema.ManagedIndexSchema;
@@ -400,32 +398,6 @@ public class SchemaDesignerAPI extends JerseyResource
         .forEach(c -> configs.putIfAbsent(c, 0));
 
     return configs;
-  }
-
-  @Override
-  @PermissionName(CONFIG_READ_PERM)
-  public Response downloadConfig(String configSet) throws Exception {
-    requireNotEmpty(CONFIG_SET_PARAM, configSet);
-    String mutableId = getMutableId(configSet);
-
-    // find the configSet to download: prefer the mutable designer copy, fall back to production
-    SolrZkClient zkClient = zkStateReader().getZkClient();
-    String configId = mutableId;
-    try {
-      if (!zkClient.exists(getConfigSetZkPath(mutableId, null))) {
-        if (zkClient.exists(getConfigSetZkPath(configSet, null))) {
-          configId = configSet;
-        } else {
-          throw new SolrException(
-              SolrException.ErrorCode.NOT_FOUND, "ConfigSet " + configSet + " not found!");
-        }
-      }
-    } catch (KeeperException | InterruptedException e) {
-      throw new IOException("Error reading config from ZK", SolrZkClient.checkInterrupted(e));
-    }
-
-    return DownloadConfigSet.buildZipResponse(
-        coreContainer.getConfigSetService(), configId, configSet);
   }
 
   @Override

@@ -23,7 +23,6 @@ import static org.apache.solr.handler.designer.SchemaDesignerAPI.getMutableId;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import jakarta.ws.rs.core.Response;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -509,15 +508,6 @@ public class TestSchemaDesignerAPI extends SolrCloudTestCase implements SchemaDe
     @SuppressWarnings("unchecked")
     List<Object> queryDocs2 = (List<Object>) queryResponse2.get("docs");
     assertEquals(4, queryDocs2.size());
-
-    // Download ZIP
-    when(mockReq.getContentStreams()).thenReturn(null);
-    Response downloadResponse = schemaDesignerAPI.downloadConfig(configSet);
-    assertNotNull(downloadResponse);
-    assertEquals(200, downloadResponse.getStatus());
-    assertTrue(
-        String.valueOf(downloadResponse.getHeaderString("Content-Disposition"))
-            .contains("_configset.zip"));
 
     // publish schema to a config set that can be used by real collections
     String collection = "test123";
