@@ -41,7 +41,7 @@ import org.apache.solr.jersey.PermissionName;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.response.SolrQueryResponse;
 
-/** V2 API implementation for {@link ConfigsetsApi.Download}. */
+/** V2 API implementation for downloading a configset as a zip file. */
 public class DownloadConfigSet extends ConfigSetAPIBase implements ConfigsetsApi.Download {
 
   @Inject
