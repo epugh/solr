@@ -39,6 +39,11 @@ import org.apache.solr.util.FileTypeMagicUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * V2 API implementation for uploading a configset as a zip file.
+ *
+ * <p>This API (GET /v2/configsets) is analogous to the v1 /admin/configs?action=UPLOAD command.
+ */
 public class UploadConfigSet extends ConfigSetAPIBase implements ConfigsetsApi.Upload {
 
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

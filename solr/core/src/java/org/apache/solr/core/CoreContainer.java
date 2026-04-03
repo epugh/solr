@@ -126,7 +126,7 @@ import org.apache.solr.handler.admin.ZookeeperRead;
 import org.apache.solr.handler.admin.ZookeeperStatusHandler;
 import org.apache.solr.handler.api.V2ApiUtils;
 import org.apache.solr.handler.component.ShardHandlerFactory;
-import org.apache.solr.handler.designer.SchemaDesignerAPI;
+import org.apache.solr.handler.designer.SchemaDesigner;
 import org.apache.solr.jersey.InjectionFactories;
 import org.apache.solr.jersey.JerseyAppHandlerCache;
 import org.apache.solr.logging.LogWatcher;
@@ -876,7 +876,7 @@ public class CoreContainer {
     registerV2ApiIfEnabled(clusterAPI.commands);
 
     if (isZooKeeperAware()) {
-      registerV2ApiIfEnabled(new SchemaDesignerAPI(this));
+      registerV2ApiIfEnabled(SchemaDesigner.class);
     } // else Schema Designer not available in standalone (non-cloud) mode
 
     /*
