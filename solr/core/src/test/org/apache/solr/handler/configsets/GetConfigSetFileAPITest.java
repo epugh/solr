@@ -46,7 +46,7 @@ public class GetConfigSetFileAPITest extends SolrTestCase {
   }
 
   @Before
-  public void initConfigSetService() throws Exception {
+  public void initConfigSetService() {
     configSetBase = createTempDir("configsets");
     // Use an anonymous subclass to access the protected testing constructor
     configSetService = new FileSystemConfigSetService(configSetBase) {};
