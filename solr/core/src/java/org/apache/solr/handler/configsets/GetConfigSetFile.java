@@ -30,12 +30,7 @@ import org.apache.solr.jersey.PermissionName;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.response.SolrQueryResponse;
 
-/**
- * V2 API implementation for reading the contents of a single file from an existing configset.
- *
- * <p>This API (GET /api/configsets/{configSetName}/file?path=...) is a general-purpose endpoint
- * that works for any configset, including the temporary schema-designer drafts.
- */
+/** V2 API implementation for reading the contents of a single file from an existing configset. */
 public class GetConfigSetFile extends ConfigSetAPIBase implements ConfigsetsApi.GetFile {
 
   @Inject
@@ -68,7 +63,7 @@ public class GetConfigSetFile extends ConfigSetAPIBase implements ConfigsetsApi.
     return response;
   }
 
-  private byte[] downloadFileFromConfig(String configSetName, String filePath) throws IOException {
+  private byte[] downloadFileFromConfig(String configSetName, String filePath) {
     try {
       final byte[] data = configSetService.downloadFileFromConfig(configSetName, filePath);
       if (data == null) {
