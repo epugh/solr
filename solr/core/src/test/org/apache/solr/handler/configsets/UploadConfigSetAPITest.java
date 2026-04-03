@@ -143,17 +143,18 @@ public class UploadConfigSetAPITest extends SolrTestCase {
 
   @Test
   public void testEmptyZipThrowsBadRequest() throws Exception {
-    InputStream emptyZip = createEmptyZipStream();
+    try (InputStream emptyZip = createEmptyZipStream()) {
 
-    final var api = new UploadConfigSet(mockCoreContainer, null, null);
-    final var ex =
-        assertThrows(
-            SolrException.class, () -> api.uploadConfigSet("newconfig", true, false, emptyZip));
+      final var api = new UploadConfigSet(mockCoreContainer, null, null);
+      final var ex =
+          assertThrows(
+              SolrException.class, () -> api.uploadConfigSet("newconfig", true, false, emptyZip));
 
-    assertEquals(SolrException.ErrorCode.BAD_REQUEST.code, ex.code());
-    assertTrue(
-        "Error message should mention empty zip",
-        ex.getMessage().contains("empty zipped data") || ex.getMessage().contains("non-zipped"));
+      assertEquals(SolrException.ErrorCode.BAD_REQUEST.code, ex.code());
+      assertTrue(
+          "Error message should mention empty zip",
+          ex.getMessage().contains("empty zipped data") || ex.getMessage().contains("non-zipped"));
+    }
   }
 
   @Test
@@ -190,16 +191,17 @@ public class UploadConfigSetAPITest extends SolrTestCase {
     final String configSetName = "existing";
     createExistingConfigSet(configSetName, "solrconfig.xml", "<old-config/>");
 
-    InputStream zipStream = createZipStream("solrconfig.xml", "<new-config/>");
-    final var api = new UploadConfigSet(mockCoreContainer, null, null);
+    try (InputStream zipStream = createZipStream("solrconfig.xml", "<new-config/>")) {
+      final var api = new UploadConfigSet(mockCoreContainer, null, null);
 
-    final var ex =
-        assertThrows(
-            SolrException.class, () -> api.uploadConfigSet(configSetName, false, false, zipStream));
+      final var ex =
+          assertThrows(
+              SolrException.class, () -> api.uploadConfigSet(configSetName, false, false, zipStream));
 
-    assertEquals(SolrException.ErrorCode.BAD_REQUEST.code, ex.code());
-    assertTrue(
-        "Error message should mention config already exists", ex.getMessage().contains("already"));
+      assertEquals(SolrException.ErrorCode.BAD_REQUEST.code, ex.code());
+      assertTrue(
+          "Error message should mention config already exists", ex.getMessage().contains("already"));
+    }
   }
 
   @Test
