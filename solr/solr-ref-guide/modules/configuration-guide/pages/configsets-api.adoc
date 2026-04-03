@@ -82,6 +82,68 @@ The output will look like:
 }
 ----
 
+[[configsets-download]]
+== Download a Configset
+
+The `download` command downloads an entire configset as a zipped file.
+This is useful for backing up configsets, sharing them between environments, or examining their contents.
+
+The `download` command takes the following parameters:
+
+`name`::
++
+[%autowidth,frame=none]
+|===
+s|Required |Default: none
+|===
++
+The name of the configset to download.
+
+`displayName`::
++
+[%autowidth,frame=none]
+|===
+|Optional |Default: same as `name`
+|===
++
+An optional user-friendly name used for the downloaded filename.
+This is useful when the configset has an internal name (such as `._designer_myconfig` pattern generated when using the Schema Designer) but you want the downloaded file to have a cleaner name.
+
+The response will be a ZIP file containing all files from the configset.
+The `Content-Disposition` header will suggest a filename based on the configset name (or `displayName` if provided).
+
+To download a configset named "myConfigSet":
+
+[tabs#downloadconfigset]
+======
+V1 API::
++
+====
+The v1 API does not currently support downloading configsets.
+Use the v2 API instead.
+====
+
+V2 API::
++
+====
+With the v2 API, use a `GET` request to `/configsets/__config_name__/download`:
+
+[source,bash]
+----
+curl -X GET -o myConfigSet.zip "http://localhost:8983/api/configsets/myConfigSet/download"
+----
+
+To specify a custom display name for the downloaded file:
+
+[source,bash]
+----
+curl -X GET -o myConfig.zip "http://localhost:8983/api/configsets/myConfigSet/download?displayName=myConfig"
+----
+
+This will download the configset as a ZIP file that can be extracted and used locally, or re-uploaded to another Solr instance.
+====
+======
+
 [[configsets-upload]]
 == Upload a Configset
 
@@ -226,6 +288,78 @@ This behavior can be disabled with the parameter `overwrite=false`, in which cas
 ====
 ======
 
+[[configsets-get-file]]
+== Get a Single File from a Configset
+
+This command retrieves the contents of a single file from an existing configset.
+This is useful for inspecting individual configuration files without downloading the entire configset.
+
+The command takes the following parameters:
+
+`name`::
++
+[%autowidth,frame=none]
+|===
+s|Required |Default: none
+|===
++
+The name of the configset containing the file.
+
+`filePath`::
++
+[%autowidth,frame=none]
+|===
+s|Required |Default: none
+|===
++
+The path to the file within the configset (e.g., `solrconfig.xml` or `lang/stopwords_en.txt`).
+
+The response will be a JSON object containing:
+
+* `path`: The file path that was requested
+* `content`: The content of the file as a UTF-8 string
+
+To retrieve the `solrconfig.xml` file from a configset named "myConfigSet":
+
+[tabs#getfileconfigset]
+======
+V1 API::
++
+====
+The v1 API does not currently support retrieving individual configset files.
+Use the v2 API instead.
+====
+
+V2 API::
++
+====
+With the v2 API, use a `GET` request to `/configsets/__config_name__/__file_path__`:
+
+[source,bash]
+----
+curl -X GET "http://localhost:8983/api/configsets/myConfigSet/solrconfig.xml"
+----
+
+For nested files within the configset:
+
+[source,bash]
+----
+curl -X GET "http://localhost:8983/api/configsets/myConfigSet/lang/stopwords_en.txt"
+----
+====
+======
+
+*Example Output*
+
+[source,json]
+----
+{
+  "path": "solrconfig.xml",
+  "content": "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<config>\n  ...\n</config>"
+}
+----
+
+
 [[configsets-create]]
 == Create a Configset
 
@@ -347,7 +481,7 @@ The name of the configset to delete is provided as a path parameter:
 
 [source,bash]
 ----
-curl -X DELETE http://localhost:8983/api/configsets/myConfigSet?omitHeader=true
+curl -X DELETE http://localhost:8983/api/configsets/myConfigSet
 ----
 ====
 ======
