@@ -139,8 +139,6 @@ public class TestCollectionStateWatchers extends SolrCloudTestCase {
         shutdownUnusedNode ? extraJetty : cluster.getJettySolrRunners().get(0);
     final int expectedNodesWithActiveReplicas = CLUSTER_SIZE - (shutdownUnusedNode ? 0 : 1);
 
-    cluster.waitForAllNodes(MAX_WAIT_TIMEOUT);
-
     // shutdown a node and check that we get notified about the change
     final CountDownLatch latch = new CountDownLatch(1);
     ZkStateReader.from(client)

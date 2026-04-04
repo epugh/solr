@@ -270,7 +270,6 @@ public class TestMiniSolrCloudClusterSSL extends SolrTestCaseJ4 {
 
     // create a new server
     JettySolrRunner startedServer = cluster.startJettySolrRunner();
-    cluster.waitForAllNodes(30);
     assertTrue(startedServer.isRunning());
     assertEquals(NUM_SERVERS, cluster.getJettySolrRunners().size());
 

@@ -46,7 +46,6 @@ public class TestCloudSolrClientConnections extends SolrTestCaseJ4 {
           e.getMessage().contains("cluster not found/not ready"));
 
       cluster.startJettySolrRunner();
-      cluster.waitForAllNodes(30);
       client.connect(20, TimeUnit.SECONDS);
 
       // should work now!
@@ -77,7 +76,6 @@ public class TestCloudSolrClientConnections extends SolrTestCaseJ4 {
           e.getMessage().contains("cluster not found/not ready"));
 
       cluster.startJettySolrRunner();
-      cluster.waitForAllNodes(30);
       client.connect(20, TimeUnit.SECONDS);
 
       cluster.getZkClient().upConfig(configPath, "testconfig");

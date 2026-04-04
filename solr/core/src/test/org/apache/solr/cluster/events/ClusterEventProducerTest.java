@@ -164,7 +164,6 @@ public class ClusterEventProducerTest extends SolrCloudTestCase {
     // NODES_UP
     eventsListener.setExpectedType(ClusterEvent.EventType.NODES_UP);
     JettySolrRunner newNode = cluster.startJettySolrRunner();
-    cluster.waitForNode(newNode, 60);
     eventsListener.waitForExpectedEvent(30);
     assertNotNull(
         "should be NODES_UP events", eventsListener.events.get(ClusterEvent.EventType.NODES_UP));
