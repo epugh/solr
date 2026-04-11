@@ -128,7 +128,7 @@ public class UploadConfigSet extends ConfigSetAPIBase implements ConfigsetsApi.U
     if (cleanup == null) cleanup = false;
 
     String fixedSingleFilePath = singleFilePath;
-    if (fixedSingleFilePath.charAt(0) == '/') {
+    if (!fixedSingleFilePath.isEmpty() && fixedSingleFilePath.charAt(0) == '/') {
       fixedSingleFilePath = fixedSingleFilePath.substring(1);
     }
     byte[] data = requestBody.readAllBytes();
