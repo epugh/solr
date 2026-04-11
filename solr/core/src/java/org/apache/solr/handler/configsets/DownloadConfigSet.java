@@ -54,7 +54,7 @@ public class DownloadConfigSet extends ConfigSetAPIBase implements ConfigsetsApi
 
   @Override
   @PermissionName(CONFIG_READ_PERM)
-  public Response downloadConfigSet(String configSetName, String displayName) throws Exception {
+  public Response downloadConfigSet(String configSetName) throws Exception {
     if (StrUtils.isNullOrEmpty(configSetName)) {
       throw new SolrException(
           SolrException.ErrorCode.BAD_REQUEST, "No configset name provided to download");
@@ -63,28 +63,20 @@ public class DownloadConfigSet extends ConfigSetAPIBase implements ConfigsetsApi
       throw new SolrException(
           SolrException.ErrorCode.NOT_FOUND, "ConfigSet " + configSetName + " not found!");
     }
-    final String resolvedDisplayName =
-        StrUtils.isNullOrEmpty(displayName) ? configSetName : displayName;
-    return buildZipResponse(configSetService, configSetName, resolvedDisplayName);
+    return buildZipResponse(configSetService, configSetName);
   }
 
   /**
    * Build a ZIP download {@link Response} for the given configset.
    *
    * @param configSetService the service to use for downloading the configset files
-   * @param configSetId the internal configset name to download (may differ from displayName, e.g.
-   *     for schema-designer's mutable copies)
-   * @param displayName the user-visible name used to derive the download filename
+   * @param configSetId the internal configset name to download
    */
-  public static Response buildZipResponse(
-      ConfigSetService configSetService, String configSetId, String displayName)
+  public static Response buildZipResponse(ConfigSetService configSetService, String configSetId)
       throws IOException {
     final byte[] zipBytes = zipConfigSet(configSetService, configSetId);
-    final String safeName = displayName.replaceAll("[^a-zA-Z0-9_\\-.]", "_");
-    final String fileName = safeName + "_configset.zip";
     return Response.ok((StreamingOutput) outputStream -> outputStream.write(zipBytes))
         .type("application/zip")
-        .header("Content-Disposition", "attachment; filename=\"" + fileName + "\"")
         .build();
   }
 

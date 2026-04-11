@@ -65,10 +65,10 @@ public class DownloadConfigSetAPITest extends SolrTestCase {
   @SuppressWarnings("resource") // Response never created when exception is thrown
   public void testMissingConfigSetNameThrowsBadRequest() {
     final var api = new DownloadConfigSet(mockCoreContainer, null, null);
-    final var ex = assertThrows(SolrException.class, () -> api.downloadConfigSet(null, null));
+    final var ex = assertThrows(SolrException.class, () -> api.downloadConfigSet(null));
     assertEquals(SolrException.ErrorCode.BAD_REQUEST.code, ex.code());
 
-    final var ex2 = assertThrows(SolrException.class, () -> api.downloadConfigSet("", null));
+    final var ex2 = assertThrows(SolrException.class, () -> api.downloadConfigSet(""));
     assertEquals(SolrException.ErrorCode.BAD_REQUEST.code, ex2.code());
   }
 
@@ -77,7 +77,7 @@ public class DownloadConfigSetAPITest extends SolrTestCase {
   public void testNonExistentConfigSetThrowsNotFound() {
     // "missing" was never created in configSetBase, so checkConfigExists returns false
     final var api = new DownloadConfigSet(mockCoreContainer, null, null);
-    final var ex = assertThrows(SolrException.class, () -> api.downloadConfigSet("missing", null));
+    final var ex = assertThrows(SolrException.class, () -> api.downloadConfigSet("missing"));
     assertEquals(SolrException.ErrorCode.NOT_FOUND.code, ex.code());
   }
 
@@ -86,69 +86,10 @@ public class DownloadConfigSetAPITest extends SolrTestCase {
     createConfigSet("myconfig", "solrconfig.xml", "<config/>");
 
     final var api = new DownloadConfigSet(mockCoreContainer, null, null);
-    try (final Response response = api.downloadConfigSet("myconfig", null)) {
+    try (final Response response = api.downloadConfigSet("myconfig")) {
       assertNotNull(response);
       assertEquals(200, response.getStatus());
       assertEquals("application/zip", response.getMediaType().toString());
-      assertTrue(
-          String.valueOf(response.getHeaderString("Content-Disposition"))
-              .contains("myconfig_configset.zip"));
-    }
-  }
-
-  @Test
-  public void testFilenameIsSanitized() throws Exception {
-    // A name with spaces gets sanitized: spaces → underscores in the Content-Disposition filename
-    final String nameWithSpaces = "my config name";
-    createConfigSet(nameWithSpaces, "schema.xml", "<schema/>");
-
-    final var api = new DownloadConfigSet(mockCoreContainer, null, null);
-    try (final Response response = api.downloadConfigSet(nameWithSpaces, null)) {
-      assertNotNull(response);
-      final String disposition = response.getHeaderString("Content-Disposition");
-      assertTrue(
-          "filename must contain the sanitized (underscored) version of the name",
-          disposition.contains("my_config_name_configset.zip"));
-      assertFalse(
-          "filename must not retain spaces from the original configset name",
-          disposition.contains("my config name"));
-    }
-  }
-
-  @Test
-  public void testDisplayNameOverridesFilename() throws Exception {
-    final String mutableId = "._designer_films";
-    createConfigSet(mutableId, "schema.xml", "<schema/>");
-
-    final var api = new DownloadConfigSet(mockCoreContainer, null, null);
-    try (final Response response = api.downloadConfigSet(mutableId, "films")) {
-      assertNotNull(response);
-      assertEquals(200, response.getStatus());
-      final String disposition = response.getHeaderString("Content-Disposition");
-      assertTrue(
-          "Content-Disposition should use the displayName 'films'",
-          disposition.contains("films_configset.zip"));
-      assertFalse(
-          "Content-Disposition must not expose the internal mutable-ID prefix",
-          disposition.contains("._designer_"));
-    }
-  }
-
-  @Test
-  public void testBuildZipResponseUsesDisplayName() throws Exception {
-    createConfigSet("_designer_films", "schema.xml", "<schema/>");
-
-    try (final Response response =
-        DownloadConfigSet.buildZipResponse(configSetService, "_designer_films", "films")) {
-      assertNotNull(response);
-      assertEquals(200, response.getStatus());
-      final String disposition = response.getHeaderString("Content-Disposition");
-      assertTrue(
-          "Content-Disposition should use the display name 'films'",
-          disposition.contains("films_configset.zip"));
-      assertFalse(
-          "Content-Disposition must not expose internal _designer_ prefix",
-          disposition.contains("_designer_"));
     }
   }
 }

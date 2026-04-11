@@ -99,18 +99,7 @@ s|Required |Default: none
 +
 The name of the configset to download.
 
-`displayName`::
-+
-[%autowidth,frame=none]
-|===
-|Optional |Default: same as `name`
-|===
-+
-An optional user-friendly name used for the downloaded filename.
-This is useful when the configset has an internal name (such as `._designer_myconfig` pattern generated when using the Schema Designer) but you want the downloaded file to have a cleaner name.
-
 The response will be a ZIP file containing all files from the configset.
-The `Content-Disposition` header will suggest a filename based on the configset name (or `displayName` if provided).
 
 To download a configset named "myConfigSet":
 
@@ -133,14 +122,7 @@ With the v2 API, use a `GET` request to `/configsets/__config_name__/download`:
 curl -X GET -o myConfigSet.zip "http://localhost:8983/api/configsets/myConfigSet/download"
 ----
 
-To specify a custom display name for the downloaded file:
-
-[source,bash]
-----
-curl -X GET -o myConfig.zip "http://localhost:8983/api/configsets/myConfigSet/download?displayName=myConfig"
-----
-
-This will download the configset as a ZIP file that can be extracted and used locally, or re-uploaded to another Solr instance.
+The configset will be downloaded as a ZIP file that can be extracted and used locally, or re-uploaded to another Solr instance.
 ====
 ======
 
