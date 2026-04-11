@@ -55,7 +55,7 @@ public class GetConfigSetFile extends ConfigSetAPIBase implements ConfigsetsApi.
       throw new SolrException(
           SolrException.ErrorCode.NOT_FOUND, "ConfigSet '" + configSetName + "' not found");
     }
-    byte[] data = downloadFileFromConfig(configSetName, filePath);
+    final byte[] data = downloadFileFromConfig(configSetName, filePath);
     final var response = instantiateJerseyResponse(ConfigSetFileContentsResponse.class);
     response.path = filePath;
     response.content =
