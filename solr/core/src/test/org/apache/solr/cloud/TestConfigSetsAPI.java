@@ -58,6 +58,7 @@ import org.apache.commons.io.file.PathUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.auth.BasicUserPrincipal;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.ByteArrayEntity;
@@ -76,7 +77,6 @@ import org.apache.solr.client.solrj.request.ConfigSetAdminRequest;
 import org.apache.solr.client.solrj.request.ConfigSetAdminRequest.Create;
 import org.apache.solr.client.solrj.request.ConfigSetAdminRequest.Delete;
 import org.apache.solr.client.solrj.request.ConfigSetAdminRequest.Upload;
-import org.apache.solr.client.solrj.request.ConfigsetsApi;
 import org.apache.solr.client.solrj.request.GenericSolrRequest;
 import org.apache.solr.client.solrj.request.schema.SchemaRequest;
 import org.apache.solr.client.solrj.response.CollectionAdminResponse;
@@ -1139,25 +1139,80 @@ public class TestConfigSetsAPI extends SolrCloudTestCase {
       assertTrue(
           zkClient.exists("/configs/" + configSetName + configSetSuffix + "/managed-schema.xml"));
 
-      // Test getting a root-level file via V2 API using generated ConfigsetsApi client
-      var getFileRequest =
-          new ConfigsetsApi.GetConfigSetFile(configSetName + configSetSuffix, "solrconfig.xml");
-      var response = getFileRequest.process(cluster.getSolrClient());
+      // Test getting a root-level file via V2 API - now returns raw bytes via StreamingOutput
+      String baseUrl = cluster.getJettySolrRunners().get(0).getBaseURLV2().toString();
+      String getFileUrl =
+          baseUrl + "/configsets/" + configSetName + configSetSuffix + "/files/solrconfig.xml";
 
-      assertNotNull(response);
-      assertNotNull("Response should contain 'path'", response.path);
-      assertEquals("solrconfig.xml", response.path);
-      assertNotNull("Response should contain 'content'", response.content);
-      assertTrue("Content should contain config XML", response.content.contains("<config"));
+      HttpGet httpGet = new HttpGet(getFileUrl);
+      HttpEntity entity =
+          ((CloudLegacySolrClient) cluster.getSolrClient())
+              .getHttpClient()
+              .execute(httpGet)
+              .getEntity();
+
+      // Response should be raw bytes (application/octet-stream), not JSON
+      byte[] responseBytes = EntityUtils.toByteArray(entity);
+      String content = new String(responseBytes, UTF_8);
+
+      assertNotNull(content);
+      assertTrue("Content should contain config XML", content.contains("<config"));
 
       // Test getting a nested file
-      getFileRequest =
-          new ConfigsetsApi.GetConfigSetFile(configSetName + configSetSuffix, "managed-schema.xml");
-      response = getFileRequest.process(cluster.getSolrClient());
+      getFileUrl =
+          baseUrl + "/configsets/" + configSetName + configSetSuffix + "/files/managed-schema.xml";
+      httpGet = new HttpGet(getFileUrl);
+      entity =
+          ((CloudLegacySolrClient) cluster.getSolrClient())
+              .getHttpClient()
+              .execute(httpGet)
+              .getEntity();
 
-      assertNotNull(response);
-      assertEquals("managed-schema.xml", response.path);
-      assertTrue("Content should contain schema XML", response.content.contains("schema"));
+      responseBytes = EntityUtils.toByteArray(entity);
+      content = new String(responseBytes, UTF_8);
+
+      assertNotNull(content);
+      assertTrue("Content should contain schema XML", content.contains("schema"));
+
+      // Test binary file preservation by uploading a small binary file
+      byte[] binaryData =
+          new byte[] {
+            (byte) 0x89,
+            0x50,
+            0x4E,
+            0x47,
+            0x0D,
+            0x0A,
+            0x1A,
+            0x0A, // PNG signature
+            (byte) 0xFF,
+            (byte) 0xFE,
+            0x00,
+            0x01,
+            (byte) 0x80
+          };
+
+      // Upload binary file to ZK directly
+      zkClient.makePath(
+          "/configs/" + configSetName + configSetSuffix + "/test.bin",
+          binaryData,
+          CreateMode.PERSISTENT,
+          null);
+
+      // Retrieve it via API
+      getFileUrl = baseUrl + "/configsets/" + configSetName + configSetSuffix + "/files/test.bin";
+      httpGet = new HttpGet(getFileUrl);
+      entity =
+          ((CloudLegacySolrClient) cluster.getSolrClient())
+              .getHttpClient()
+              .execute(httpGet)
+              .getEntity();
+
+      byte[] retrievedBytes = EntityUtils.toByteArray(entity);
+
+      // Binary data should be preserved exactly
+      assertArrayEquals(
+          "Binary file should be preserved byte-for-byte", binaryData, retrievedBytes);
     }
   }
 

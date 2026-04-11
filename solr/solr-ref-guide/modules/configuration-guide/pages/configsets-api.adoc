@@ -291,10 +291,11 @@ This behavior can be disabled with the parameter `overwrite=false`, in which cas
 [[configsets-get-file]]
 == Get a Single File from a Configset
 
-This command retrieves the contents of a single file from an existing configset.
+This command retrieves the raw contents of a single file from an existing configset.
 This is useful for inspecting individual configuration files without downloading the entire configset.
 
 This endpoint mirrors the upload API structure, with the file path specified as part of the URL path.
+The response contains the raw bytes of the file, supporting both text and binary files.
 
 **URL Path Parameters:**
 
@@ -317,10 +318,8 @@ s|Required |Default: none
 The path to the file within the configset, specified as part of the URL path (e.g., `solrconfig.xml` or `lang/stopwords_en.txt`).
 For nested paths, use slashes as shown in the examples below.
 
-The response will be a JSON object containing:
-
-* `path`: The file path that was requested
-* `content`: The content of the file as a UTF-8 string
+The response is the raw file content as `application/octet-stream`.
+This format supports both text files (XML, properties, etc.) and binary files (images, class files, etc.).
 
 To retrieve the `solrconfig.xml` file from a configset named "myConfigSet":
 
@@ -336,7 +335,7 @@ Use the v2 API instead.
 V2 API::
 +
 ====
-With the v2 API, the file path is part of the URL path (not a query parameter).
+With the v2 API, the file path is part of the URL path.
 Use a `GET` request to `/api/configsets/{configSetName}/files/{filePath}`:
 
 [source,bash]
@@ -355,21 +354,25 @@ curl -X GET "http://localhost:8983/api/configsets/myConfigSet/files/lang/stopwor
 
 *Example Output*
 
-[source,json]
+The response is the raw file content. For a text file like `solrconfig.xml`:
+
+[source,xml]
 ----
-{
-  "path": "solrconfig.xml",
-  "content": "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<config>\n  ...\n</config>"
-}
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+  ...
+</config>
 ----
+
+For binary files, the raw bytes are returned directly, preserving the binary content.
 
 
 [[configsets-create]]
 == Create a Configset
 
-The `create` command creates a new configset based on a configset that has been previously uploaded.
+The `create` command creates a new configset based on a configset that has been previously been created.
 
-If you have not yet uploaded any configsets, see the <<Upload a Configset>> command above.
+If you have not yet created any configsets, see the <<Upload a Configset>> command above.
 
 The following parameters are supported when creating a configset.
 

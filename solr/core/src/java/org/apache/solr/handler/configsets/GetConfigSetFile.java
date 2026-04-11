@@ -19,10 +19,9 @@ package org.apache.solr.handler.configsets;
 import static org.apache.solr.security.PermissionNameProvider.Name.CONFIG_READ_PERM;
 
 import jakarta.inject.Inject;
+import jakarta.ws.rs.core.StreamingOutput;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import org.apache.solr.client.api.endpoint.ConfigsetsApi;
-import org.apache.solr.client.api.model.ConfigSetFileContentsResponse;
 import org.apache.solr.common.SolrException;
 import org.apache.solr.common.util.StrUtils;
 import org.apache.solr.core.CoreContainer;
@@ -43,8 +42,7 @@ public class GetConfigSetFile extends ConfigSetAPIBase implements ConfigsetsApi.
 
   @Override
   @PermissionName(CONFIG_READ_PERM)
-  public ConfigSetFileContentsResponse getConfigSetFile(String configSetName, String filePath)
-      throws Exception {
+  public StreamingOutput getConfigSetFile(String configSetName, String filePath) throws Exception {
     if (StrUtils.isNullOrEmpty(configSetName)) {
       throw new SolrException(SolrException.ErrorCode.BAD_REQUEST, "No configset name provided");
     }
@@ -55,28 +53,23 @@ public class GetConfigSetFile extends ConfigSetAPIBase implements ConfigsetsApi.
       throw new SolrException(
           SolrException.ErrorCode.NOT_FOUND, "ConfigSet '" + configSetName + "' not found");
     }
-    final byte[] data = downloadFileFromConfig(configSetName, filePath);
-    final var response = instantiateJerseyResponse(ConfigSetFileContentsResponse.class);
-    response.path = filePath;
-    response.content =
-        data != null && data.length > 0 ? new String(data, StandardCharsets.UTF_8) : "";
-    return response;
-  }
 
-  private byte[] downloadFileFromConfig(String configSetName, String filePath) {
-    try {
-      final byte[] data = configSetService.downloadFileFromConfig(configSetName, filePath);
-      if (data == null) {
+    // Return StreamingOutput that writes raw bytes (supports both text and binary files)
+    return output -> {
+      try {
+        final byte[] data = configSetService.downloadFileFromConfig(configSetName, filePath);
+        if (data == null) {
+          throw new SolrException(
+              SolrException.ErrorCode.NOT_FOUND,
+              "File '" + filePath + "' not found in configset '" + configSetName + "'");
+        }
+        output.write(data);
+      } catch (IOException e) {
         throw new SolrException(
             SolrException.ErrorCode.NOT_FOUND,
-            "File '" + filePath + "' not found in configset '" + configSetName + "'");
+            "File '" + filePath + "' not found in configset '" + configSetName + "'",
+            e);
       }
-      return data;
-    } catch (IOException e) {
-      throw new SolrException(
-          SolrException.ErrorCode.NOT_FOUND,
-          "File '" + filePath + "' not found in configset '" + configSetName + "'",
-          e);
-    }
+    };
   }
 }

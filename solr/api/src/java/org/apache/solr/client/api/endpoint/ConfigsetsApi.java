@@ -32,10 +32,10 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.StreamingOutput;
 import java.io.IOException;
 import java.io.InputStream;
 import org.apache.solr.client.api.model.CloneConfigsetRequestBody;
-import org.apache.solr.client.api.model.ConfigSetFileContentsResponse;
 import org.apache.solr.client.api.model.ListConfigsetsResponse;
 import org.apache.solr.client.api.model.SolrJerseyResponse;
 
@@ -100,17 +100,22 @@ public interface ConfigsetsApi {
   /**
    * V2 API definition for reading a single file from an existing configset.
    *
+   * <p>Returns the raw bytes of the file, suitable for both text and binary files.
+   *
    * <p>Equivalent to GET /api/configsets/{configSetName}/files/{filePath}
    */
   @Path("/configsets/{configSetName}")
   interface GetFile {
     @GET
     @Path("/files/{filePath:.+}")
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
     @Operation(
-        summary = "Get the contents of a file in a configset.",
-        tags = {"configsets"})
-    ConfigSetFileContentsResponse getConfigSetFile(
+        summary = "Get the raw contents of a file in a configset.",
+        tags = {"configsets"},
+        extensions = {
+          @Extension(properties = {@ExtensionProperty(name = RAW_OUTPUT_PROPERTY, value = "true")})
+        })
+    StreamingOutput getConfigSetFile(
         @PathParam("configSetName") String configSetName, @PathParam("filePath") String filePath)
         throws Exception;
   }
