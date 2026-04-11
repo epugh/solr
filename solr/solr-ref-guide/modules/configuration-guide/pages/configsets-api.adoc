@@ -294,9 +294,11 @@ This behavior can be disabled with the parameter `overwrite=false`, in which cas
 This command retrieves the contents of a single file from an existing configset.
 This is useful for inspecting individual configuration files without downloading the entire configset.
 
-The command takes the following parameters:
+This endpoint mirrors the upload API structure, with the file path specified as part of the URL path.
 
-`name`::
+**URL Path Parameters:**
+
+`configSetName`::
 +
 [%autowidth,frame=none]
 |===
@@ -312,7 +314,8 @@ The name of the configset containing the file.
 s|Required |Default: none
 |===
 +
-The path to the file within the configset (e.g., `solrconfig.xml` or `lang/stopwords_en.txt`).
+The path to the file within the configset, specified as part of the URL path (e.g., `solrconfig.xml` or `lang/stopwords_en.txt`).
+For nested paths, use slashes as shown in the examples below.
 
 The response will be a JSON object containing:
 
@@ -333,18 +336,19 @@ Use the v2 API instead.
 V2 API::
 +
 ====
-With the v2 API, use a `GET` request to `/configsets/__config_name__/__file_path__`:
+With the v2 API, the file path is part of the URL path (not a query parameter).
+Use a `GET` request to `/api/configsets/{configSetName}/files/{filePath}`:
 
 [source,bash]
 ----
-curl -X GET "http://localhost:8983/api/configsets/myConfigSet/solrconfig.xml"
+curl -X GET "http://localhost:8983/api/configsets/myConfigSet/files/solrconfig.xml"
 ----
 
 For nested files within the configset:
 
 [source,bash]
 ----
-curl -X GET "http://localhost:8983/api/configsets/myConfigSet/lang/stopwords_en.txt"
+curl -X GET "http://localhost:8983/api/configsets/myConfigSet/files/lang/stopwords_en.txt"
 ----
 ====
 ======

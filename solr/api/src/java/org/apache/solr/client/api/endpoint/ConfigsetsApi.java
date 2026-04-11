@@ -79,11 +79,7 @@ public interface ConfigsetsApi {
         throws Exception;
   }
 
-  /**
-   * V2 API definition for downloading an existing configset as a ZIP archive.
-   *
-   * <p>Equivalent to GET /api/configsets/{configSetName}/download
-   */
+  /** V2 API definition for downloading an existing configset as a ZIP archive. */
   @Path("/configsets/{configSetName}")
   interface Download {
     @GET
@@ -104,18 +100,18 @@ public interface ConfigsetsApi {
   /**
    * V2 API definition for reading a single file from an existing configset.
    *
-   * <p>Equivalent to GET /api/configsets/{configSetName}/file?path=...
+   * <p>Equivalent to GET /api/configsets/{configSetName}/files/{filePath}
    */
   @Path("/configsets/{configSetName}")
   interface GetFile {
     @GET
-    @Path("/file")
+    @Path("/files/{filePath:.+}")
     @Produces(MediaType.TEXT_PLAIN)
     @Operation(
         summary = "Get the contents of a file in a configset.",
         tags = {"configsets"})
     ConfigSetFileContentsResponse getConfigSetFile(
-        @PathParam("configSetName") String configSetName, @QueryParam("path") String filePath)
+        @PathParam("configSetName") String configSetName, @PathParam("filePath") String filePath)
         throws Exception;
   }
 

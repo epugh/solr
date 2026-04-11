@@ -76,6 +76,7 @@ import org.apache.solr.client.solrj.request.ConfigSetAdminRequest;
 import org.apache.solr.client.solrj.request.ConfigSetAdminRequest.Create;
 import org.apache.solr.client.solrj.request.ConfigSetAdminRequest.Delete;
 import org.apache.solr.client.solrj.request.ConfigSetAdminRequest.Upload;
+import org.apache.solr.client.solrj.request.ConfigsetsApi;
 import org.apache.solr.client.solrj.request.GenericSolrRequest;
 import org.apache.solr.client.solrj.request.schema.SchemaRequest;
 import org.apache.solr.client.solrj.response.CollectionAdminResponse;
@@ -1115,6 +1116,49 @@ public class TestConfigSetsAPI extends SolrCloudTestCase {
     // Uploads a config set containing a script, a class file and jar file, will return 400 error
     long res = uploadConfigSet("forbidden", "suffix", "foo", true, false, true, false, true);
     assertEquals(400, res);
+  }
+
+  @Test
+  public void testGetFile() throws Exception {
+    String configSetName = "regular";
+    String configSetSuffix = "testGetFile";
+
+    // First upload a configset
+    uploadConfigSetWithAssertions(configSetName, configSetSuffix, null);
+
+    try (SolrZkClient zkClient =
+        new SolrZkClient.Builder()
+            .withUrl(cluster.getZkServer().getZkAddress())
+            .withTimeout(AbstractZkTestCase.TIMEOUT, TimeUnit.MILLISECONDS)
+            .withConnTimeOut(45000, TimeUnit.MILLISECONDS)
+            .build()) {
+
+      // Verify files exist in ZK
+      assertTrue(
+          zkClient.exists("/configs/" + configSetName + configSetSuffix + "/solrconfig.xml"));
+      assertTrue(
+          zkClient.exists("/configs/" + configSetName + configSetSuffix + "/managed-schema.xml"));
+
+      // Test getting a root-level file via V2 API using generated ConfigsetsApi client
+      var getFileRequest =
+          new ConfigsetsApi.GetConfigSetFile(configSetName + configSetSuffix, "solrconfig.xml");
+      var response = getFileRequest.process(cluster.getSolrClient());
+
+      assertNotNull(response);
+      assertNotNull("Response should contain 'path'", response.path);
+      assertEquals("solrconfig.xml", response.path);
+      assertNotNull("Response should contain 'content'", response.content);
+      assertTrue("Content should contain config XML", response.content.contains("<config"));
+
+      // Test getting a nested file
+      getFileRequest =
+          new ConfigsetsApi.GetConfigSetFile(configSetName + configSetSuffix, "managed-schema.xml");
+      response = getFileRequest.process(cluster.getSolrClient());
+
+      assertNotNull(response);
+      assertEquals("managed-schema.xml", response.path);
+      assertTrue("Content should contain schema XML", response.content.contains("schema"));
+    }
   }
 
   private static String getSecurityJson() {
