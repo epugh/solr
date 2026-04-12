@@ -18,7 +18,6 @@ package org.apache.solr.handler.admin;
 
 import static org.apache.solr.common.params.CommonParams.NAME;
 
-import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -47,15 +46,12 @@ import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.response.SolrQueryResponse;
 import org.apache.solr.security.AuthorizationContext;
 import org.apache.solr.security.PermissionNameProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** A {@link org.apache.solr.request.SolrRequestHandler} for ConfigSets API requests. */
 public class ConfigSetsHandler extends RequestHandlerBase implements PermissionNameProvider {
   // TODO refactor into o.a.s.handler.configsets package to live alongside actual API logic
   public static final String DEFAULT_CONFIGSET_NAME = "_default";
   public static final String AUTOCREATED_CONFIGSET_SUFFIX = ".AUTOCREATED";
-  private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
   protected final CoreContainer coreContainer;
   public static long CONFIG_SET_TIMEOUT = 300 * 1000;
 
@@ -109,9 +105,7 @@ public class ConfigSetsHandler extends RequestHandlerBase implements PermissionN
               uploadApi.uploadConfigSet(configSetName, overwrite, cleanup, configSetData);
         } else { // Uploading a single file
           final var filePath = req.getParams().get(ConfigSetParams.FILE_PATH);
-          uploadResponse =
-              uploadApi.uploadConfigSetFile(
-                  configSetName, filePath, overwrite, cleanup, configSetData);
+          uploadResponse = uploadApi.putConfigSetFile(configSetName, filePath, configSetData);
         }
         V2ApiUtils.squashIntoSolrResponseWithoutHeader(rsp, uploadResponse);
         break;
@@ -121,7 +115,7 @@ public class ConfigSetsHandler extends RequestHandlerBase implements PermissionN
         break;
       case CREATE:
         final String newConfigSetName = req.getParams().get(NAME);
-        if (newConfigSetName == null || newConfigSetName.length() == 0) {
+        if (newConfigSetName == null || newConfigSetName.isEmpty()) {
           throw new SolrException(ErrorCode.BAD_REQUEST, "ConfigSet name not specified");
         }
 

@@ -37,7 +37,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/** Unit tests for {@link UploadConfigSet}. */
+/** Unit tests for {@link UploadConfigSet#uploadConfigSet} (Upload interface). */
 public class UploadConfigSetAPITest extends SolrTestCase {
 
   private CoreContainer mockCoreContainer;
@@ -265,89 +265,6 @@ public class UploadConfigSetAPITest extends SolrTestCase {
   }
 
   @Test
-  public void testSingleFileUploadSuccess() throws Exception {
-    final String configSetName = "singlefile";
-    final String filePath = "solrconfig.xml";
-    final String content = "<config/>";
-    InputStream fileStream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
-
-    final var api = new UploadConfigSet(mockCoreContainer, null, null);
-    final var response = api.uploadConfigSetFile(configSetName, filePath, true, false, fileStream);
-
-    assertNotNull(response);
-
-    // Verify the file was uploaded
-    byte[] uploadedData = configSetService.downloadFileFromConfig(configSetName, filePath);
-    assertEquals(content, new String(uploadedData, StandardCharsets.UTF_8));
-  }
-
-  @Test
-  public void testSingleFileWithLeadingSlashIsNormalized() throws Exception {
-    final String configSetName = "leadingslash";
-    final String filePath = "/solrconfig.xml"; // Leading slash
-    final String content = "<config/>";
-    InputStream fileStream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
-
-    final var api = new UploadConfigSet(mockCoreContainer, null, null);
-    final var response = api.uploadConfigSetFile(configSetName, filePath, true, false, fileStream);
-
-    assertNotNull(response);
-
-    // Verify the file was uploaded without leading slash
-    byte[] uploadedData = configSetService.downloadFileFromConfig(configSetName, "solrconfig.xml");
-    assertEquals(content, new String(uploadedData, StandardCharsets.UTF_8));
-  }
-
-  @Test
-  public void testSingleFileWithEmptyPathThrowsBadRequest() {
-    final String configSetName = "emptypath";
-    InputStream fileStream = new ByteArrayInputStream("<config/>".getBytes(StandardCharsets.UTF_8));
-
-    final var api = new UploadConfigSet(mockCoreContainer, null, null);
-
-    // Test with empty string
-    final var ex =
-        assertThrows(
-            SolrException.class,
-            () -> api.uploadConfigSetFile(configSetName, "", true, false, fileStream));
-    assertEquals(SolrException.ErrorCode.BAD_REQUEST.code, ex.code());
-    assertTrue("Error should mention invalid path", ex.getMessage().contains("not valid"));
-  }
-
-  @Test
-  public void testSingleFileWithNullPathThrowsBadRequest() {
-    final String configSetName = "nullpath";
-    InputStream fileStream = new ByteArrayInputStream("<config/>".getBytes(StandardCharsets.UTF_8));
-
-    final var api = new UploadConfigSet(mockCoreContainer, null, null);
-
-    // Test with null - note: null becomes empty string after processing
-    final var ex =
-        assertThrows(
-            SolrException.class,
-            () -> api.uploadConfigSetFile(configSetName, null, true, false, fileStream));
-    assertEquals(SolrException.ErrorCode.BAD_REQUEST.code, ex.code());
-  }
-
-  @Test
-  public void testCleanupWithSingleFileThrowsBadRequest() {
-    final String configSetName = "nocleanupallowed";
-    final String filePath = "solrconfig.xml";
-    InputStream fileStream = new ByteArrayInputStream("<config/>".getBytes(StandardCharsets.UTF_8));
-
-    final var api = new UploadConfigSet(mockCoreContainer, null, null);
-
-    final var ex =
-        assertThrows(
-            SolrException.class,
-            () -> api.uploadConfigSetFile(configSetName, filePath, true, true, fileStream));
-
-    assertEquals(SolrException.ErrorCode.BAD_REQUEST.code, ex.code());
-    assertTrue(
-        "Error should mention cleanup not allowed", ex.getMessage().contains("cleanup=true"));
-  }
-
-  @Test
   public void testDefaultParametersWhenNull() throws Exception {
     final String configSetName = "defaults";
     InputStream zipStream = createZipStream("solrconfig.xml", "<config/>");
@@ -386,42 +303,5 @@ public class UploadConfigSetAPITest extends SolrTestCase {
     byte[] uploadedData =
         configSetService.downloadFileFromConfig(configSetName, "conf/solrconfig.xml");
     assertEquals("<config/>", new String(uploadedData, StandardCharsets.UTF_8));
-  }
-
-  @Test
-  public void testOverwriteExistingFile() throws Exception {
-    final String configSetName = "overwritefile";
-    final String filePath = "solrconfig.xml";
-
-    // Create existing file
-    createExistingConfigSet(configSetName, filePath, "<old/>");
-
-    // Upload new content with overwrite=true
-    InputStream fileStream = new ByteArrayInputStream("<new/>".getBytes(StandardCharsets.UTF_8));
-    final var api = new UploadConfigSet(mockCoreContainer, null, null);
-    final var response = api.uploadConfigSetFile(configSetName, filePath, true, false, fileStream);
-
-    assertNotNull(response);
-
-    // Verify file was overwritten
-    byte[] uploadedData = configSetService.downloadFileFromConfig(configSetName, filePath);
-    assertEquals("<new/>", new String(uploadedData, StandardCharsets.UTF_8));
-  }
-
-  @Test
-  public void testSingleFileUploadWithNestedPath() throws Exception {
-    final String configSetName = "nested";
-    final String filePath = "lang/stopwords_en.txt";
-    final String content = "a\nthe\nis";
-    InputStream fileStream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
-
-    final var api = new UploadConfigSet(mockCoreContainer, null, null);
-    final var response = api.uploadConfigSetFile(configSetName, filePath, true, false, fileStream);
-
-    assertNotNull(response);
-
-    // Verify the file was uploaded with correct path
-    byte[] uploadedData = configSetService.downloadFileFromConfig(configSetName, filePath);
-    assertEquals(content, new String(uploadedData, StandardCharsets.UTF_8));
   }
 }

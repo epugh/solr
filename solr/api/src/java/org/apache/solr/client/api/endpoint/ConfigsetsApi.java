@@ -118,29 +118,36 @@ public interface ConfigsetsApi {
   }
 
   /**
-   * V2 API definitions for uploading a configset, in whole or part.
+   * V2 API definition for uploading an entire configset as a ZIP archive.
    *
    * <p>Equivalent to the existing v1 API /admin/configs?action=UPLOAD
    */
   @Path("/configsets/{configSetName}")
   interface Upload {
     @PUT
-    @Operation(summary = "Create a new configset.", tags = "configsets")
+    @Operation(summary = "Upload a configset as a ZIP archive.", tags = "configsets")
     SolrJerseyResponse uploadConfigSet(
         @PathParam("configSetName") String configSetName,
         @QueryParam("overwrite") Boolean overwrite,
         @QueryParam("cleanup") Boolean cleanup,
         @RequestBody(required = true) InputStream requestBody)
         throws IOException;
+  }
 
+  /**
+   * V2 API definition for putting a single file to an existing configset.
+   *
+   * <p>This endpoint allows updating individual configuration files without re-uploading the entire
+   * configset. The file path is specified as part of the URL path.
+   */
+  @Path("/configsets/{configSetName}")
+  interface PutFile {
     @PUT
     @Path("{filePath:.+}")
-    @Operation(summary = "Create a new configset.", tags = "configsets")
-    SolrJerseyResponse uploadConfigSetFile(
+    @Operation(summary = "Upload a single file to a configset.", tags = "configsets")
+    SolrJerseyResponse putConfigSetFile(
         @PathParam("configSetName") String configSetName,
         @PathParam("filePath") String filePath,
-        @QueryParam("overwrite") Boolean overwrite,
-        @QueryParam("cleanup") Boolean cleanup,
         @RequestBody(required = true) InputStream requestBody)
         throws IOException;
   }
