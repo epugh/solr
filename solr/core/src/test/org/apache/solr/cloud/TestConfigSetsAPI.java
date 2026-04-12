@@ -592,15 +592,9 @@ public class TestConfigSetsAPI extends SolrCloudTestCase {
     }
   }
 
-  @Test
-  public void testSingleFileOverwriteV1() throws Exception {
-    testSingleFileOverwrite(false);
-  }
+  // Single file uploads do not support overwrite parameter (always overwrites)
 
-  @Test
-  public void testSingleFileOverwriteV2() throws Exception {
-    testSingleFileOverwrite(true);
-  }
+  // V2 API not tested: single file uploads always overwrite (no overwrite parameter)
 
   public void testSingleFileOverwrite(boolean v2) throws Exception {
     String configsetName = "regular";
@@ -743,15 +737,9 @@ public class TestConfigSetsAPI extends SolrCloudTestCase {
             zkClient, configsetName, configsetSuffix, "test/upload/path/solrconfig.xml"));
   }
 
-  @Test
-  public void testSingleWithCleanupV1() throws Exception {
-    testSingleWithCleanup(false);
-  }
+  // Single file uploads do not support cleanup parameter
 
-  @Test
-  public void testSingleWithCleanupV2() throws Exception {
-    testSingleWithCleanup(true);
-  }
+  // V2 API not tested: single file uploads do not support cleanup parameter
 
   public void testSingleWithCleanup(boolean v2) throws Exception {
     String configsetName = "regular";
@@ -831,15 +819,9 @@ public class TestConfigSetsAPI extends SolrCloudTestCase {
     }
   }
 
-  @Test
-  public void testSingleFileUntrustedV1() throws Exception {
-    testSingleFileUntrusted(false);
-  }
+  // Single file uploads do not support cleanup parameter
 
-  @Test
-  public void testSingleFileUntrustedV2() throws Exception {
-    testSingleFileUntrusted(true);
-  }
+  // V2 API not tested: single file uploads do not support cleanup parameter
 
   public void testSingleFileUntrusted(boolean v2) throws Exception {
     String configsetName = "regular";
@@ -1121,15 +1103,11 @@ public class TestConfigSetsAPI extends SolrCloudTestCase {
       String getFileUrl =
           baseUrl + "/configsets/" + configSetName + configSetSuffix + "/files/solrconfig.xml";
 
-      HttpGet httpGet = new HttpGet(getFileUrl);
-      HttpEntity entity =
-          ((CloudLegacySolrClient) cluster.getSolrClient())
-              .getHttpClient()
-              .execute(httpGet)
-              .getEntity();
+      HttpClient httpClient = cluster.getJettySolrRunners().get(0).getSolrClient().getHttpClient();
+      ContentResponse response = httpClient.newRequest(getFileUrl).method(HttpMethod.GET).send();
 
       // Response should be raw bytes (application/octet-stream), not JSON
-      byte[] responseBytes = EntityUtils.toByteArray(entity);
+      byte[] responseBytes = response.getContent();
       String content = new String(responseBytes, UTF_8);
 
       assertNotNull(content);
@@ -1138,14 +1116,9 @@ public class TestConfigSetsAPI extends SolrCloudTestCase {
       // Test getting a nested file
       getFileUrl =
           baseUrl + "/configsets/" + configSetName + configSetSuffix + "/files/managed-schema.xml";
-      httpGet = new HttpGet(getFileUrl);
-      entity =
-          ((CloudLegacySolrClient) cluster.getSolrClient())
-              .getHttpClient()
-              .execute(httpGet)
-              .getEntity();
+      response = httpClient.newRequest(getFileUrl).method(HttpMethod.GET).send();
 
-      responseBytes = EntityUtils.toByteArray(entity);
+      responseBytes = response.getContent();
       content = new String(responseBytes, UTF_8);
 
       assertNotNull(content);
@@ -1178,14 +1151,9 @@ public class TestConfigSetsAPI extends SolrCloudTestCase {
 
       // Retrieve it via API
       getFileUrl = baseUrl + "/configsets/" + configSetName + configSetSuffix + "/files/test.bin";
-      httpGet = new HttpGet(getFileUrl);
-      entity =
-          ((CloudLegacySolrClient) cluster.getSolrClient())
-              .getHttpClient()
-              .execute(httpGet)
-              .getEntity();
+      response = httpClient.newRequest(getFileUrl).method(HttpMethod.GET).send();
 
-      byte[] retrievedBytes = EntityUtils.toByteArray(entity);
+      byte[] retrievedBytes = response.getContent();
 
       // Binary data should be preserved exactly
       assertArrayEquals(

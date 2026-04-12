@@ -104,6 +104,13 @@ public class ConfigSetsHandler extends RequestHandlerBase implements PermissionN
           uploadResponse =
               uploadApi.uploadConfigSet(configSetName, overwrite, cleanup, configSetData);
         } else { // Uploading a single file
+          // Single file uploads do not support cleanup or overwrite parameters
+          if (cleanup) {
+            throw new SolrException(
+                ErrorCode.BAD_REQUEST,
+                "ConfigSet uploads do not allow cleanup=true when filePath is used.");
+          }
+          // Note: overwrite parameter is ignored for single file uploads (always overwrites)
           final var filePath = req.getParams().get(ConfigSetParams.FILE_PATH);
           uploadResponse = uploadApi.putConfigSetFile(configSetName, filePath, configSetData);
         }
