@@ -55,7 +55,7 @@ The complete logical set of searchable documents that share a schema and configu
 In <<solrclouddef,SolrCloud>>, a collection may be divided up into multiple logical <<shard,shards>>, which may in turn be distributed across many <<node,nodes>> for scalability and fault tolerance.
 Each collection encompasses all the shards and their <<replica,replicas>>.
 +
-Single-node installations and user-managed clusters do not manage collections as first-class entities; instead they work directly with individual <<core,cores>>.
+Standalone installations and user-managed clusters do not manage collections as first-class entities; instead they work directly with individual <<core,cores>>.
 +
 [[defcommit]]Commit::
 To make document changes permanent in the index.
@@ -242,8 +242,8 @@ Examples of synonyms in this context would be "Inc." and "Incorporated" or "iPod
 
 [[standalone]]Standalone::
 An informal term referring to Solr deployments that do not use <<solrclouddef,SolrCloud>> mode.
-This includes both single-node installations and <<usermanaged,User-Managed>> clusters.
-In source code and documentation, "Standalone" may refer to either <<usermanaged,User-Managed Mode>> or single-node deployments.
+This includes both standalone installations and <<usermanaged,User-Managed>> clusters.
+In source code and documentation, "Standalone" may refer to either <<usermanaged,User-Managed Mode>> or standalone deployments.
 See also xref:cluster-types.adoc[] and <<cluster,Cluster>>.
 
 [[SolrGlossary-T]]
