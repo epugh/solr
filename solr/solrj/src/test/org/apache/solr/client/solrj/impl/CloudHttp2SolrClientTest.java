@@ -943,9 +943,7 @@ public class CloudHttp2SolrClientTest extends SolrCloudTestCase {
     String baseUrl = cluster.getJettySolrRunners().get(0).getBaseUrl().toString();
     try (HttpJettySolrClient httpClient = new HttpJettySolrClient.Builder(baseUrl).build()) {
       try (CloudSolrClient cloudClient =
-          new CloudJettySolrClient.Builder(Collections.singletonList(baseUrl))
-              .withHttpClient(httpClient)
-              .build()) {
+          new CloudJettySolrClient.Builder(List.of(baseUrl)).withHttpClient(httpClient).build()) {
         // Verify the CloudJettySolrClient uses the provided HttpJettySolrClient
         assertSame(((CloudJettySolrClient) cloudClient).getHttpClient(), httpClient);
       }
