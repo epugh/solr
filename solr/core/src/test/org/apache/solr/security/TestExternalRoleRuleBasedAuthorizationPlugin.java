@@ -22,8 +22,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
-import org.apache.http.auth.BasicUserPrincipal;
 
 /**
  * Tests {@link ExternalRoleRuleBasedAuthorizationPlugin} through simulating principals with roles
@@ -63,7 +61,7 @@ public class TestExternalRoleRuleBasedAuthorizationPlugin
             ? null
             : principals.get(userPrincipal) != null
                 ? principals.get(userPrincipal)
-                : new BasicUserPrincipal(userPrincipal);
+                : new SimplePrincipal(userPrincipal);
       }
     };
   }
