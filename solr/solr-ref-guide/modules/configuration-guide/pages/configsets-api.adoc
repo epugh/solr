@@ -115,11 +115,11 @@ Use the v2 API instead.
 V2 API::
 +
 ====
-With the v2 API, use a `GET` request to `/configsets/__config_name__/download`:
+With the v2 API, use a `GET` request to `/configsets/__config_name__/files`:
 
 [source,bash]
 ----
-curl -X GET -o myConfigSet.zip "http://localhost:8983/api/configsets/myConfigSet/download"
+curl -X GET -o myConfigSet.zip "http://localhost:8983/api/configsets/myConfigSet/files"
 ----
 
 The configset will be downloaded as a ZIP file that can be extracted and used locally, or re-uploaded to another Solr instance.

@@ -83,7 +83,7 @@ public interface ConfigsetsApi {
   @Path("/configsets/{configSetName}")
   interface Download {
     @GET
-    @Path("/download")
+    @Path("/files")
     @Operation(
         summary = "Download a configset as a ZIP archive.",
         tags = {"configsets"},
