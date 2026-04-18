@@ -42,7 +42,9 @@ ui:
     - path: js/vendor/tabs.js
       contents: ~+/node_modules/@asciidoctor/tabs/dist/js/tabs.js
     - path: js/vendor/elements-web-components.min.js
-      contents: ~+/node_modules/@stoplight/elements/web-components.min.js    
+      contents: ~+/node_modules/@stoplight/elements/web-components.min.js
+    - path: layouts/api-reference.hbs
+      contents: ~+/supplemental-ui/layouts/api-reference.hbs
 output:
   clean: true
   dir: '${site_dir}'

@@ -417,7 +417,7 @@ task stageSupplementalUIAssets(type: Copy) {
   group = 'Site - Local'
   description "Copies supplemental UI assets (layouts, etc.) into the node project dir for playbook resolution."
 
-  from("${projectDir}/supplemental-ui/layouts/api-reference.hbs") {
+  from("${projectDir}/ui-src/layouts/api-reference.hbs") {
     into "supplemental-ui/layouts"
   }
 
