@@ -24,7 +24,6 @@ import static org.mockito.Mockito.when;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import org.apache.solr.SolrTestCase;
 import org.apache.solr.common.SolrException;
@@ -53,20 +52,6 @@ public class UploadConfigSetFileAPITest extends SolrTestCase {
     configSetService = new FileSystemConfigSetService(configSetBase) {};
     mockCoreContainer = mock(CoreContainer.class);
     when(mockCoreContainer.getConfigSetService()).thenReturn(configSetService);
-  }
-
-  /** Creates a configset with files on disk for testing overwrites. */
-  private void createExistingConfigSet(String configSetName, String... filePathAndContent)
-      throws Exception {
-    Path configDir = configSetBase.resolve(configSetName);
-    Files.createDirectories(configDir);
-    for (int i = 0; i < filePathAndContent.length; i += 2) {
-      String filePath = filePathAndContent[i];
-      String content = filePathAndContent[i + 1];
-      Path fullPath = configDir.resolve(filePath);
-      Files.createDirectories(fullPath.getParent());
-      Files.writeString(fullPath, content, StandardCharsets.UTF_8);
-    }
   }
 
   @Test
