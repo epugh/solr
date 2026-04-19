@@ -34,8 +34,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/** Unit tests for {@link UploadConfigSet#putConfigSetFile} (PutFile interface). */
-public class PutConfigSetFileAPITest extends SolrTestCase {
+/** Unit tests for {@link UploadConfigSet#uploadConfigSetFile} (PutFile interface). */
+public class UploadConfigSetFileAPITest extends SolrTestCase {
 
   private CoreContainer mockCoreContainer;
   private FileSystemConfigSetService configSetService;
@@ -77,7 +77,7 @@ public class PutConfigSetFileAPITest extends SolrTestCase {
     InputStream fileStream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
 
     final var api = new UploadConfigSet(mockCoreContainer, null, null);
-    final var response = api.putConfigSetFile(configSetName, filePath, fileStream);
+    final var response = api.uploadConfigSetFile(configSetName, filePath, fileStream);
 
     assertNotNull(response);
 
@@ -96,7 +96,7 @@ public class PutConfigSetFileAPITest extends SolrTestCase {
     // Test with empty string
     final var ex =
         assertThrows(
-            SolrException.class, () -> api.putConfigSetFile(configSetName, "", fileStream));
+            SolrException.class, () -> api.uploadConfigSetFile(configSetName, "", fileStream));
     assertEquals(SolrException.ErrorCode.BAD_REQUEST.code, ex.code());
     assertTrue("Error should mention invalid path", ex.getMessage().contains("not valid"));
   }
@@ -109,7 +109,7 @@ public class PutConfigSetFileAPITest extends SolrTestCase {
     InputStream fileStream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
 
     final var api = new UploadConfigSet(mockCoreContainer, null, null);
-    final var response = api.putConfigSetFile(configSetName, filePath, fileStream);
+    final var response = api.uploadConfigSetFile(configSetName, filePath, fileStream);
 
     assertNotNull(response);
 

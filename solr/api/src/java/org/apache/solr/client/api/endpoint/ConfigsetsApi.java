@@ -145,7 +145,7 @@ public interface ConfigsetsApi {
     @PUT
     @Path("/files/{filePath:.+}")
     @Operation(summary = "Upload a single file to a configset.", tags = "configsets")
-    SolrJerseyResponse putConfigSetFile(
+    SolrJerseyResponse uploadConfigSetFile(
         @PathParam("configSetName") String configSetName,
         @PathParam("filePath") String filePath,
         @RequestBody(required = true) InputStream requestBody)

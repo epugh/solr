@@ -112,7 +112,7 @@ public class ConfigSetsHandler extends RequestHandlerBase implements PermissionN
           }
           // Note: overwrite parameter is ignored for single file uploads (always overwrites)
           final var filePath = req.getParams().get(ConfigSetParams.FILE_PATH);
-          uploadResponse = uploadApi.putConfigSetFile(configSetName, filePath, configSetData);
+          uploadResponse = uploadApi.uploadConfigSetFile(configSetName, filePath, configSetData);
         }
         V2ApiUtils.squashIntoSolrResponseWithoutHeader(rsp, uploadResponse);
         break;

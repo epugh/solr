@@ -109,7 +109,7 @@ public class UploadConfigSet extends ConfigSetAPIBase
 
   @Override
   @PermissionName(CONFIG_EDIT_PERM)
-  public SolrJerseyResponse putConfigSetFile(
+  public SolrJerseyResponse uploadConfigSetFile(
       String configSetName, String filePath, InputStream requestBody) throws IOException {
     final var response = instantiateJerseyResponse(SolrJerseyResponse.class);
     ensureConfigSetUploadEnabled();
