@@ -191,14 +191,7 @@ public class GetConfigSetFileAPITest extends SolrTestCase {
     streamingOutput.write(baos);
     byte[] responseBytes = baos.toByteArray();
 
-    // SUCCESS: Binary data is preserved exactly!
     assertArrayEquals(
         "Binary file content should be preserved byte-for-byte", binaryData, responseBytes);
-
-    // Verify PNG signature is intact
-    assertEquals((byte) 0x89, responseBytes[0]);
-    assertEquals(0x50, responseBytes[1]); // 'P'
-    assertEquals(0x4E, responseBytes[2]); // 'N'
-    assertEquals(0x47, responseBytes[3]); // 'G'
   }
 }

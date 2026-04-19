@@ -87,7 +87,6 @@ public class DownloadConfigSetAPITest extends SolrTestCase {
 
     final var api = new DownloadConfigSet(mockCoreContainer, null, null);
     try (final Response response = api.downloadConfigSet("myconfig")) {
-      assertNotNull(response);
       assertEquals(200, response.getStatus());
       assertEquals("application/zip", response.getMediaType().toString());
     }

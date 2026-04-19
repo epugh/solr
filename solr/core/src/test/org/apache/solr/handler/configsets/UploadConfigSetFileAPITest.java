@@ -77,9 +77,7 @@ public class UploadConfigSetFileAPITest extends SolrTestCase {
     InputStream fileStream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
 
     final var api = new UploadConfigSet(mockCoreContainer, null, null);
-    final var response = api.uploadConfigSetFile(configSetName, filePath, fileStream);
-
-    assertNotNull(response);
+    api.uploadConfigSetFile(configSetName, filePath, fileStream);
 
     // Verify the file was uploaded
     byte[] uploadedData = configSetService.downloadFileFromConfig(configSetName, filePath);
@@ -109,9 +107,7 @@ public class UploadConfigSetFileAPITest extends SolrTestCase {
     InputStream fileStream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
 
     final var api = new UploadConfigSet(mockCoreContainer, null, null);
-    final var response = api.uploadConfigSetFile(configSetName, filePath, fileStream);
-
-    assertNotNull(response);
+    api.uploadConfigSetFile(configSetName, filePath, fileStream);
 
     // Verify the file was uploaded with correct path
     byte[] uploadedData = configSetService.downloadFileFromConfig(configSetName, filePath);
