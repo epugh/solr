@@ -43,6 +43,8 @@ ui:
       contents: ~+/node_modules/@asciidoctor/tabs/dist/js/tabs.js
     - path: js/vendor/elements-web-components.min.js
       contents: ~+/node_modules/@stoplight/elements/web-components.min.js
+    - path: css/vendor/elements-styles.min.css
+      contents: ~+/node_modules/@stoplight/elements/styles.min.css
     - path: layouts/api-reference.hbs
       contents: ~+/supplemental-ui/layouts/api-reference.hbs
 output:
