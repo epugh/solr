@@ -70,11 +70,11 @@ public class DownloadConfigSet extends ConfigSetAPIBase implements ConfigsetsApi
    * Build a ZIP download {@link Response} for the given configset.
    *
    * @param configSetService the service to use for downloading the configset files
-   * @param configSetId the internal configset name to download
+   * @param configSetName the name of the configset to download
    */
-  public static Response buildZipResponse(ConfigSetService configSetService, String configSetId)
+  public static Response buildZipResponse(ConfigSetService configSetService, String configSetName)
       throws IOException {
-    final byte[] zipBytes = zipConfigSet(configSetService, configSetId);
+    final byte[] zipBytes = zipConfigSet(configSetService, configSetName);
     return Response.ok((StreamingOutput) outputStream -> outputStream.write(zipBytes))
         .type("application/zip")
         .build();
@@ -84,12 +84,12 @@ public class DownloadConfigSet extends ConfigSetAPIBase implements ConfigsetsApi
    * Download the named configset from {@link ConfigSetService} and return its contents as a ZIP
    * archive byte array.
    */
-  public static byte[] zipConfigSet(ConfigSetService configSetService, String configSetId)
+  public static byte[] zipConfigSet(ConfigSetService configSetService, String configSetName)
       throws IOException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     Path tmpDirectory = Files.createTempDirectory("configset-download-");
     try {
-      configSetService.downloadConfig(configSetId, tmpDirectory);
+      configSetService.downloadConfig(configSetName, tmpDirectory);
       try (ZipOutputStream zipOut = new ZipOutputStream(baos)) {
         Files.walkFileTree(
             tmpDirectory,
