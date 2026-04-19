@@ -143,7 +143,7 @@ public interface ConfigsetsApi {
   @Path("/configsets/{configSetName}")
   interface PutFile {
     @PUT
-    @Path("{filePath:.+}")
+    @Path("/files/{filePath:.+}")
     @Operation(summary = "Upload a single file to a configset.", tags = "configsets")
     SolrJerseyResponse putConfigSetFile(
         @PathParam("configSetName") String configSetName,
