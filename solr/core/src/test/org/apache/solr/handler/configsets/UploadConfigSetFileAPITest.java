@@ -76,7 +76,7 @@ public class UploadConfigSetFileAPITest extends SolrTestCase {
 
     final var api = new UploadConfigSet(mockCoreContainer, null, null);
 
-    // Test with empty string
+    // Test with empty filePath
     final var ex =
         assertThrows(
             SolrException.class, () -> api.uploadConfigSetFile(configSetName, "", fileStream));
