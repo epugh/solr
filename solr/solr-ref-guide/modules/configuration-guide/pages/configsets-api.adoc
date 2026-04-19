@@ -209,7 +209,7 @@ This behavior can be disabled with the parameter `overwrite=false`, in which cas
 ====
 ======
 
-[[configsets-putfile]]
+[[configsets-upload-file]]
 == Update a Single File in a Configset
 
 This API lets you modify a specific file in an existing configset.
