@@ -335,3 +335,8 @@ If you require the ability to roll back, back up your indexes before upgrading.
 === API Changes
 
 Solr 10.1 changes the V1 API signature for uploading a single file to remove the overwrite parameter.  Previously the default for `overwrite` is false when using the v1 API, but true when using the v2 API.
+Overwrite made sense when uploading a complete configset and you wanted to eliminate any remnants configset files when you added a new one.  but for single file it has no bearing.
+
+=== Docker
+
+The `gosu` binary is no longer installed in the Solr Docker image. See https://github.com/tianon/gosu[gosu github page] for alternatives, such as `runuser`, `setpriv` or `chroot`.
