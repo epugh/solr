@@ -382,7 +382,7 @@ public abstract class ConfigSetService {
 
   /**
    * Upload a file to config. If file does not exist, it will be uploaded. If overwriteOnExists is
-   * set to true then file will be overwritten.
+   * set to true then the file will be overwritten.
    *
    * @param configName the name to give the config
    * @param fileName the name of the file with '/' used as the file path separator
