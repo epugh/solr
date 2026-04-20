@@ -1178,15 +1178,7 @@ public class TestConfigSetsAPI extends SolrCloudTestCase {
 
     if (v2) {
       // Use generated v2 SolrJ client (ConfigsetsApi)
-      try {
-        final ByteBuffer fileBytesBuffer =
-            TestSolrConfigHandler.getFileContent(file.toString(), false);
-
-        // Convert ByteBuffer to InputStream for the generated client
-        final InputStream fileBytes =
-            new ByteArrayInputStream(
-                fileBytesBuffer.array(), fileBytesBuffer.arrayOffset(), fileBytesBuffer.limit());
-
+      try (InputStream fileBytes = new FileInputStream(file.toFile())) {
         // Create and execute the upload request using generated client
         final var uploadRequest =
             new ConfigsetsApi.UploadConfigSet(configSetName + suffix, fileBytes);
