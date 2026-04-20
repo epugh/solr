@@ -257,15 +257,15 @@ curl -X POST --header "Content-Type:application/octet-stream"
 V2 API::
 +
 ====
-With the v2 API, the name of the configset and file are both provided in the URL.
-They can be substituted in `/configsets/__config_name__/__file_name__`.
-The filename may be nested and include `/` characters.
+With the v2 API, the file path is part of the URL path.
+Use a `PUT` request to `/api/configsets/{configSetName}/files/{filePath}`:
+
 
 [source,bash]
 ----
 curl -X PUT --header "Content-Type:application/octet-stream"
     --data-binary @solr/server/solr/configsets/sample_techproducts_configs/conf/solrconfig.xml
-    "http://localhost:8983/api/configsets/myConfigSet/solrconfig.xml"
+    "http://localhost:8983/api/configsets/myConfigSet/files/solrconfig.xml"
 ----
 
 For nested files within the configset:
@@ -274,7 +274,7 @@ For nested files within the configset:
 ----
 curl -X PUT --header "Content-Type:application/octet-stream"
     --data-binary @solr/server/solr/configsets/sample_techproducts_configs/conf/lang/stopwords_en.txt
-    "http://localhost:8983/api/configsets/myConfigSet/lang/stopwords_en.txt"
+    "http://localhost:8983/api/configsets/myConfigSet/files/lang/stopwords_en.txt"
 ----
 ====
 ======
