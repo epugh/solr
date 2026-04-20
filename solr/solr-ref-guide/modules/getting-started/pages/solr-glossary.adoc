@@ -210,7 +210,7 @@ Each shard represents a partition containing a subset of the collection's docume
 A shard exists physically as one or more <<replica,Replicas>>, which may be distributed across multiple <<node,Nodes>> for fault tolerance and scalability.
 See also <<solrclouddef,SolrCloud>>.
 
-[[solrclouddef]]xref:cluster-types.adoc#solrcloud-mode[SolrCloud]::
+[[solrclouddef]]xref:cluster-types.adoc#solrcloud-clusters[SolrCloud]::
 Umbrella term for a suite of functionality in Solr which allows managing a <<cluster,Cluster>> of Solr <<node,Nodes>> for scalability, fault tolerance, and high availability.
 
 [[schema]]xref:indexing-guide:schema-elements.adoc[Solr Schema (managed-schema.xml or schema.xml)]::
@@ -260,7 +260,7 @@ This log is required with SolrCloud implementations and is created and managed a
 [[SolrGlossary-U]]
 === U
 
-[[usermanaged]]xref:cluster-types.adoc#user-managed-mode[User-Managed Mode]::
+[[usermanaged]]xref:cluster-types.adoc#user-managed-cluster[User-Managed Cluster]::
 A mode of operating a Solr <<cluster,Cluster>> without the centralized coordination provided by <<zookeeper,ZooKeeper>> in <<solrclouddef,SolrCloud>> mode.
 In user-managed mode, cluster coordination activities must be performed manually or with local scripts.
 This includes shard creation, document routing, leader/follower configuration, and load balancing.
