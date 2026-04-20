@@ -16,6 +16,7 @@
  */
 package org.apache.solr.client.api.endpoint;
 
+import static org.apache.solr.client.api.util.Constants.GENERIC_ENTITY_PROPERTY;
 import static org.apache.solr.client.api.util.Constants.RAW_OUTPUT_PROPERTY;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -130,7 +131,15 @@ public interface ConfigsetsApi {
         @PathParam("configSetName") String configSetName,
         @QueryParam("overwrite") Boolean overwrite,
         @QueryParam("cleanup") Boolean cleanup,
-        @RequestBody(required = true) InputStream requestBody)
+        @RequestBody(
+                required = true,
+                extensions = {
+                  @Extension(
+                      properties = {
+                        @ExtensionProperty(name = GENERIC_ENTITY_PROPERTY, value = "true")
+                      })
+                })
+            InputStream requestBody)
         throws IOException;
   }
 
@@ -148,7 +157,15 @@ public interface ConfigsetsApi {
     SolrJerseyResponse uploadConfigSetFile(
         @PathParam("configSetName") String configSetName,
         @PathParam("filePath") String filePath,
-        @RequestBody(required = true) InputStream requestBody)
+        @RequestBody(
+                required = true,
+                extensions = {
+                  @Extension(
+                      properties = {
+                        @ExtensionProperty(name = GENERIC_ENTITY_PROPERTY, value = "true")
+                      })
+                })
+            InputStream requestBody)
         throws IOException;
   }
 }

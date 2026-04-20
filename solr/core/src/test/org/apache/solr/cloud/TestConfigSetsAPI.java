@@ -56,6 +56,7 @@ import javax.script.ScriptEngineManager;
 import org.apache.commons.io.file.PathUtils;
 import org.apache.solr.SolrTestCaseJ4;
 import org.apache.solr.api.AnnotatedApi;
+import org.apache.solr.client.solrj.RemoteSolrException;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrRequest.METHOD;
 import org.apache.solr.client.solrj.SolrRequest.SolrRequestType;
@@ -65,6 +66,7 @@ import org.apache.solr.client.solrj.request.ConfigSetAdminRequest;
 import org.apache.solr.client.solrj.request.ConfigSetAdminRequest.Create;
 import org.apache.solr.client.solrj.request.ConfigSetAdminRequest.Delete;
 import org.apache.solr.client.solrj.request.ConfigSetAdminRequest.Upload;
+import org.apache.solr.client.solrj.request.ConfigsetsApi;
 import org.apache.solr.client.solrj.request.GenericSolrRequest;
 import org.apache.solr.client.solrj.request.schema.SchemaRequest;
 import org.apache.solr.client.solrj.response.CollectionAdminResponse;
@@ -1175,21 +1177,28 @@ public class TestConfigSetsAPI extends SolrCloudTestCase {
       throws Exception {
 
     if (v2) {
-      // TODO: switch to using V2Request
+      // Use generated v2 SolrJ client (ConfigsetsApi)
+      try {
+        final ByteBuffer fileBytesBuffer =
+            TestSolrConfigHandler.getFileContent(file.toString(), false);
 
-      final ByteBuffer fileBytes = TestSolrConfigHandler.getFileContent(file.toString(), false);
-      final String uriEnding =
-          "/configsets/"
-              + configSetName
-              + suffix
-              + (!overwrite ? "?overwrite=false" : "")
-              + (cleanup ? "?cleanup=true" : "");
-      final boolean usePut = true;
-      JettySolrRunner jetty = cluster.getJettySolrRunners().getFirst();
-      Map<?, ?> map =
-          postDataAndGetResponse(
-              jetty, jetty.getBaseURLV2() + uriEnding, fileBytes, username, usePut);
-      return getStatusCode(map);
+        // Convert ByteBuffer to InputStream for the generated client
+        final InputStream fileBytes =
+            new ByteArrayInputStream(
+                fileBytesBuffer.array(), fileBytesBuffer.arrayOffset(), fileBytesBuffer.limit());
+
+        // Create and execute the upload request using generated client
+        final var uploadRequest =
+            new ConfigsetsApi.UploadConfigSet(configSetName + suffix, fileBytes);
+        uploadRequest.setOverwrite(overwrite);
+        uploadRequest.setCleanup(cleanup);
+
+        final var response = uploadRequest.process(cluster.getSolrClient());
+        return response.responseHeader.status;
+      } catch (RemoteSolrException e) {
+        // Convert exception to status code for consistent error handling with v1
+        return e.code();
+      }
     } // else "not" a V2 request...
 
     try {
@@ -1222,23 +1231,33 @@ public class TestConfigSetsAPI extends SolrCloudTestCase {
     final Path file = SolrTestCaseJ4.getFile(localFilePath);
 
     if (v2) {
-      // TODO: switch to use V2Request
+      // Use generated v2 SolrJ client (ConfigsetsApi)
+      try {
+        final ByteBuffer sampleConfigFileBuffer =
+            TestSolrConfigHandler.getFileContent(file.toString(), false);
 
-      final ByteBuffer sampleConfigFile =
-          TestSolrConfigHandler.getFileContent(file.toString(), false);
+        // Convert ByteBuffer to InputStream for the generated client
+        final InputStream sampleConfigFile =
+            new ByteArrayInputStream(
+                sampleConfigFileBuffer.array(),
+                sampleConfigFileBuffer.arrayOffset(),
+                sampleConfigFileBuffer.limit());
 
-      if (uploadPath.startsWith("/")) {
-        uploadPath = uploadPath.substring(1);
+        if (uploadPath.startsWith("/")) {
+          uploadPath = uploadPath.substring(1);
+        }
+
+        // Create and execute the upload request using generated client
+        final var uploadRequest =
+            new ConfigsetsApi.UploadConfigSetFile(
+                configSetName + suffix, uploadPath, sampleConfigFile);
+
+        final var response = uploadRequest.process(cluster.getSolrClient());
+        return response.responseHeader.status;
+      } catch (RemoteSolrException e) {
+        // Convert exception to status code for consistent error handling with v1
+        return e.code();
       }
-
-      final String uriEnding = "/configsets/" + configSetName + suffix + "/files/" + uploadPath;
-      final boolean usePut = true;
-
-      JettySolrRunner jetty = cluster.getJettySolrRunners().getFirst();
-      Map<?, ?> map =
-          postDataAndGetResponse(
-              jetty, jetty.getBaseURLV2() + uriEnding, sampleConfigFile, username, usePut);
-      return getStatusCode(map);
     } else { // else "not" a V2 request...
 
       try {
