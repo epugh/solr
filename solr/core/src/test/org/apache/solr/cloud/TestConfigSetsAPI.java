@@ -736,12 +736,11 @@ public class TestConfigSetsAPI extends SolrCloudTestCase {
   }
 
   // Single file uploads do not support cleanup parameter
-
   // V2 API not tested: single file uploads do not support cleanup parameter
-
-  public void testSingleWithCleanup(boolean v2) throws Exception {
+  @Test
+  public void testSingleWithCleanup() throws Exception {
     String configsetName = "regular";
-    String configsetSuffix = "testSinglePathCleanup-1-" + v2;
+    String configsetSuffix = "testSinglePathCleanup-1";
     uploadConfigSetWithAssertions(configsetName, configsetSuffix, null);
     try (SolrZkClient zkClient =
         new SolrZkClient.Builder()
@@ -760,7 +759,7 @@ public class TestConfigSetsAPI extends SolrCloudTestCase {
               "/test/upload/path/solrconfig.xml",
               true,
               true,
-              v2));
+              false));
       assertFalse(
           "New file should not exist, since the trust check did not succeed.",
           zkClient.exists(
@@ -1022,7 +1021,7 @@ public class TestConfigSetsAPI extends SolrCloudTestCase {
       assertTrue(
           zkClient.exists("/configs/" + configSetName + configSetSuffix + "/managed-schema.xml"));
 
-      // Test getting a root-level file via V2 API - now returns raw bytes via StreamingOutput
+      // Test getting a root-level file via V2 API
       String baseUrl = cluster.getJettySolrRunners().get(0).getBaseURLV2().toString();
       String getFileUrl =
           baseUrl + "/configsets/" + configSetName + configSetSuffix + "/files/solrconfig.xml";
@@ -1030,7 +1029,6 @@ public class TestConfigSetsAPI extends SolrCloudTestCase {
       HttpClient httpClient = cluster.getJettySolrRunners().get(0).getSolrClient().getHttpClient();
       ContentResponse response = httpClient.newRequest(getFileUrl).method(HttpMethod.GET).send();
 
-      // Response should be raw bytes (application/octet-stream), not JSON
       byte[] responseBytes = response.getContent();
       String content = new String(responseBytes, UTF_8);
 
@@ -1228,16 +1226,12 @@ public class TestConfigSetsAPI extends SolrCloudTestCase {
 
       final ByteBuffer sampleConfigFile =
           TestSolrConfigHandler.getFileContent(file.toString(), false);
-      if (uploadPath != null && !uploadPath.startsWith("/")) {
-        uploadPath = "/" + uploadPath;
+
+      if (uploadPath.startsWith("/")) {
+        uploadPath = uploadPath.substring(1);
       }
-      final String uriEnding =
-          "/configsets/"
-              + configSetName
-              + suffix
-              + uploadPath
-              + (!overwrite ? "?overwrite=false" : "")
-              + (cleanup ? "?cleanup=true" : "");
+
+      final String uriEnding = "/configsets/" + configSetName + suffix + "/files/" + uploadPath;
       final boolean usePut = true;
 
       JettySolrRunner jetty = cluster.getJettySolrRunners().getFirst();
@@ -1245,23 +1239,24 @@ public class TestConfigSetsAPI extends SolrCloudTestCase {
           postDataAndGetResponse(
               jetty, jetty.getBaseURLV2() + uriEnding, sampleConfigFile, username, usePut);
       return getStatusCode(map);
-    } // else "not" a V2 request...
+    } else { // else "not" a V2 request...
 
-    try {
-      return (new Upload())
-          .setConfigSetName(configSetName + suffix)
-          .setFilePath(uploadPath)
-          // NOTE: server doesn't actually care, and test plumbing doesn't tell us
-          .setUploadFile(file, "application/octet-stream")
-          .setOverwrite(overwrite ? true : null) // expect server default to be 'false'
-          .setCleanup(cleanup ? true : null) // expect server default to be 'false'
-          .setBasicAuthCredentials(username, username) // for our MockAuthenticationPlugin
-          .process(cluster.getSolrClient())
-          .getStatus();
-    } catch (SolrServerException e1) {
-      throw new AssertionError("Server error uploading file to configset: " + e1, e1);
-    } catch (SolrException e2) {
-      return e2.code();
+      try {
+        return (new Upload())
+            .setConfigSetName(configSetName + suffix)
+            .setFilePath(uploadPath)
+            // NOTE: server doesn't actually care, and test plumbing doesn't tell us
+            .setUploadFile(file, "application/octet-stream")
+            .setOverwrite(overwrite ? true : null) // expect server default to be 'false'
+            .setCleanup(cleanup ? true : null) // expect server default to be 'false'
+            .setBasicAuthCredentials(username, username) // for our MockAuthenticationPlugin
+            .process(cluster.getSolrClient())
+            .getStatus();
+      } catch (SolrServerException e1) {
+        throw new AssertionError("Server error uploading file to configset: " + e1, e1);
+      } catch (SolrException e2) {
+        return e2.code();
+      }
     }
   }
 
