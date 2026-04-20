@@ -33,7 +33,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/** Unit tests for {@link UploadConfigSet#uploadConfigSetFile} (PutFile interface). */
+/** Unit tests for {@link UploadConfigSet#uploadConfigSetFile} */
 public class UploadConfigSetFileAPITest extends SolrTestCase {
 
   private CoreContainer mockCoreContainer;
