@@ -28,7 +28,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -113,7 +112,7 @@ public class TestSchemaDesigner extends SolrCloudTestCase implements SchemaDesig
 
     // POST some sample TSV docs
     ContentStream stream = new ContentStreamBase.StringStream(tsv, "text/csv");
-    when(mockReq.getContentStreams()).thenReturn(Collections.singletonList(stream));
+    when(mockReq.getContentStreams()).thenReturn(List.of(stream));
 
     // POST /schema-designer/analyze
     SchemaDesignerResponse response =
@@ -185,7 +184,7 @@ public class TestSchemaDesigner extends SolrCloudTestCase implements SchemaDesig
       ContentStreamBase.FileStream stream = new ContentStreamBase.FileStream(next);
       stream.setContentType(
           TestSampleDocumentsLoader.guessContentTypeFromFilename(next.getFileName().toString()));
-      when(mockReq.getContentStreams()).thenReturn(Collections.singletonList(stream));
+      when(mockReq.getContentStreams()).thenReturn(List.of(stream));
 
       // POST /schema-designer/analyze
       response =
@@ -210,7 +209,7 @@ public class TestSchemaDesigner extends SolrCloudTestCase implements SchemaDesig
             ENABLE_DYNAMIC_FIELDS_PARAM, false,
             ENABLE_FIELD_GUESSING_PARAM, true,
             ENABLE_NESTED_DOCS_PARAM, false,
-            LANGUAGES_PARAM, Collections.singletonList("en"),
+            LANGUAGES_PARAM, List.of("en"),
             COPY_FROM_PARAM, "_default");
     assertDesignerSettings(expSettings, infoResponse);
 
@@ -273,7 +272,7 @@ public class TestSchemaDesigner extends SolrCloudTestCase implements SchemaDesig
     ModifiableSolrParams reqParams = new ModifiableSolrParams();
     reqParams.set(CONFIG_SET_PARAM, configSet);
     when(mockReq.getParams()).thenReturn(reqParams);
-    when(mockReq.getContentStreams()).thenReturn(Collections.singletonList(stream));
+    when(mockReq.getContentStreams()).thenReturn(List.of(stream));
 
     // POST /schema-designer/analyze
     SchemaDesignerResponse response =
@@ -317,7 +316,7 @@ public class TestSchemaDesigner extends SolrCloudTestCase implements SchemaDesig
     ModifiableSolrParams reqParams = new ModifiableSolrParams();
     reqParams.set(CONFIG_SET_PARAM, configSet);
     when(mockReq.getParams()).thenReturn(reqParams);
-    when(mockReq.getContentStreams()).thenReturn(Collections.singletonList(stream));
+    when(mockReq.getContentStreams()).thenReturn(List.of(stream));
 
     // POST /schema-designer/analyze
     response = schemaDesigner.analyze(configSet, null, null, null, null, null, null, null);
@@ -353,16 +352,14 @@ public class TestSchemaDesigner extends SolrCloudTestCase implements SchemaDesig
     // Update solrconfig.xml
     when(mockReq.getContentStreams())
         .thenReturn(
-            Collections.singletonList(
-                new ContentStreamBase.StringStream(solrconfigXml, "application/xml")));
+            List.of(new ContentStreamBase.StringStream(solrconfigXml, "application/xml")));
     response = schemaDesigner.updateFileContents(configSet, file);
     schemaVersion = response.schemaVersion;
 
     // update solrconfig.xml with some invalid XML mess
     when(mockReq.getContentStreams())
         .thenReturn(
-            Collections.singletonList(
-                new ContentStreamBase.StringStream("<config/>", "application/xml")));
+            List.of(new ContentStreamBase.StringStream("<config/>", "application/xml")));
 
     // this should fail b/c the updated solrconfig.xml is invalid
     response = schemaDesigner.updateFileContents(configSet, file);
@@ -380,7 +377,7 @@ public class TestSchemaDesigner extends SolrCloudTestCase implements SchemaDesig
             ENABLE_DYNAMIC_FIELDS_PARAM, false,
             ENABLE_FIELD_GUESSING_PARAM, false,
             ENABLE_NESTED_DOCS_PARAM, false,
-            LANGUAGES_PARAM, Collections.singletonList("en"),
+            LANGUAGES_PARAM, List.of("en"),
             COPY_FROM_PARAM, "_default");
     assertDesignerSettings(expSettings, response);
 
@@ -449,7 +446,7 @@ public class TestSchemaDesigner extends SolrCloudTestCase implements SchemaDesig
     // add a new field
     stream = new ContentStreamBase.FileStream(getFile("schema-designer/add-new-field.json"));
     stream.setContentType(JSON_MIME);
-    when(mockReq.getContentStreams()).thenReturn(Collections.singletonList(stream));
+    when(mockReq.getContentStreams()).thenReturn(List.of(stream));
 
     // POST /schema-designer/add
     response = schemaDesigner.addSchemaObject(configSet, schemaVersion);
@@ -462,7 +459,7 @@ public class TestSchemaDesigner extends SolrCloudTestCase implements SchemaDesig
     // "temp" collection
     stream = new ContentStreamBase.FileStream(getFile("schema-designer/update-author-field.json"));
     stream.setContentType(JSON_MIME);
-    when(mockReq.getContentStreams()).thenReturn(Collections.singletonList(stream));
+    when(mockReq.getContentStreams()).thenReturn(List.of(stream));
 
     // PUT /schema-designer/update
     response = schemaDesigner.updateSchemaObject(configSet, schemaVersion);
@@ -472,7 +469,7 @@ public class TestSchemaDesigner extends SolrCloudTestCase implements SchemaDesig
     // add a new type
     stream = new ContentStreamBase.FileStream(getFile("schema-designer/add-new-type.json"));
     stream.setContentType(JSON_MIME);
-    when(mockReq.getContentStreams()).thenReturn(Collections.singletonList(stream));
+    when(mockReq.getContentStreams()).thenReturn(List.of(stream));
 
     // POST /schema-designer/add
     response = schemaDesigner.addSchemaObject(configSet, schemaVersion);
@@ -490,7 +487,7 @@ public class TestSchemaDesigner extends SolrCloudTestCase implements SchemaDesig
 
     stream = new ContentStreamBase.FileStream(getFile("schema-designer/update-type.json"));
     stream.setContentType(JSON_MIME);
-    when(mockReq.getContentStreams()).thenReturn(Collections.singletonList(stream));
+    when(mockReq.getContentStreams()).thenReturn(List.of(stream));
 
     // POST /schema-designer/update
     response = schemaDesigner.updateSchemaObject(configSet, schemaVersion);
@@ -555,7 +552,7 @@ public class TestSchemaDesigner extends SolrCloudTestCase implements SchemaDesig
     ContentStreamBase.FileStream stream =
         new ContentStreamBase.FileStream(getFile("schema-designer/add-new-field.json"));
     stream.setContentType(JSON_MIME);
-    when(mockReq.getContentStreams()).thenReturn(Collections.singletonList(stream));
+    when(mockReq.getContentStreams()).thenReturn(List.of(stream));
 
     // POST /schema-designer/add
     response = schemaDesigner.addSchemaObject(configSet, schemaVersion);
@@ -625,7 +622,7 @@ public class TestSchemaDesigner extends SolrCloudTestCase implements SchemaDesig
     assertFalse(schemaField.isRequired());
     assertTrue(schemaField.stored());
     List<String> srcFields = schema.getCopySources("_text_");
-    assertEquals(Collections.singletonList(fieldName), srcFields);
+    assertEquals(List.of(fieldName), srcFields);
   }
 
   @SuppressWarnings({"unchecked"})
@@ -671,7 +668,7 @@ public class TestSchemaDesigner extends SolrCloudTestCase implements SchemaDesig
 
     ContentStreamBase.StringStream stringStream =
         new ContentStreamBase.StringStream(JSONUtil.toJSON(mapParams), JSON_MIME);
-    when(mockReq.getContentStreams()).thenReturn(Collections.singletonList(stringStream));
+    when(mockReq.getContentStreams()).thenReturn(List.of(stringStream));
 
     response = schemaDesigner.updateSchemaObject(configSet, schemaVersion);
 
@@ -680,7 +677,7 @@ public class TestSchemaDesigner extends SolrCloudTestCase implements SchemaDesig
     ContentStreamBase.FileStream fileStream =
         new ContentStreamBase.FileStream(getFile("schema-designer/add-new-field.json"));
     fileStream.setContentType(JSON_MIME);
-    when(mockReq.getContentStreams()).thenReturn(Collections.singletonList(fileStream));
+    when(mockReq.getContentStreams()).thenReturn(List.of(fileStream));
     // POST /schema-designer/add
     response = schemaDesigner.addSchemaObject(configSet, schemaVersion);
     assertNotNull(response.field);
@@ -689,7 +686,7 @@ public class TestSchemaDesigner extends SolrCloudTestCase implements SchemaDesig
     schemaVersion = response.schemaVersion;
     fileStream = new ContentStreamBase.FileStream(getFile("schema-designer/add-new-type.json"));
     fileStream.setContentType(JSON_MIME);
-    when(mockReq.getContentStreams()).thenReturn(Collections.singletonList(fileStream));
+    when(mockReq.getContentStreams()).thenReturn(List.of(fileStream));
     // POST /schema-designer/add
     response = schemaDesigner.addSchemaObject(configSet, schemaVersion);
     assertNotNull(response.fieldType);
@@ -749,7 +746,7 @@ public class TestSchemaDesigner extends SolrCloudTestCase implements SchemaDesig
     ModifiableSolrParams reqParams = new ModifiableSolrParams();
     reqParams.set(CONFIG_SET_PARAM, configSet);
     when(mockReq.getParams()).thenReturn(reqParams);
-    when(mockReq.getContentStreams()).thenReturn(Collections.singletonList(stream));
+    when(mockReq.getContentStreams()).thenReturn(List.of(stream));
     schemaDesigner.analyze(configSet, null, null, null, null, null, null, null);
 
     // Build a fresh API instance whose indexedVersion cache is empty (so it always

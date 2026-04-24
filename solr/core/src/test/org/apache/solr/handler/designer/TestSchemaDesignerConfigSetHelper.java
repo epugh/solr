@@ -26,7 +26,6 @@ import static org.apache.solr.schema.IndexSchema.ROOT_FIELD_NAME;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -152,14 +151,14 @@ public class TestSchemaDesignerConfigSetHelper extends SolrCloudTestCase
 
     schema =
         helper.syncLanguageSpecificObjectsAndFiles(
-            configSet, schema, Collections.singletonList("en"), true, DEFAULT_CONFIGSET_NAME);
+            configSet, schema, List.of("en"), true, DEFAULT_CONFIGSET_NAME);
     assertNotNull(schema.getFieldTypeByName("text_en"));
     assertNotNull(schema.getFieldOrNull("*_txt_en"));
     assertNull(schema.getFieldTypeByName("text_fr"));
 
     schema =
         helper.syncLanguageSpecificObjectsAndFiles(
-            configSet, schema, Collections.singletonList("en"), false, DEFAULT_CONFIGSET_NAME);
+            configSet, schema, List.of("en"), false, DEFAULT_CONFIGSET_NAME);
     assertNotNull(schema.getFieldTypeByName("text_en"));
     assertNull(schema.getFieldOrNull("*_txt_en"));
     assertNull(schema.getFieldTypeByName("text_fr"));
@@ -187,8 +186,7 @@ public class TestSchemaDesignerConfigSetHelper extends SolrCloudTestCase
     // add a field that uses text_en and then try removing "en" from the lang set
     helper.createCollection(mutableId, mutableId); // need to create field
     Map<String, Object> addField = Map.of("name", "title", "type", "text_en");
-    String addedFieldName =
-        helper.addSchemaObject(configSet, Collections.singletonMap("add-field", addField));
+    String addedFieldName = helper.addSchemaObject(configSet, Map.of("add-field", addField));
     assertEquals("title", addedFieldName);
 
     schema = helper.loadLatestSchema(helper.loadSolrConfig(mutableId));
@@ -196,7 +194,7 @@ public class TestSchemaDesignerConfigSetHelper extends SolrCloudTestCase
 
     schema =
         helper.syncLanguageSpecificObjectsAndFiles(
-            configSet, schema, Collections.singletonList("fr"), true, DEFAULT_CONFIGSET_NAME);
+            configSet, schema, List.of("fr"), true, DEFAULT_CONFIGSET_NAME);
     assertNotNull(schema.getFieldTypeByName("text_en")); // being used, so not removed
     assertNotNull(schema.getFieldOrNull("*_txt_en"));
     assertTrue(
@@ -285,8 +283,7 @@ public class TestSchemaDesignerConfigSetHelper extends SolrCloudTestCase
     helper.createCollection(mutableId, mutableId);
 
     Map<String, Object> addField = Map.of("name", "title", "type", "text_en");
-    String addedFieldName =
-        helper.addSchemaObject(configSet, Collections.singletonMap("add-field", addField));
+    String addedFieldName = helper.addSchemaObject(configSet, Map.of("add-field", addField));
     assertEquals("title", addedFieldName);
 
     Map<String, Object> analysis =
@@ -311,14 +308,11 @@ public class TestSchemaDesignerConfigSetHelper extends SolrCloudTestCase
 
     // add / update field
     Map<String, Object> addField = Map.of("name", "author", "type", "string");
-    String addedFieldName =
-        helper.addSchemaObject(configSet, Collections.singletonMap("add-field", addField));
+    String addedFieldName = helper.addSchemaObject(configSet, Map.of("add-field", addField));
     assertEquals("author", addedFieldName);
 
     helper.addSchemaObject(
-        configSet,
-        Collections.singletonMap(
-            "add-field", Map.of("name", "_catch_all_", "type", "text_general")));
+        configSet, Map.of("add-field", Map.of("name", "_catch_all_", "type", "text_general")));
 
     Map<String, Object> updateField =
         Map.of("name", "author", "type", "string", "copyDest", "_text_");
@@ -338,8 +332,8 @@ public class TestSchemaDesignerConfigSetHelper extends SolrCloudTestCase
     assertEquals(false, resp.get("rebuild"));
 
     latest = helper.loadLatestSchema(helper.loadSolrConfig(mutableId));
-    assertEquals(Collections.singletonList("author"), latest.getCopySources("_text_"));
-    assertEquals(Collections.singletonList("author"), latest.getCopySources("_catch_all_"));
+    assertEquals(List.of("author"), latest.getCopySources("_text_"));
+    assertEquals(List.of("author"), latest.getCopySources("_catch_all_"));
 
     updateField = Map.of("name", "author", "type", "string", "copyDest", "");
     latest = helper.loadLatestSchema(helper.loadSolrConfig(mutableId));
@@ -364,8 +358,7 @@ public class TestSchemaDesignerConfigSetHelper extends SolrCloudTestCase
 
     // add / update field
     Map<String, Object> addField = Map.of("name", "author", "type", "string");
-    String addedFieldName =
-        helper.addSchemaObject(configSet, Collections.singletonMap("add-field", addField));
+    String addedFieldName = helper.addSchemaObject(configSet, Map.of("add-field", addField));
     assertEquals("author", addedFieldName);
 
     Map<String, Object> updateField = Map.of("name", "author", "type", "string", "required", true);
@@ -403,7 +396,7 @@ public class TestSchemaDesignerConfigSetHelper extends SolrCloudTestCase
 
     // did the copy field update get applied?
     latest = helper.loadLatestSchema(helper.loadSolrConfig(mutableId));
-    assertEquals(Collections.singletonList("author"), latest.getCopySources("_text_"));
+    assertEquals(List.of("author"), latest.getCopySources("_text_"));
 
     // switch the author field type to strings
     updateField =
@@ -419,8 +412,7 @@ public class TestSchemaDesignerConfigSetHelper extends SolrCloudTestCase
     // add / update field type
     Map<String, Object> addType =
         Map.of("name", "testType", "class", "solr.StrField", "docValues", true);
-    String addTypeName =
-        helper.addSchemaObject(configSet, Collections.singletonMap("add-field-type", addType));
+    String addTypeName = helper.addSchemaObject(configSet, Map.of("add-field-type", addType));
     assertEquals("testType", addTypeName);
 
     latest = helper.loadLatestSchema(helper.loadSolrConfig(mutableId));
@@ -443,8 +435,7 @@ public class TestSchemaDesignerConfigSetHelper extends SolrCloudTestCase
     // add / update dynamic field
     Map<String, Object> addDynField = Map.of("name", "*_test", "type", "string");
     String addedDynFieldName =
-        helper.addSchemaObject(
-            configSet, Collections.singletonMap("add-dynamic-field", addDynField));
+        helper.addSchemaObject(configSet, Map.of("add-dynamic-field", addDynField));
     assertEquals("*_test", addedDynFieldName);
 
     // update the dynamic field
