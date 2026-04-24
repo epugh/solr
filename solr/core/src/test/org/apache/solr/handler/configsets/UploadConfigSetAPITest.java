@@ -196,11 +196,13 @@ public class UploadConfigSetAPITest extends SolrTestCase {
 
       final var ex =
           assertThrows(
-              SolrException.class, () -> api.uploadConfigSet(configSetName, false, false, zipStream));
+              SolrException.class,
+              () -> api.uploadConfigSet(configSetName, false, false, zipStream));
 
       assertEquals(SolrException.ErrorCode.BAD_REQUEST.code, ex.code());
       assertTrue(
-          "Error message should mention config already exists", ex.getMessage().contains("already"));
+          "Error message should mention config already exists",
+          ex.getMessage().contains("already"));
     }
   }
 
