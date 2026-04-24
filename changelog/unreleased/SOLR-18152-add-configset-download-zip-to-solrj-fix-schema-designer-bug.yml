@@ -1,5 +1,5 @@
 # See https://github.com/apache/solr/blob/main/dev-docs/changelog.adoc
-title: Migrated SchemaDesignerAPI to JAX-RS V2 annotations. Fixed a bug in the "analyze" existing documents feature of Schema Designer. Added download and getFileContents endpoints to the Schema Designer API.
+title: Fixed a bug in the "analyze" existing documents feature of Schema Designer that prevented the designer from working.
 type: fixed # added, changed, fixed, deprecated, removed, dependency_update, security, other
 authors:
   - name: Eric Pugh
