@@ -162,5 +162,4 @@ public interface SchemaDesignerApi {
       tags = {"schema-designer"})
   SchemaDesignerSchemaDiffResponse getSchemaDiff(@PathParam("configSet") String configSet)
       throws Exception;
-
 }
