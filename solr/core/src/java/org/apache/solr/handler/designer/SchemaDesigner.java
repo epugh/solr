@@ -1477,27 +1477,6 @@ public class SchemaDesigner extends JerseyResource
     }
   }
 
-  @Override
-  @PermissionName(CONFIG_READ_PERM)
-  public FlexibleSolrJerseyResponse getFileContents(String configSet, String filePath)
-      throws Exception {
-    requireNotEmpty(CONFIG_SET_PARAM, configSet);
-    requireNotEmpty("filePath", filePath);
-    String mutableId = getMutableId(configSet);
-    String resolvedId = configExists(mutableId) ? mutableId : configSet;
-    byte[] data = coreContainer.getConfigSetService().downloadFileFromConfig(resolvedId, filePath);
-    if (data == null) {
-      throw new SolrException(
-          SolrException.ErrorCode.NOT_FOUND,
-          "File '" + filePath + "' not found in configSet: " + configSet);
-    }
-    FlexibleSolrJerseyResponse response =
-        instantiateJerseyResponse(FlexibleSolrJerseyResponse.class);
-    response.setUnknownProperty("path", filePath);
-    response.setUnknownProperty("content", new String(data, StandardCharsets.UTF_8));
-    return response;
-  }
-
   private static class InMemoryResourceLoader extends SolrResourceLoader {
     String resource;
     byte[] data;

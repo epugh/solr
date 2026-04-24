@@ -15,7 +15,7 @@
  limitations under the License.
 */
 
-solrAdminApp.controller('SchemaDesignerController', function ($scope, $timeout, $cookies, $window, Constants, SchemaDesigner, Luke) {
+solrAdminApp.controller('SchemaDesignerController', function ($scope, $timeout, $cookies, $window, Constants, SchemaDesigner, ConfigSetFiles, Luke) {
   $scope.resetMenu("schema-designer", Constants.IS_ROOT_PAGE);
 
   $scope.schemas = [];
@@ -905,7 +905,7 @@ solrAdminApp.controller('SchemaDesignerController', function ($scope, $timeout, 
     $scope.selectedFile = id.startsWith("files/") ? id.substring("files/".length) : id;
 
     var mutableId = "._designer_" + $scope.currentSchema;
-    SchemaDesigner.get({configSet: mutableId, path: "file", filePath: $scope.selectedFile}, function (data) {
+    ConfigSetFiles.get({configSet: mutableId, filePath: $scope.selectedFile}, function (data) {
       $scope.fileNodeText = data.content;
       $scope.isLeafNode = false;
       if (doSelectOnTree) {

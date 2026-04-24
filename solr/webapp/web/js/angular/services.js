@@ -73,6 +73,23 @@ solrAdminServices.factory('System',
     return $resource('admin/configs', {'wt': 'json', '_': Date.now()}, {"configs": {params: {action: "LIST"}}
     });
  }])
+.factory('ConfigSetFiles',
+ ['$http', function ($http) {
+    // Fetches a single file from a configset via V2 /api/configsets/{name}/files/{path}.
+    // Each path segment is encoded separately so subdirectory paths like "lang/stopwords.txt"
+    // preserve their slashes (encoding them as %2F gets rejected by Jetty).
+    // transformResponse is overridden to skip JSON parsing since files are raw text.
+    return {
+      get: function (params, successFn, errorFn) {
+        var url = "/api/configsets/" + encodeURIComponent(params.configSet) +
+                  "/files/" + params.filePath.split("/").map(encodeURIComponent).join("/");
+        $http.get(url, {transformResponse: [function (data) { return data; }]}).then(
+          function (response) { if (successFn) successFn({content: response.data}); },
+          function (response) { if (errorFn) errorFn(response); }
+        );
+      }
+    };
+ }])
 .factory('Cores',
   ['$resource', function($resource) {
     return $resource('admin/cores',

@@ -24,6 +24,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -345,9 +346,10 @@ public class TestSchemaDesigner extends SolrCloudTestCase implements SchemaDesig
       }
     }
     assertNotNull("solrconfig.xml not found in files!", file);
-    FlexibleSolrJerseyResponse fileContentsResp = schemaDesigner.getFileContents(configSet, file);
-    String solrconfigXml = (String) fileContentsResp.unknownProperties().get("content");
-    assertNotNull(solrconfigXml);
+    byte[] solrconfigBytes =
+        cc.getConfigSetService().downloadFileFromConfig(getMutableId(configSet), file);
+    assertNotNull(solrconfigBytes);
+    String solrconfigXml = new String(solrconfigBytes, StandardCharsets.UTF_8);
 
     // Update solrconfig.xml
     when(mockReq.getContentStreams())
