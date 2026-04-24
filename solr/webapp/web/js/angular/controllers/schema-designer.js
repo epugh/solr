@@ -1524,7 +1524,7 @@ solrAdminApp.controller('SchemaDesignerController', function ($scope, $timeout, 
   $scope.downloadConfig = function () {
     // Use the generic configsets download endpoint on the mutable draft
     var mutableId = "._designer_" + $scope.currentSchema;
-    var downloadUrl = "/api/configsets/" + encodeURIComponent(mutableId) + "/files?displayName=" + encodeURIComponent($scope.currentSchema);
+    var downloadUrl = "/api/configsets/" + encodeURIComponent(mutableId) + "/files";
     if (sessionStorage.getItem("auth.header")) {
       var fileName = $scope.currentSchema+"_configset.zip";
       var xhr = new XMLHttpRequest();

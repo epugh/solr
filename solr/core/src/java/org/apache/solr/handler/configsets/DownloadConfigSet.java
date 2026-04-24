@@ -54,7 +54,7 @@ public class DownloadConfigSet extends ConfigSetAPIBase implements ConfigsetsApi
 
   @Override
   @PermissionName(CONFIG_READ_PERM)
-  public Response downloadConfigSet(String configSetName, String displayName) throws Exception {
+  public Response downloadConfigSet(String configSetName) throws Exception {
     if (StrUtils.isNullOrEmpty(configSetName)) {
       throw new SolrException(
           SolrException.ErrorCode.BAD_REQUEST, "No configset name provided to download");
@@ -63,8 +63,16 @@ public class DownloadConfigSet extends ConfigSetAPIBase implements ConfigsetsApi
       throw new SolrException(
           SolrException.ErrorCode.NOT_FOUND, "ConfigSet " + configSetName + " not found!");
     }
-    String effectiveDisplayName = StrUtils.isNullOrEmpty(displayName) ? configSetName : displayName;
-    return buildZipResponse(configSetService, configSetName, effectiveDisplayName);
+    return buildZipResponse(configSetService, configSetName, deriveDisplayName(configSetName));
+  }
+
+  // This is to support the schema designer's internal name and
+  // lets us not duplicate the download endpoint.
+  static String deriveDisplayName(String configSetName) {
+    if (configSetName.startsWith("._designer_")) {
+      return configSetName.substring("._designer_".length());
+    }
+    return configSetName;
   }
 
   /**
@@ -72,7 +80,7 @@ public class DownloadConfigSet extends ConfigSetAPIBase implements ConfigsetsApi
    *
    * @param configSetService the service to use for downloading the configset files
    * @param configSetName the name of the configset to download (internal id)
-   * @param displayName the name to use in the Content-Disposition filename
+   * @param displayName the sanitized name to use in the Content-Disposition filename
    */
   public static Response buildZipResponse(
       ConfigSetService configSetService, String configSetName, String displayName)
