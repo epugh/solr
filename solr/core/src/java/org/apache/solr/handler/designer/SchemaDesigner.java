@@ -82,6 +82,7 @@ import org.apache.solr.common.util.StrUtils;
 import org.apache.solr.core.CoreContainer;
 import org.apache.solr.core.SolrConfig;
 import org.apache.solr.core.SolrResourceLoader;
+import org.apache.solr.handler.configsets.DownloadConfigSet;
 import org.apache.solr.jersey.PermissionName;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.schema.ManagedIndexSchema;
@@ -1507,7 +1508,7 @@ public class SchemaDesigner extends JerseyResource
     String mutableId = getMutableId(configSet);
     String resolvedId = configExists(mutableId) ? mutableId : configSet;
     final byte[] zipBytes =
-        SchemaDesignerConfigSetHelper.zipConfigSet(coreContainer.getConfigSetService(), resolvedId);
+        DownloadConfigSet.zipConfigSet(coreContainer.getConfigSetService(), resolvedId);
     final String safeName = configSet.replaceAll("[^a-zA-Z0-9_\\-.]", "_");
     final String fileName = safeName + "_configset.zip";
     return Response.ok((StreamingOutput) outputStream -> outputStream.write(zipBytes))

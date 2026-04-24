@@ -351,15 +351,13 @@ public class TestSchemaDesigner extends SolrCloudTestCase implements SchemaDesig
 
     // Update solrconfig.xml
     when(mockReq.getContentStreams())
-        .thenReturn(
-            List.of(new ContentStreamBase.StringStream(solrconfigXml, "application/xml")));
+        .thenReturn(List.of(new ContentStreamBase.StringStream(solrconfigXml, "application/xml")));
     response = schemaDesigner.updateFileContents(configSet, file);
     schemaVersion = response.schemaVersion;
 
     // update solrconfig.xml with some invalid XML mess
     when(mockReq.getContentStreams())
-        .thenReturn(
-            List.of(new ContentStreamBase.StringStream("<config/>", "application/xml")));
+        .thenReturn(List.of(new ContentStreamBase.StringStream("<config/>", "application/xml")));
 
     // this should fail b/c the updated solrconfig.xml is invalid
     response = schemaDesigner.updateFileContents(configSet, file);
