@@ -29,8 +29,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.apache.solr.client.api.endpoint.ConfigsetsApi;
 import org.apache.solr.client.api.model.SolrJerseyResponse;
+import org.apache.solr.client.solrj.util.SolrIdentifierValidator;
 import org.apache.solr.common.SolrException;
-import org.apache.solr.common.cloud.ZkMaintenanceUtils;
 import org.apache.solr.core.ConfigSetService;
 import org.apache.solr.core.CoreContainer;
 import org.apache.solr.jersey.PermissionName;
@@ -64,6 +64,7 @@ public class UploadConfigSet extends ConfigSetAPIBase implements ConfigsetsApi.U
       throws IOException {
     final var response = instantiateJerseyResponse(SolrJerseyResponse.class);
     ensureConfigSetUploadEnabled();
+    SolrIdentifierValidator.validateConfigSetName(configSetName);
 
     boolean overwritesExisting = configSetService.checkConfigExists(configSetName);
     // Get upload parameters
@@ -116,6 +117,7 @@ public class UploadConfigSet extends ConfigSetAPIBase implements ConfigsetsApi.U
       throws IOException {
     final var response = instantiateJerseyResponse(SolrJerseyResponse.class);
     ensureConfigSetUploadEnabled();
+    SolrIdentifierValidator.validateConfigSetName(configSetName);
 
     boolean overwritesExisting = configSetService.checkConfigExists(configSetName);
 
@@ -134,7 +136,7 @@ public class UploadConfigSet extends ConfigSetAPIBase implements ConfigsetsApi.U
       throw new SolrException(
           SolrException.ErrorCode.BAD_REQUEST,
           "The file path provided for upload, '" + singleFilePath + "', is not valid.");
-    } else if (ZkMaintenanceUtils.isFileForbiddenInConfigSets(fixedSingleFilePath)
+    } else if (ConfigSetService.isFileForbiddenInConfigSets(fixedSingleFilePath)
         || FileTypeMagicUtil.isFileForbiddenInConfigset(data)) {
       throw new SolrException(
           SolrException.ErrorCode.BAD_REQUEST,
