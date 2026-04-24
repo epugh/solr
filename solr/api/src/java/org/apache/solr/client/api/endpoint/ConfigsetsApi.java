@@ -92,7 +92,10 @@ public interface ConfigsetsApi {
           @Extension(properties = {@ExtensionProperty(name = RAW_OUTPUT_PROPERTY, value = "true")})
         })
     @Produces("application/zip")
-    Response downloadConfigSet(@PathParam("configSetName") String configSetName) throws Exception;
+    Response downloadConfigSet(
+        @PathParam("configSetName") String configSetName,
+        @QueryParam("displayName") String displayName)
+        throws Exception;
   }
 
   /**

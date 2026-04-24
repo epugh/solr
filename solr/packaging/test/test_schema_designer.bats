@@ -132,11 +132,12 @@ teardown() {
     > /dev/null
 
   local zip_file="${BATS_TEST_TMPDIR}/${DESIGNER_CONFIGSET}.zip"
+  local mutable_id="._designer_${DESIGNER_CONFIGSET}"
 
   # Capture HTTP status code separately
   local http_code
   http_code=$(curl -s -o "${zip_file}" -w "%{http_code}" \
-    "http://localhost:${SOLR_PORT}/api/schema-designer/${DESIGNER_CONFIGSET}/download")
+    "http://localhost:${SOLR_PORT}/api/configsets/$(python3 -c "import urllib.parse; print(urllib.parse.quote('${mutable_id}', safe=''))")/files?displayName=${DESIGNER_CONFIGSET}")
 
   # Assert HTTP 200
   [ "${http_code}" = "200" ]
@@ -158,8 +159,9 @@ teardown() {
     "http://localhost:${SOLR_PORT}/api/schema-designer/${DESIGNER_CONFIGSET}/prep?copyFrom=_default" \
     > /dev/null
 
+  local mutable_id="._designer_${DESIGNER_CONFIGSET}"
   run curl -s -I \
-    "http://localhost:${SOLR_PORT}/api/schema-designer/${DESIGNER_CONFIGSET}/download"
+    "http://localhost:${SOLR_PORT}/api/configsets/$(python3 -c "import urllib.parse; print(urllib.parse.quote('${mutable_id}', safe=''))")/files?displayName=${DESIGNER_CONFIGSET}"
   assert_output --partial 'Content-Disposition'
   assert_output --partial '.zip'
 }

@@ -1522,8 +1522,9 @@ solrAdminApp.controller('SchemaDesignerController', function ($scope, $timeout, 
   };
 
   $scope.downloadConfig = function () {
-    // have to use an AJAX request so we can supply the Authorization header
-    var downloadUrl = "/api/schema-designer/" + encodeURIComponent($scope.currentSchema) + "/download";
+    // Use the generic configsets download endpoint on the mutable draft
+    var mutableId = "._designer_" + $scope.currentSchema;
+    var downloadUrl = "/api/configsets/" + encodeURIComponent(mutableId) + "/files?displayName=" + encodeURIComponent($scope.currentSchema);
     if (sessionStorage.getItem("auth.header")) {
       var fileName = $scope.currentSchema+"_configset.zip";
       var xhr = new XMLHttpRequest();

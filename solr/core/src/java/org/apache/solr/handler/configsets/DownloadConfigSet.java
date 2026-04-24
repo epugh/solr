@@ -54,7 +54,7 @@ public class DownloadConfigSet extends ConfigSetAPIBase implements ConfigsetsApi
 
   @Override
   @PermissionName(CONFIG_READ_PERM)
-  public Response downloadConfigSet(String configSetName) throws Exception {
+  public Response downloadConfigSet(String configSetName, String displayName) throws Exception {
     if (StrUtils.isNullOrEmpty(configSetName)) {
       throw new SolrException(
           SolrException.ErrorCode.BAD_REQUEST, "No configset name provided to download");
@@ -63,20 +63,26 @@ public class DownloadConfigSet extends ConfigSetAPIBase implements ConfigsetsApi
       throw new SolrException(
           SolrException.ErrorCode.NOT_FOUND, "ConfigSet " + configSetName + " not found!");
     }
-    return buildZipResponse(configSetService, configSetName);
+    String effectiveDisplayName = StrUtils.isNullOrEmpty(displayName) ? configSetName : displayName;
+    return buildZipResponse(configSetService, configSetName, effectiveDisplayName);
   }
 
   /**
    * Build a ZIP download {@link Response} for the given configset.
    *
    * @param configSetService the service to use for downloading the configset files
-   * @param configSetName the name of the configset to download
+   * @param configSetName the name of the configset to download (internal id)
+   * @param displayName the name to use in the Content-Disposition filename
    */
-  public static Response buildZipResponse(ConfigSetService configSetService, String configSetName)
+  public static Response buildZipResponse(
+      ConfigSetService configSetService, String configSetName, String displayName)
       throws IOException {
     final byte[] zipBytes = zipConfigSet(configSetService, configSetName);
+    final String safeName = displayName.replaceAll("[^a-zA-Z0-9_\\-.]", "_");
+    final String fileName = safeName + "_configset.zip";
     return Response.ok((StreamingOutput) outputStream -> outputStream.write(zipBytes))
         .type("application/zip")
+        .header("Content-Disposition", "attachment; filename=\"" + fileName + "\"")
         .build();
   }
 
