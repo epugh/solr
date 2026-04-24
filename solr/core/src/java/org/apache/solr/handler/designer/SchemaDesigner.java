@@ -23,6 +23,8 @@ import static org.apache.solr.security.PermissionNameProvider.Name.CONFIG_EDIT_P
 import static org.apache.solr.security.PermissionNameProvider.Name.CONFIG_READ_PERM;
 
 import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.StreamingOutput;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -1475,6 +1477,43 @@ public class SchemaDesigner extends JerseyResource
       throw new IOException(
           "Failed to check if path exists: " + zkPath, SolrZkClient.checkInterrupted(e));
     }
+  }
+
+  @Override
+  @PermissionName(CONFIG_READ_PERM)
+  public FlexibleSolrJerseyResponse getFileContents(String configSet, String filePath)
+      throws Exception {
+    requireNotEmpty(CONFIG_SET_PARAM, configSet);
+    requireNotEmpty("filePath", filePath);
+    String mutableId = getMutableId(configSet);
+    String resolvedId = configExists(mutableId) ? mutableId : configSet;
+    byte[] data = coreContainer.getConfigSetService().downloadFileFromConfig(resolvedId, filePath);
+    if (data == null) {
+      throw new SolrException(
+          SolrException.ErrorCode.NOT_FOUND,
+          "File '" + filePath + "' not found in configSet: " + configSet);
+    }
+    FlexibleSolrJerseyResponse response =
+        instantiateJerseyResponse(FlexibleSolrJerseyResponse.class);
+    response.setUnknownProperty("path", filePath);
+    response.setUnknownProperty("content", new String(data, StandardCharsets.UTF_8));
+    return response;
+  }
+
+  @Override
+  @PermissionName(CONFIG_READ_PERM)
+  public Response downloadConfig(String configSet) throws Exception {
+    requireNotEmpty(CONFIG_SET_PARAM, configSet);
+    String mutableId = getMutableId(configSet);
+    String resolvedId = configExists(mutableId) ? mutableId : configSet;
+    final byte[] zipBytes =
+        SchemaDesignerConfigSetHelper.zipConfigSet(coreContainer.getConfigSetService(), resolvedId);
+    final String safeName = configSet.replaceAll("[^a-zA-Z0-9_\\-.]", "_");
+    final String fileName = safeName + "_configset.zip";
+    return Response.ok((StreamingOutput) outputStream -> outputStream.write(zipBytes))
+        .type("application/zip")
+        .header("Content-Disposition", "attachment; filename=\"" + fileName + "\"")
+        .build();
   }
 
   private static class InMemoryResourceLoader extends SolrResourceLoader {

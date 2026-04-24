@@ -16,7 +16,11 @@
  */
 package org.apache.solr.client.api.endpoint;
 
+import static org.apache.solr.client.api.util.Constants.RAW_OUTPUT_PROPERTY;
+
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.extensions.Extension;
+import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
@@ -24,7 +28,9 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Response;
 import java.util.List;
 import org.apache.solr.client.api.model.FlexibleSolrJerseyResponse;
 import org.apache.solr.client.api.model.SchemaDesignerCollectionsResponse;
@@ -162,4 +168,24 @@ public interface SchemaDesignerApi {
       tags = {"schema-designer"})
   SchemaDesignerSchemaDiffResponse getSchemaDiff(@PathParam("configSet") String configSet)
       throws Exception;
+
+  @GET
+  @Path("/{configSet}/file")
+  @Operation(
+      summary = "Get the contents of a file in a configSet being designed.",
+      tags = {"schema-designer"})
+  FlexibleSolrJerseyResponse getFileContents(
+      @PathParam("configSet") String configSet, @QueryParam("filePath") String filePath)
+      throws Exception;
+
+  @GET
+  @Path("/{configSet}/download")
+  @Operation(
+      summary = "Download the configSet being designed as a ZIP archive.",
+      tags = {"schema-designer"},
+      extensions = {
+        @Extension(properties = {@ExtensionProperty(name = RAW_OUTPUT_PROPERTY, value = "true")})
+      })
+  @Produces("application/zip")
+  Response downloadConfig(@PathParam("configSet") String configSet) throws Exception;
 }

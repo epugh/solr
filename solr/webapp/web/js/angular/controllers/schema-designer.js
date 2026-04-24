@@ -15,7 +15,7 @@
  limitations under the License.
 */
 
-solrAdminApp.controller('SchemaDesignerController', function ($scope, $timeout, $cookies, $window, Constants, SchemaDesigner, Configsets, Luke) {
+solrAdminApp.controller('SchemaDesignerController', function ($scope, $timeout, $cookies, $window, Constants, SchemaDesigner, Luke) {
   $scope.resetMenu("schema-designer", Constants.IS_ROOT_PAGE);
 
   $scope.schemas = [];
@@ -905,7 +905,7 @@ solrAdminApp.controller('SchemaDesignerController', function ($scope, $timeout, 
     $scope.selectedFile = id.startsWith("files/") ? id.substring("files/".length) : id;
 
     var mutableId = "._designer_" + $scope.currentSchema;
-    Configsets.get({configSetName: mutableId, endpoint: "file", path: $scope.selectedFile}, function (data) {
+    SchemaDesigner.get({configSet: mutableId, path: "file", filePath: $scope.selectedFile}, function (data) {
       $scope.fileNodeText = data.content;
       $scope.isLeafNode = false;
       if (doSelectOnTree) {
@@ -1523,8 +1523,7 @@ solrAdminApp.controller('SchemaDesignerController', function ($scope, $timeout, 
 
   $scope.downloadConfig = function () {
     // have to use an AJAX request so we can supply the Authorization header
-    var mutableId = "._designer_" + $scope.currentSchema;
-    var downloadUrl = "/api/configsets/" + encodeURIComponent(mutableId) + "/download?displayName=" + encodeURIComponent($scope.currentSchema);
+    var downloadUrl = "/api/schema-designer/" + encodeURIComponent($scope.currentSchema) + "/download";
     if (sessionStorage.getItem("auth.header")) {
       var fileName = $scope.currentSchema+"_configset.zip";
       var xhr = new XMLHttpRequest();

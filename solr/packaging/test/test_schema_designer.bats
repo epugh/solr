@@ -120,11 +120,9 @@ teardown() {
 }
 
 # ---------------------------------------------------------------------------
-# 6. Download configSet zip via the generic configsets endpoint.
-#    This is the primary new endpoint introduced by the migration.
+# 6. Download configSet zip via the schema-designer endpoint.
 #    We verify:
 #      - HTTP 200 response
-#      - Content-Disposition header with a .zip filename
 #      - The response body is a valid zip (starts with the PK magic bytes)
 # ---------------------------------------------------------------------------
 @test "download schema-designer configSet as zip" {
@@ -133,13 +131,12 @@ teardown() {
     "http://localhost:${SOLR_PORT}/api/schema-designer/${DESIGNER_CONFIGSET}/prep?copyFrom=_default" \
     > /dev/null
 
-  local mutable_id="._designer_${DESIGNER_CONFIGSET}"
   local zip_file="${BATS_TEST_TMPDIR}/${DESIGNER_CONFIGSET}.zip"
 
   # Capture HTTP status code separately
   local http_code
   http_code=$(curl -s -o "${zip_file}" -w "%{http_code}" \
-    "http://localhost:${SOLR_PORT}/api/configsets/${mutable_id}/download?displayName=${DESIGNER_CONFIGSET}")
+    "http://localhost:${SOLR_PORT}/api/schema-designer/${DESIGNER_CONFIGSET}/download")
 
   # Assert HTTP 200
   [ "${http_code}" = "200" ]
@@ -161,10 +158,8 @@ teardown() {
     "http://localhost:${SOLR_PORT}/api/schema-designer/${DESIGNER_CONFIGSET}/prep?copyFrom=_default" \
     > /dev/null
 
-  local mutable_id="._designer_${DESIGNER_CONFIGSET}"
-
   run curl -s -I \
-    "http://localhost:${SOLR_PORT}/api/configsets/${mutable_id}/download?displayName=${DESIGNER_CONFIGSET}"
+    "http://localhost:${SOLR_PORT}/api/schema-designer/${DESIGNER_CONFIGSET}/download"
   assert_output --partial 'Content-Disposition'
   assert_output --partial '.zip'
 }

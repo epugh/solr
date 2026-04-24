@@ -875,7 +875,7 @@ public class CoreContainer {
     registerV2Api(clusterAPI.commands);
 
     if (isZooKeeperAware()) {
-      registerV2ApiIfEnabled(SchemaDesigner.class);
+      registerV2Api(SchemaDesigner.class);
     } // else Schema Designer not available in standalone (non-cloud) mode
 
     /*

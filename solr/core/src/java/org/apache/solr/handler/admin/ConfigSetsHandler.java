@@ -39,8 +39,6 @@ import org.apache.solr.handler.api.V2ApiUtils;
 import org.apache.solr.handler.configsets.CloneConfigSet;
 import org.apache.solr.handler.configsets.ConfigSetAPIBase;
 import org.apache.solr.handler.configsets.DeleteConfigSet;
-import org.apache.solr.handler.configsets.DownloadConfigSet;
-import org.apache.solr.handler.configsets.GetConfigSetFile;
 import org.apache.solr.handler.configsets.ListConfigSets;
 import org.apache.solr.handler.configsets.UploadConfigSet;
 import org.apache.solr.request.SolrQueryRequest;
@@ -189,12 +187,7 @@ public class ConfigSetsHandler extends RequestHandlerBase implements PermissionN
   @Override
   public Collection<Class<? extends JerseyResource>> getJerseyResources() {
     return List.of(
-        ListConfigSets.class,
-        CloneConfigSet.class,
-        DeleteConfigSet.class,
-        UploadConfigSet.class,
-        DownloadConfigSet.class,
-        GetConfigSetFile.class);
+        ListConfigSets.class, CloneConfigSet.class, DeleteConfigSet.class, UploadConfigSet.class);
   }
 
   @Override

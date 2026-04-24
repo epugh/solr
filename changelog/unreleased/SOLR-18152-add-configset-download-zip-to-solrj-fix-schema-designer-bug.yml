@@ -1,5 +1,5 @@
 # See https://github.com/apache/solr/blob/main/dev-docs/changelog.adoc
-title: The "analyze" existing documents feature of Schema Designer was fixed.  Added a new ConfigSet.Download and ConfigSet.GetFile capablities to SolrJ.
+title: Migrated SchemaDesignerAPI to JAX-RS V2 annotations. Fixed a bug in the "analyze" existing documents feature of Schema Designer. Added download and getFileContents endpoints to the Schema Designer API.
 type: fixed # added, changed, fixed, deprecated, removed, dependency_update, security, other
 authors:
   - name: Eric Pugh
