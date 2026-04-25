@@ -134,7 +134,7 @@ public class SolrPackageLoader implements Closeable {
     // some packages are deleted altogether
     for (String s : old.packages.keySet()) {
       if (!newPkgs.packages.keySet().contains(s)) {
-        log.info("Package: {} is removed althogether", s);
+        log.info("Package: {} is removed altogether", s);
         changed.put(s, null);
       }
     }
@@ -330,7 +330,7 @@ public class SolrPackageLoader implements Closeable {
     @Override
     public <T> boolean addToCoreAware(T obj) {
       // do not do anything
-      // this class is not aware of a SolrCore and it is totally not tied to
+      // this class is not aware of a SolrCore, and it is totally not tied to
       // the lifecycle of SolrCore. So, this returns 'false' & it should be
       // taken care of by the caller
       return false;

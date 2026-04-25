@@ -54,7 +54,7 @@ public class PackageStore {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
   public static final String ERR_MSG =
-      "Package loading is not enabled , Start your nodes with -Dsolr.packages.enabled=true";
+      "Package loading is not enabled, start your nodes with -Dsolr.packages.enabled=true";
 
   final CoreContainer coreContainer;
   final ObjectMapper mapper = SolrJacksonAnnotationInspector.createObjectMapper();
@@ -126,7 +126,7 @@ public class PackageStore {
       stat = new Stat();
       data = coreContainer.getZkController().getZkClient().getData(SOLR_PKGS_PATH, null, stat);
     }
-    Packages packages = null;
+    Packages packages;
     if (data == null || data.length == 0) {
       packages = new Packages();
     } else {
@@ -221,7 +221,7 @@ public class PackageStore {
   }
 
   public boolean isJarInuse(String path) {
-    Packages pkg = null;
+    Packages pkg;
     try {
       pkg = readPkgsFromZk(null, null);
     } catch (KeeperException.NoNodeException nne) {
