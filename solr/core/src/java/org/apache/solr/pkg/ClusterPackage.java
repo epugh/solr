@@ -107,8 +107,7 @@ public class ClusterPackage extends JerseyResource implements PackageApis {
     // Filter to only the requested package; if absent, return an empty packages map.
     if (response.result != null && response.result.packages != null) {
       final var pkgVersions = response.result.packages.get(packageName);
-      response.result.packages =
-          pkgVersions == null ? Map.of() : Map.of(packageName, pkgVersions);
+      response.result.packages = pkgVersions == null ? Map.of() : Map.of(packageName, pkgVersions);
     }
     return response;
   }
