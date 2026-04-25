@@ -30,8 +30,8 @@ import java.util.List;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrRequest;
 import org.apache.solr.client.solrj.request.CollectionAdminRequest;
+import org.apache.solr.client.solrj.request.FileStoreApi;
 import org.apache.solr.client.solrj.request.PackageApi;
-import org.apache.solr.client.solrj.request.V2Request;
 import org.apache.solr.client.solrj.response.SolrResponseBase;
 import org.apache.solr.cloud.SolrCloudTestCase;
 import org.apache.solr.filestore.FileStoreAPI;
@@ -123,13 +123,10 @@ public class PackageStoreSchemaPluginsTest extends SolrCloudTestCase {
 
   private void uploadPluginJar(String version, Path jarPath) throws Exception {
     var pluginRequest =
-        new V2Request.Builder("/cluster/filestore/files/my-plugin/plugin-" + version + ".jar")
-            .PUT()
-            .withParams(params("sig", signature(Files.readAllBytes(jarPath))))
-            .withPayload(Files.newInputStream(jarPath))
-            .forceV2(true)
-            .build();
-    processRequest(client, pluginRequest);
+        new FileStoreApi.UploadFile(
+            "/my-plugin/plugin-" + version + ".jar", Files.newInputStream(jarPath));
+    pluginRequest.setSig(List.of(signature(Files.readAllBytes(jarPath))));
+    pluginRequest.process(client);
   }
 
   private void registerPackage(String version) throws Exception {
