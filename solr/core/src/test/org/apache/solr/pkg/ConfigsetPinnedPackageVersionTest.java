@@ -39,7 +39,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class PackageStoreSchemaPluginsTest extends SolrCloudTestCase {
+/**
+ * Verifies that a configset which pins a specific package version (via {@code params.json})
+ * resolves classes from that exact version's jar — even when other versions of the same package are
+ * also registered.
+ */
+public class ConfigsetPinnedPackageVersionTest extends SolrCloudTestCase {
 
   private static final KeyPair KEY_PAIR;
 

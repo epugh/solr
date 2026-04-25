@@ -354,6 +354,21 @@ public class TestDistribFileStore extends SolrCloudTestCase {
   }
 
   /**
+   * Upload a file from the test classpath to the distributed file store under the given path, then
+   * wait until every node in the cluster reports the expected SHA-512 for that path.
+   */
+  public static void postFileAndWait(
+      MiniSolrCloudCluster cluster, String fname, String path, String sig) throws Exception {
+    ByteBuffer fileContent = getFileContent(fname);
+    @SuppressWarnings("ByteBufferBackingArray") // this is the result of a call to wrap()
+    String sha512 = DigestUtils.sha512Hex(fileContent.array());
+
+    postFile(cluster.getSolrClient(), fileContent, path, sig);
+
+    checkAllNodesForFile(cluster, path, Map.of(":files:" + path + ":sha512", sha512), false);
+  }
+
+  /**
    * Read and return the contents of the file-like resource
    *
    * @param fname the name of the resource to read

@@ -60,7 +60,6 @@ import org.apache.solr.filestore.TestDistribFileStore.Fetcher;
 import org.apache.solr.pkg.PackageListeners;
 import org.apache.solr.pkg.PackageStore;
 import org.apache.solr.pkg.SolrPackageLoader;
-import org.apache.solr.pkg.TestPackages;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.response.SolrQueryResponse;
 import org.apache.solr.security.PermissionNameProvider;
@@ -294,12 +293,12 @@ public class TestContainerPlugin extends SolrCloudTestCase {
 
     byte[] derFile = readFile("cryptokeys/pub_key512.der");
     uploadKey(derFile, ClusterFileStore.KEYS_DIR + "/pub_key512.der", cluster);
-    TestPackages.postFileAndWait(
+    TestDistribFileStore.postFileAndWait(
         cluster,
         "runtimecode/containerplugin.v.1.jar.bin",
         FILE1,
         "pmrmWCDafdNpYle2rueAGnU2J6NYlcAey9mkZYbqh+5RdYo2Ln+llLF9voyRj+DDivK9GV1XdtKvD9rgCxlD7Q==");
-    TestPackages.postFileAndWait(
+    TestDistribFileStore.postFileAndWait(
         cluster,
         "runtimecode/containerplugin.v.2.jar.bin",
         FILE2,

@@ -64,7 +64,7 @@ public class ClusterPackageTest extends SolrCloudTestCase {
     // Upload a key and a signed jar file to the filestore
     byte[] derFile = TestDistribFileStore.readFile("cryptokeys/pub_key512.der");
     uploadKey(derFile, ClusterFileStore.KEYS_DIR + "/pub_key512.der", cluster);
-    TestPackages.postFileAndWait(
+    TestDistribFileStore.postFileAndWait(
         cluster,
         "runtimecode/runtimelibs.jar.bin",
         FILE1,
