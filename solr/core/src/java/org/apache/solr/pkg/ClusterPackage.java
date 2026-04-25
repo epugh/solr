@@ -43,8 +43,6 @@ import org.apache.solr.common.util.Utils;
 import org.apache.solr.core.CoreContainer;
 import org.apache.solr.filestore.FileStoreUtils;
 import org.apache.solr.jersey.PermissionName;
-import org.apache.solr.request.SolrQueryRequest;
-import org.apache.solr.response.SolrQueryResponse;
 import org.apache.zookeeper.KeeperException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,17 +59,10 @@ public class ClusterPackage extends JerseyResource implements PackageApis {
   private static final long SYNC_SLEEP_MS = 10L;
 
   private final CoreContainer coreContainer;
-  private final SolrQueryRequest solrQueryRequest;
-  private final SolrQueryResponse solrQueryResponse;
 
   @Inject
-  public ClusterPackage(
-      CoreContainer coreContainer,
-      SolrQueryRequest solrQueryRequest,
-      SolrQueryResponse solrQueryResponse) {
+  public ClusterPackage(CoreContainer coreContainer) {
     this.coreContainer = coreContainer;
-    this.solrQueryRequest = solrQueryRequest;
-    this.solrQueryResponse = solrQueryResponse;
   }
 
   @Override
