@@ -43,12 +43,10 @@ import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.request.FileStoreApi;
 import org.apache.solr.client.solrj.request.PackageApi;
-import org.apache.solr.client.solrj.request.SystemInfoRequest;
-import org.apache.solr.client.solrj.response.SystemInfoResponse;
+import org.apache.solr.client.solrj.request.SystemApi;
 import org.apache.solr.common.SolrException;
 import org.apache.solr.common.SolrException.ErrorCode;
 import org.apache.solr.common.cloud.SolrZkClient;
-import org.apache.solr.common.params.CommonParams;
 import org.apache.solr.common.util.Utils;
 import org.apache.solr.filestore.ClusterFileStore;
 import org.apache.solr.packagemanager.SolrPackage.Artifact;
@@ -162,7 +160,7 @@ public class RepositoryManager {
   /**
    * Install a given package and version from the available repositories to Solr. The various steps
    * for doing so are, briefly, a) find upload a manifest to package store, b) download the
-   * artifacts and upload to package store, c) call {@link PackageAPI} to register the package.
+   * artifacts and upload to package store, c) call {@link PackageManager} to register the package.
    */
   private boolean installPackage(String packageName, String version) throws SolrException {
     SolrPackageInstance existingPlugin = packageManager.getPackageInstance(packageName, version);

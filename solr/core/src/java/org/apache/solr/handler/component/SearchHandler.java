@@ -201,7 +201,7 @@ public class SearchHandler extends RequestHandlerBase
                 }
 
                 @Override
-                public Map<String, PackageAPI.PkgVersion> packageDetails() {
+                public Map<String, PackageStore.PkgVersion> packageDetails() {
                   return Map.of();
                 }
 

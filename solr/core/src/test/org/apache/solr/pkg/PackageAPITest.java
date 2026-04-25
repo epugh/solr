@@ -20,10 +20,12 @@ import static org.apache.solr.filestore.TestDistribFileStore.uploadKey;
 
 import java.util.List;
 import org.apache.solr.client.api.model.PackagesResponse;
-import org.apache.solr.client.solrj.apache.HttpSolrClient;
+import org.apache.solr.client.solrj.RemoteSolrException;
+import org.apache.solr.client.solrj.jetty.HttpJettySolrClient;
 import org.apache.solr.client.solrj.request.PackageApi;
 import org.apache.solr.cloud.SolrCloudTestCase;
 import org.apache.solr.filestore.ClusterFileStore;
+import org.apache.solr.filestore.TestDistribFileStore;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -46,8 +48,9 @@ public class PackageAPITest extends SolrCloudTestCase {
 
   @Test
   public void testListPackagesReturnsResult() throws Exception {
-    try (HttpSolrClient client =
-        new HttpSolrClient.Builder(cluster.getJettySolrRunner(0).getBaseUrl().toString()).build()) {
+    try (HttpJettySolrClient client =
+        new HttpJettySolrClient.Builder(cluster.getJettySolrRunner(0).getBaseUrl().toString())
+            .build()) {
       PackagesResponse response = new PackageApi.ListPackages().process(client);
       assertNotNull("Expected non-null response from GET /cluster/package", response);
       assertNotNull("Expected 'result' field in GET /cluster/package response", response.result);
@@ -59,8 +62,7 @@ public class PackageAPITest extends SolrCloudTestCase {
     String FILE1 = "/pkgapitestpkg/runtimelibs.jar";
 
     // Upload a key and a signed jar file to the filestore
-    byte[] derFile =
-        org.apache.solr.filestore.TestDistribFileStore.readFile("cryptokeys/pub_key512.der");
+    byte[] derFile = TestDistribFileStore.readFile("cryptokeys/pub_key512.der");
     uploadKey(derFile, ClusterFileStore.KEYS_DIR + "/pub_key512.der", cluster);
     TestPackages.postFileAndWait(
         cluster,
@@ -68,8 +70,9 @@ public class PackageAPITest extends SolrCloudTestCase {
         FILE1,
         "L3q/qIGs4NaF6JiO0ZkMUFa88j0OmYc+I6O7BOdNuMct/xoZ4h73aZHZGc0+nmI1f/U3bOlMPINlSOM6LK3JpQ==");
 
-    try (HttpSolrClient client =
-        new HttpSolrClient.Builder(cluster.getJettySolrRunner(0).getBaseUrl().toString()).build()) {
+    try (HttpJettySolrClient client =
+        new HttpJettySolrClient.Builder(cluster.getJettySolrRunner(0).getBaseUrl().toString())
+            .build()) {
       // Add a package version via POST /cluster/package/{name}/versions
       PackageApi.AddPackageVersion addRequest = new PackageApi.AddPackageVersion("pkgapitestpkg");
       addRequest.setVersion("1.0");
@@ -111,38 +114,36 @@ public class PackageAPITest extends SolrCloudTestCase {
   }
 
   @Test
-  public void testAddPackageVersionValidatesFiles() throws Exception {
-    try (HttpSolrClient client =
-        new HttpSolrClient.Builder(cluster.getJettySolrRunner(0).getBaseUrl().toString()).build()) {
-      // Try to add a package version with a non-existent file.
-      // Note: JacksonDataBindResponseParser doesn't expose errors as RemoteSolrException;
-      // instead, the error is in the response body's 'error' field.
+  public void testAddPackageVersionValidatesFiles() {
+    try (HttpJettySolrClient client =
+        new HttpJettySolrClient.Builder(cluster.getJettySolrRunner(0).getBaseUrl().toString())
+            .build()) {
       PackageApi.AddPackageVersion addRequest = new PackageApi.AddPackageVersion("testpkg_invalid");
       addRequest.setVersion("1.0");
       addRequest.setFiles(List.of("/nonexistent/file.jar"));
 
-      var response = addRequest.process(client);
-      assertNotNull("Expected error in response for non-existent file", response.error);
-      assertEquals("Expected 400 for non-existent file", 400, (int) response.error.code);
+      RemoteSolrException ex =
+          expectThrows(RemoteSolrException.class, () -> addRequest.process(client));
+      assertEquals("Expected 400 for non-existent file", 400, ex.code());
       assertTrue(
-          "Expected error message to mention the file",
-          response.error.msg.contains("No such file"));
+          "Expected error message to mention the file: " + ex.getMessage(),
+          ex.getMessage().contains("No such file"));
     }
   }
 
   @Test
-  public void testRefreshNonExistentPackage() throws Exception {
-    try (HttpSolrClient client =
-        new HttpSolrClient.Builder(cluster.getJettySolrRunner(0).getBaseUrl().toString()).build()) {
-      // Try to refresh a non-existent package.
-      // Note: JacksonDataBindResponseParser doesn't expose errors as RemoteSolrException;
-      // instead, the error is in the response body's 'error' field.
-      var response = new PackageApi.RefreshPackage("nonexistentpkg_test").process(client);
-      assertNotNull("Expected error in response for non-existent package", response.error);
-      assertEquals("Expected 400 for non-existent package", 400, (int) response.error.code);
+  public void testRefreshNonExistentPackage() {
+    try (HttpJettySolrClient client =
+        new HttpJettySolrClient.Builder(cluster.getJettySolrRunner(0).getBaseUrl().toString())
+            .build()) {
+      RemoteSolrException ex =
+          expectThrows(
+              RemoteSolrException.class,
+              () -> new PackageApi.RefreshPackage("nonexistentpkg_test").process(client));
+      assertEquals("Expected 400 for non-existent package", 400, ex.code());
       assertTrue(
-          "Expected error message to mention the package",
-          response.error.msg.contains("No such package"));
+          "Expected error message to mention the package: " + ex.getMessage(),
+          ex.getMessage().contains("No such package"));
     }
   }
 }

@@ -310,7 +310,7 @@ public class TestContainerPlugin extends SolrCloudTestCase {
     listener.reset();
     PackageApi.AddPackageVersion addPkgVersionReq = new PackageApi.AddPackageVersion("mypkg");
     addPkgVersionReq.setVersion("1.0");
-    addPkgVersionReq.setFiles(singletonList(FILE1));
+    addPkgVersionReq.setFiles(List.of(FILE1));
     addPkgVersionReq.process(cluster.getSolrClient());
     assertTrue(
         "core package listeners did not notify",

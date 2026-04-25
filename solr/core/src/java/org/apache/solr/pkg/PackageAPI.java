@@ -24,7 +24,6 @@ import jakarta.inject.Inject;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -103,7 +102,7 @@ public class PackageAPI extends JerseyResource implements PackageApis {
     // Filter to only the requested package
     if (response.result != null && response.result.packages != null) {
       final var pkgVersions = response.result.packages.get(packageName);
-      response.result.packages = Collections.singletonMap(packageName, pkgVersions);
+      response.result.packages = Map.of(packageName, pkgVersions);
     }
     return response;
   }

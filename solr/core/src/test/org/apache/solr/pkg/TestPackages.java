@@ -134,7 +134,7 @@ public class TestPackages extends SolrCloudTestCase {
 
     AddPackageVersionRequestBody add = new AddPackageVersionRequestBody();
     add.version = "1.0";
-    add.files = Arrays.asList(new String[] {FILE1});
+    add.files = List.of(FILE1);
     V2Request req =
         new V2Request.Builder("/cluster/package/mypkg/versions")
             .forceV2(true)
@@ -214,7 +214,7 @@ public class TestPackages extends SolrCloudTestCase {
 
     AddPackageVersionRequestBody add = new AddPackageVersionRequestBody();
     add.version = "1.0";
-    add.files = Arrays.asList(new String[] {FILE1, URP1, EXPR1});
+    add.files = List.of(FILE1, URP1, EXPR1);
     V2Request req =
         new V2Request.Builder("/cluster/package/mypkg/versions")
             .forceV2(true)
@@ -343,7 +343,7 @@ public class TestPackages extends SolrCloudTestCase {
         "P/ptFXRvQMd4oKPvadSpd+A9ffwY3gcex5GVFVRy3df0/OF8XT5my8rQz7FZva+2ORbWxdXS8NKwNrbPVHLGXw==");
     // add the version using package API
     add.version = "1.1";
-    add.files = Arrays.asList(new String[] {FILE2, URP2, EXPR1});
+    add.files = List.of(FILE2, URP2, EXPR1);
     req.process(cluster.getSolrClient());
 
     verifyComponent(
@@ -372,7 +372,7 @@ public class TestPackages extends SolrCloudTestCase {
         "a400n4T7FT+2gM0SC6+MfSOExjud8MkhTSFylhvwNjtWwUgKdPFn434Wv7Qc4QEqDVLhQoL3WqYtQmLPti0G4Q==");
 
     add.version = "2.1";
-    add.files = Arrays.asList(new String[] {FILE3, URP2, EXPR1});
+    add.files = List.of(FILE3, URP2, EXPR1);
     req.process(cluster.getSolrClient());
 
     // now let's verify that the classes are updated
@@ -445,7 +445,7 @@ public class TestPackages extends SolrCloudTestCase {
     }.setRequiresCollection(true).process(cluster.getSolrClient());
 
     add.version = "2.1";
-    add.files = Arrays.asList(new String[] {FILE3, URP2, EXPR1});
+    add.files = List.of(FILE3, URP2, EXPR1);
     req.process(cluster.getSolrClient());
 
     // the collections mypkg is set to use version 1.1
@@ -637,7 +637,7 @@ public class TestPackages extends SolrCloudTestCase {
 
     // this time we are adding the second version of the package (0.13)
     add.version = "0.13";
-    add.files = Collections.singletonList(FILE3);
+    add.files = List.of(FILE3);
 
     // this request should succeed
     req.process(cluster.getSolrClient());
@@ -888,7 +888,7 @@ public class TestPackages extends SolrCloudTestCase {
   }
 
   /*
-  //copy the jav files to a package and then run the main method
+  //copy the java files to a package and then run the main method
   public static void main(String[] args) throws Exception {
     persistZip("/tmp/x.jar", MyPatternReplaceCharFilterFactory.class, MyTextField.class, MyWhitespaceTokenizerFactory.class);
   }*/
