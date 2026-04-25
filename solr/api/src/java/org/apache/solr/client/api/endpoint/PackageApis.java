@@ -38,7 +38,9 @@ public interface PackageApis {
       summary = "List all packages registered in this Solr cluster.",
       tags = {"package"})
   PackagesResponse listPackages(
-      @Parameter(description = "If provided, the named package is refreshed on this node.")
+      @Parameter(
+              description =
+                  "Name of a package to refresh on the receiving node only (reloads its listeners from ZooKeeper). Used internally for inter-node fan-out by the refresh endpoint; not normally invoked directly.")
           @QueryParam("refreshPackage")
           String refreshPackage,
       @Parameter(
@@ -55,7 +57,12 @@ public interface PackageApis {
   PackagesResponse getPackage(
       @Parameter(description = "The name of the package.", required = true)
           @PathParam("packageName")
-          String packageName);
+          String packageName,
+      @Parameter(
+              description =
+                  "If provided, the node waits until its package data matches this ZooKeeper version before responding.")
+          @QueryParam("expectedVersion")
+          Integer expectedVersion);
 
   @POST
   @Path("/{packageName}/versions")

@@ -95,14 +95,20 @@ public class ClusterPackage extends JerseyResource implements PackageApis {
 
   @Override
   @PermissionName(PACKAGE_READ_PERM)
-  public PackagesResponse getPackage(String packageName) {
+  public PackagesResponse getPackage(String packageName, Integer expectedVersion) {
     PackageStore packageStore = coreContainer.getPackageLoader().getPackageStore();
+
+    if (expectedVersion != null) {
+      syncToVersion(packageStore, expectedVersion);
+    }
+
     final var response = instantiateJerseyResponse(PackagesResponse.class);
     response.result = toPackageData(packageStore.pkgs);
-    // Filter to only the requested package
+    // Filter to only the requested package; if absent, return an empty packages map.
     if (response.result != null && response.result.packages != null) {
       final var pkgVersions = response.result.packages.get(packageName);
-      response.result.packages = Map.of(packageName, pkgVersions);
+      response.result.packages =
+          pkgVersions == null ? Map.of() : Map.of(packageName, pkgVersions);
     }
     return response;
   }

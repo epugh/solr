@@ -146,4 +146,38 @@ public class ClusterPackageTest extends SolrCloudTestCase {
           ex.getMessage().contains("No such package"));
     }
   }
+
+  @Test
+  public void testListPackagesAcceptsRefreshPackageQueryParam() throws Exception {
+    try (HttpJettySolrClient client =
+        new HttpJettySolrClient.Builder(cluster.getJettySolrRunner(0).getBaseUrl().toString())
+            .build()) {
+      PackageApi.ListPackages req = new PackageApi.ListPackages();
+      req.setRefreshPackage("nonexistentpkg_refresh");
+      // The inter-node refresh signal calls notifyListeners on this node and returns OK even when
+      // the package doesn't exist; main's behavior is identical.
+      PackagesResponse response = req.process(client);
+      assertNotNull(response);
+    }
+  }
+
+  @Test
+  public void testListAndGetPackageAcceptExpectedVersionQueryParam() throws Exception {
+    try (HttpJettySolrClient client =
+        new HttpJettySolrClient.Builder(cluster.getJettySolrRunner(0).getBaseUrl().toString())
+            .build()) {
+      // expectedVersion at-or-below current is a no-op in syncToVersion and must return promptly.
+      PackageApi.ListPackages listReq = new PackageApi.ListPackages();
+      listReq.setExpectedVersion(0);
+      PackagesResponse listResponse = listReq.process(client);
+      assertNotNull(listResponse);
+      assertNotNull(listResponse.result);
+
+      PackageApi.GetPackage getReq = new PackageApi.GetPackage("anything");
+      getReq.setExpectedVersion(0);
+      PackagesResponse getResponse = getReq.process(client);
+      assertNotNull(getResponse);
+      assertNotNull(getResponse.result);
+    }
+  }
 }
