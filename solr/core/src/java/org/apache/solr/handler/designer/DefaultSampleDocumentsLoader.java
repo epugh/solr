@@ -28,9 +28,9 @@ import java.lang.invoke.MethodHandles;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -212,7 +212,7 @@ public class DefaultSampleDocumentsLoader implements SampleDocumentsLoader {
       if (isJsonLines) {
         docs = loadJsonLines(lines);
       } else {
-        docs = Collections.singletonList((Map<String, Object>) json);
+        docs = List.of((Map<String, Object>) json);
       }
     } else {
       throw new SolrException(
@@ -270,7 +270,7 @@ public class DefaultSampleDocumentsLoader implements SampleDocumentsLoader {
       final int event;
       try {
         event = parser.next();
-      } catch (java.util.NoSuchElementException noSuchElementException) {
+      } catch (NoSuchElementException noSuchElementException) {
         return docs;
       }
       switch (event) {

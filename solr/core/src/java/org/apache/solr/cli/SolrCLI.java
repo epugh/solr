@@ -25,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
@@ -39,6 +40,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.help.HelpFormatter;
+import org.apache.commons.cli.help.TableDefinition;
 import org.apache.commons.cli.help.TextHelpAppendable;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
@@ -71,8 +73,7 @@ public class SolrCLI implements CLIO {
       // select the version tool to be run
       args = new String[] {"version"};
     }
-    if (Arrays.asList(
-            "upconfig", "downconfig", "cp", "rm", "mv", "ls", "mkroot", "linkconfig", "updateacls")
+    if (Arrays.asList("upconfig", "downconfig", "cp", "rm", "mv", "ls", "mkroot", "updateacls")
         .contains(args[0])) {
       // remap our arguments to invoke the zk short tool help
       args = new String[] {"zk-tool-help", "--print-zk-subcommand-usage", args[0]};
@@ -192,7 +193,6 @@ public class SolrCLI implements CLIO {
     else if ("ls".equals(toolType)) return new ZkLsTool(runtime);
     else if ("cluster".equals(toolType)) return new ClusterTool(runtime);
     else if ("updateacls".equals(toolType)) return new UpdateACLTool(runtime);
-    else if ("linkconfig".equals(toolType)) return new LinkConfigTool(runtime);
     else if ("mkroot".equals(toolType)) return new ZkMkrootTool(runtime);
     else if ("assert".equals(toolType)) return new AssertTool(runtime);
     else if ("auth".equals(toolType)) return new AuthTool(runtime);
@@ -316,16 +316,14 @@ public class SolrCLI implements CLIO {
     TextHelpAppendable helpAppendable =
         new TextHelpAppendable(System.out) {
           @Override
-          public void appendTable(org.apache.commons.cli.help.TableDefinition table)
-              throws IOException {
+          public void appendTable(TableDefinition table) throws IOException {
             if (table == null) {
               return;
             }
             // Create a new TableDefinition with empty headers to suppress the header row
-            java.util.List<String> emptyHeaders =
-                java.util.Collections.nCopies(table.headers().size(), "");
-            org.apache.commons.cli.help.TableDefinition noHeaderTable =
-                org.apache.commons.cli.help.TableDefinition.from(
+            List<String> emptyHeaders = Collections.nCopies(table.headers().size(), "");
+            TableDefinition noHeaderTable =
+                TableDefinition.from(
                     table.caption(), table.columnTextStyles(), emptyHeaders, table.rows());
             super.appendTable(noHeaderTable);
           }

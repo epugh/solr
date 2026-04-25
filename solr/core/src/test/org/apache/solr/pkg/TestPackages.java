@@ -25,11 +25,12 @@ import static org.apache.solr.filestore.TestDistribFileStore.checkAllNodesForFil
 import static org.apache.solr.filestore.TestDistribFileStore.readFile;
 import static org.apache.solr.filestore.TestDistribFileStore.uploadKey;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,8 +48,6 @@ import org.apache.solr.client.solrj.RemoteSolrException;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrRequest;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.apache.HttpClientUtil;
-import org.apache.solr.client.solrj.apache.HttpSolrClient;
 import org.apache.solr.client.solrj.request.CollectionAdminRequest;
 import org.apache.solr.client.solrj.request.GenericSolrRequest;
 import org.apache.solr.client.solrj.request.RequestWriter;
@@ -65,6 +64,7 @@ import org.apache.solr.common.annotation.JsonProperty;
 import org.apache.solr.common.params.MapSolrParams;
 import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.common.params.SolrParams;
+import org.apache.solr.common.util.JavaBinCodec;
 import org.apache.solr.common.util.ReflectMapWriter;
 import org.apache.solr.common.util.Utils;
 import org.apache.solr.core.SolrCore;
@@ -82,6 +82,8 @@ import org.apache.solr.security.AuthorizationContext;
 import org.apache.solr.util.LogLevel;
 import org.apache.solr.util.plugin.SolrCoreAware;
 import org.apache.zookeeper.data.Stat;
+import org.eclipse.jetty.client.ContentResponse;
+import org.eclipse.jetty.client.HttpClient;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -525,15 +527,16 @@ public class TestPackages extends SolrCloudTestCase {
       Utils.InputStreamConsumer<?> parser,
       Map<String, Object> expected)
       throws Exception {
-    try (HttpSolrClient client = (HttpSolrClient) jetty.newClient()) {
-      TestDistribFileStore.assertResponseValues(
-          10,
-          () ->
-              NavigableObject.wrap(
-                  HttpClientUtil.executeGET(
-                      client.getHttpClient(), jetty.getBaseUrl() + uri, parser)),
-          expected);
-    }
+    HttpClient httpClient = jetty.getSolrClient().getHttpClient();
+    TestDistribFileStore.assertResponseValues(
+        10,
+        () -> {
+          ContentResponse rsp = httpClient.GET(jetty.getBaseUrl() + uri);
+          try (InputStream is = new ByteArrayInputStream(rsp.getContent())) {
+            return NavigableObject.wrap(parser.accept(is));
+          }
+        },
+        expected);
   }
 
   private void verifyComponent(
@@ -594,7 +597,7 @@ public class TestPackages extends SolrCloudTestCase {
     // post the jar file. No signature is sent
     postFileAndWait(cluster, "runtimecode/runtimelibs.jar.bin", FILE1, null);
 
-    add.files = Collections.singletonList(FILE1);
+    add.files = List.of(FILE1);
     expectError(req, cluster.getSolrClient(), errPath, FILE1 + " has no signature");
     // now we upload the keys
     byte[] derFile = readFile("cryptokeys/pub_key512.der");
@@ -607,7 +610,7 @@ public class TestPackages extends SolrCloudTestCase {
         "L3q/qIGs4NaF6JiO0ZkMUFa88j0OmYc+I6O7BOdNuMct/xoZ4h73aZHZGc0+nmI1f/U3bOlMPINlSOM6LK3JpQ==");
     // with correct signature
     // after uploading the file, let's delete the keys to see if we get proper error message
-    add.files = Collections.singletonList(FILE2);
+    add.files = List.of(FILE2);
     /*expectError(req, cluster.getSolrClient(), errPath,
     "ZooKeeper does not have any public keys");*/
 
@@ -679,11 +682,9 @@ public class TestPackages extends SolrCloudTestCase {
           new Callable<NavigableObject>() {
             @Override
             public NavigableObject call() throws Exception {
-              try (HttpSolrClient solrClient = (HttpSolrClient) jetty.newClient()) {
-                return (NavigableObject)
-                    HttpClientUtil.executeGET(
-                        solrClient.getHttpClient(), path, Utils.JAVABINCONSUMER);
-              }
+              HttpClient solrClient = jetty.getSolrClient().getHttpClient();
+              byte[] bytes = solrClient.GET(path).getContent();
+              return (NavigableObject) new JavaBinCodec().unmarshal(bytes);
             }
           },
           Map.of(

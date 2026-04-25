@@ -69,7 +69,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import javax.xml.xpath.XPathExpressionException;
-import org.apache.http.client.HttpClient;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.tests.analysis.MockAnalyzer;
 import org.apache.lucene.tests.analysis.MockTokenizer;
@@ -121,6 +120,7 @@ import org.apache.solr.request.SolrRequestHandler;
 import org.apache.solr.request.SolrRequestInfo;
 import org.apache.solr.response.SolrQueryResponse;
 import org.apache.solr.schema.IndexSchema;
+import org.apache.solr.schema.PointField;
 import org.apache.solr.schema.SchemaField;
 import org.apache.solr.search.SolrIndexSearcher;
 import org.apache.solr.security.AllowListUrlChecker;
@@ -1159,7 +1159,8 @@ public abstract class SolrTestCaseJ4 extends SolrTestCase {
     return out.toString();
   }
 
-  public static void addDoc(String doc, String updateRequestProcessorChain) throws Exception {
+  public static SolrQueryResponse addDoc(String doc, String updateRequestProcessorChain)
+      throws Exception {
     Map<String, String[]> params = new HashMap<>();
     MultiMapSolrParams mmparams = new MultiMapSolrParams(params);
     params.put(UpdateParams.UPDATE_CHAIN, new String[] {updateRequestProcessorChain});
@@ -1168,8 +1169,11 @@ public abstract class SolrTestCaseJ4 extends SolrTestCase {
     UpdateRequestHandler handler = new UpdateRequestHandler();
     handler.init(null);
     req.setContentStreams(List.of(new ContentStreamBase.StringStream(doc)));
-    handler.handleRequestBody(req, new SolrQueryResponse());
+    final SolrQueryResponse rsp = new SolrQueryResponse();
+    handler.handleRequestBody(req, rsp);
     req.close();
+
+    return rsp;
   }
 
   /**
@@ -2113,6 +2117,7 @@ public abstract class SolrTestCaseJ4 extends SolrTestCase {
    * using {@code this.getClass()}.
    */
   public static Path getFile(String name) {
+    // see if it's a classpath resource
     final URL url =
         SolrTestCaseJ4.class
             .getClassLoader()
@@ -2127,10 +2132,13 @@ public abstract class SolrTestCaseJ4 extends SolrTestCase {
                 + name);
       }
     }
+
+    // see if it's a file path resource
     final Path file = Path.of(name);
     if (Files.exists(file)) {
-      return file;
+      return file.toAbsolutePath(); // absolute to reduce ambiguity
     }
+
     throw new RuntimeException(
         "Cannot find resource in classpath or in file-system (relative to CWD): "
             + file.toAbsolutePath());
@@ -2555,18 +2563,6 @@ public abstract class SolrTestCaseJ4 extends SolrTestCase {
   }
 
   /**
-   * This method creates a HttpClient from a URL.
-   *
-   * <p><b>WARNING:</b> if you use this method, the <code>HttpClient</code> returned is tracked by
-   * <code>ObjectReleaseTracker</code>. Your test will fail if you do not pass the <code>HttpClient
-   * </code> to {@link HttpClientUtil#close(HttpClient)} when you are done with it.
-   */
-  @Deprecated // We are migrating away from Apache HttpClient.
-  public static HttpClient getHttpClient(String url) {
-    return new HttpSolrClient.Builder(url).build().getHttpClient();
-  }
-
-  /**
    * This method creates a basic HttpSolrClient. Tests that want to control the creation process
    * should use the {@link org.apache.solr.client.solrj.jetty.HttpJettySolrClient.Builder} class
    * directly
@@ -2802,7 +2798,7 @@ public abstract class SolrTestCaseJ4 extends SolrTestCase {
       log.info(
           "Using TrieFields (NUMERIC_POINTS_SYSPROP=false) w/NUMERIC_DOCVALUES_SYSPROP={}", useDV);
 
-      org.apache.solr.schema.PointField.TEST_HACK_IGNORE_USELESS_TRIEFIELD_ARGS = false;
+      PointField.TEST_HACK_IGNORE_USELESS_TRIEFIELD_ARGS = false;
       private_RANDOMIZED_NUMERIC_FIELDTYPES.put(Integer.class, "solr.TrieIntField");
       private_RANDOMIZED_NUMERIC_FIELDTYPES.put(Float.class, "solr.TrieFloatField");
       private_RANDOMIZED_NUMERIC_FIELDTYPES.put(Long.class, "solr.TrieLongField");
@@ -2814,7 +2810,7 @@ public abstract class SolrTestCaseJ4 extends SolrTestCase {
       log.info(
           "Using PointFields (NUMERIC_POINTS_SYSPROP=true) w/NUMERIC_DOCVALUES_SYSPROP={}", useDV);
 
-      org.apache.solr.schema.PointField.TEST_HACK_IGNORE_USELESS_TRIEFIELD_ARGS = true;
+      PointField.TEST_HACK_IGNORE_USELESS_TRIEFIELD_ARGS = true;
       private_RANDOMIZED_NUMERIC_FIELDTYPES.put(Integer.class, "solr.IntPointField");
       private_RANDOMIZED_NUMERIC_FIELDTYPES.put(Float.class, "solr.FloatPointField");
       private_RANDOMIZED_NUMERIC_FIELDTYPES.put(Long.class, "solr.LongPointField");
@@ -2846,7 +2842,7 @@ public abstract class SolrTestCaseJ4 extends SolrTestCase {
    * @lucene.internal
    */
   private static void clearNumericTypesProperties() {
-    org.apache.solr.schema.PointField.TEST_HACK_IGNORE_USELESS_TRIEFIELD_ARGS = false;
+    PointField.TEST_HACK_IGNORE_USELESS_TRIEFIELD_ARGS = false;
     private_RANDOMIZED_NUMERIC_FIELDTYPES.clear();
   }
 
