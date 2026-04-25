@@ -1,4 +1,4 @@
-title: Migrate PackageAPI to JAX-RS. PackageAPI now has OpenAPI and SolrJ support.
+title: Migrate PackageAPI to JAX-RS (now ClusterPackage). The package management API now has OpenAPI and SolrJ support.
 type: changed
 authors:
   - name: Eric Pugh

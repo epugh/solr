@@ -30,12 +30,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * Integration tests for the JAX-RS-based {@link PackageAPI}.
+ * Integration tests for the JAX-RS-based {@link ClusterPackage}.
  *
  * <p>Note: SolrJettyTestRule cannot be used here because the Package API requires ZooKeeper for its
  * cluster-level operations. A one-node SolrCloud cluster is used instead.
  */
-public class PackageAPITest extends SolrCloudTestCase {
+public class ClusterPackageTest extends SolrCloudTestCase {
 
   @BeforeClass
   public static void setupCluster() throws Exception {

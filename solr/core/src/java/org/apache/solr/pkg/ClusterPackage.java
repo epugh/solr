@@ -54,7 +54,7 @@ import org.slf4j.LoggerFactory;
  *
  * @see PackageApis
  */
-public class PackageAPI extends JerseyResource implements PackageApis {
+public class ClusterPackage extends JerseyResource implements PackageApis {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
   private static final int SYNC_MAX_RETRIES = 10;
@@ -65,7 +65,7 @@ public class PackageAPI extends JerseyResource implements PackageApis {
   private final SolrQueryResponse solrQueryResponse;
 
   @Inject
-  public PackageAPI(
+  public ClusterPackage(
       CoreContainer coreContainer,
       SolrQueryRequest solrQueryRequest,
       SolrQueryResponse solrQueryResponse) {
@@ -333,7 +333,7 @@ public class PackageAPI extends JerseyResource implements PackageApis {
                     Map.Entry::getKey,
                     e ->
                         e.getValue().stream()
-                            .map(PackageAPI::toPkgVersionResponse)
+                            .map(ClusterPackage::toPkgVersionResponse)
                             .collect(Collectors.toList())));
     return data;
   }

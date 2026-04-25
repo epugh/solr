@@ -88,7 +88,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-@LogLevel("org.apache.solr.pkg.PackageLoader=DEBUG;org.apache.solr.pkg.PackageAPI=DEBUG")
+@LogLevel("org.apache.solr.pkg.PackageLoader=DEBUG;org.apache.solr.pkg.ClusterPackage=DEBUG")
 public class TestPackages extends SolrCloudTestCase {
 
   @Before

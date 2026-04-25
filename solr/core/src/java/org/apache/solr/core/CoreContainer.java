@@ -135,7 +135,7 @@ import org.apache.solr.metrics.SolrMetricManager;
 import org.apache.solr.metrics.SolrMetricProducer;
 import org.apache.solr.metrics.SolrMetricsContext;
 import org.apache.solr.metrics.otel.OtelUnit;
-import org.apache.solr.pkg.PackageAPI;
+import org.apache.solr.pkg.ClusterPackage;
 import org.apache.solr.pkg.SolrPackageLoader;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.request.SolrQueryRequestBase;
@@ -848,7 +848,7 @@ public class CoreContainer {
       registerV2Api(ClusterFileStore.class);
 
       packageLoader = new SolrPackageLoader(this);
-      registerV2Api(PackageAPI.class);
+      registerV2Api(ClusterPackage.class);
       registerV2Api(ZookeeperRead.class);
     }
 
