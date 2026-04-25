@@ -72,14 +72,14 @@ public class ClusterPackage extends JerseyResource implements PackageApis {
 
     if (refreshPackage != null) {
       packageStore.packageLoader.notifyListeners(refreshPackage);
-      return instantiateJerseyResponse(PackagesResponse.class);
+      return new PackagesResponse();
     }
 
     if (expectedVersion != null) {
       syncToVersion(packageStore, expectedVersion);
     }
 
-    final var response = instantiateJerseyResponse(PackagesResponse.class);
+    final var response = new PackagesResponse();
     response.result = toPackageData(packageStore.pkgs);
     return response;
   }
@@ -93,7 +93,7 @@ public class ClusterPackage extends JerseyResource implements PackageApis {
       syncToVersion(packageStore, expectedVersion);
     }
 
-    final var response = instantiateJerseyResponse(PackagesResponse.class);
+    final var response = new PackagesResponse();
     response.result = toPackageData(packageStore.pkgs);
     // Filter to only the requested package; if absent, return an empty packages map.
     if (response.result != null && response.result.packages != null) {
@@ -107,7 +107,7 @@ public class ClusterPackage extends JerseyResource implements PackageApis {
   @PermissionName(PACKAGE_EDIT_PERM)
   public SolrJerseyResponse addPackageVersion(
       String packageName, AddPackageVersionRequestBody requestBody) {
-    final var response = instantiateJerseyResponse(SolrJerseyResponse.class);
+    final var response = new SolrJerseyResponse();
     PackageStore packageStore = coreContainer.getPackageLoader().getPackageStore();
 
     if (!packageStore.isEnabled()) {
@@ -174,7 +174,7 @@ public class ClusterPackage extends JerseyResource implements PackageApis {
   @Override
   @PermissionName(PACKAGE_EDIT_PERM)
   public SolrJerseyResponse deletePackageVersion(String packageName, String version) {
-    final var response = instantiateJerseyResponse(SolrJerseyResponse.class);
+    final var response = new SolrJerseyResponse();
     PackageStore packageStore = coreContainer.getPackageLoader().getPackageStore();
 
     if (!packageStore.isEnabled()) {
@@ -226,7 +226,7 @@ public class ClusterPackage extends JerseyResource implements PackageApis {
   @Override
   @PermissionName(PACKAGE_EDIT_PERM)
   public SolrJerseyResponse refreshPackage(String packageName) {
-    final var response = instantiateJerseyResponse(SolrJerseyResponse.class);
+    final var response = new SolrJerseyResponse();
     PackageStore packageStore = coreContainer.getPackageLoader().getPackageStore();
 
     SolrPackageLoader.SolrPackage pkg = coreContainer.getPackageLoader().getPackage(packageName);
