@@ -33,12 +33,9 @@ import org.apache.solr.client.api.endpoint.PackageApis;
 import org.apache.solr.client.api.model.AddPackageVersionRequestBody;
 import org.apache.solr.client.api.model.PackagesResponse;
 import org.apache.solr.client.api.model.SolrJerseyResponse;
-import org.apache.solr.client.solrj.SolrRequest;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.request.GenericSolrRequest;
-import org.apache.solr.client.solrj.response.JavaBinResponseParser;
+import org.apache.solr.client.solrj.request.PackageApi;
 import org.apache.solr.common.SolrException;
-import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.common.util.Utils;
 import org.apache.solr.core.CoreContainer;
 import org.apache.solr.filestore.FileStoreUtils;
@@ -237,13 +234,8 @@ public class ClusterPackage extends JerseyResource implements PackageApis {
     // first refresh on the current node
     packageStore.packageLoader.notifyListeners(packageName);
 
-    final var solrParams = new ModifiableSolrParams();
-    solrParams.add("omitHeader", "true");
-    solrParams.add("refreshPackage", packageName);
-
-    final var request =
-        new GenericSolrRequest(SolrRequest.METHOD.GET, "/cluster/package", solrParams);
-    request.setResponseParser(new JavaBinResponseParser());
+    final var request = new PackageApi.ListPackages();
+    request.setRefreshPackage(packageName);
 
     for (String liveNode : FileStoreUtils.fetchAndShuffleRemoteLiveNodes(coreContainer)) {
       final var baseUrl =
@@ -291,13 +283,8 @@ public class ClusterPackage extends JerseyResource implements PackageApis {
   }
 
   private void notifyAllNodesToSync(int expectedVersion) {
-    final var solrParams = new ModifiableSolrParams();
-    solrParams.add("omitHeader", "true");
-    solrParams.add("expectedVersion", String.valueOf(expectedVersion));
-
-    final var request =
-        new GenericSolrRequest(SolrRequest.METHOD.GET, "/cluster/package", solrParams);
-    request.setResponseParser(new JavaBinResponseParser());
+    final var request = new PackageApi.ListPackages();
+    request.setExpectedVersion(expectedVersion);
 
     for (String liveNode : FileStoreUtils.fetchAndShuffleRemoteLiveNodes(coreContainer)) {
       var baseUrl = coreContainer.getZkController().zkStateReader.getBaseUrlV2ForNodeName(liveNode);

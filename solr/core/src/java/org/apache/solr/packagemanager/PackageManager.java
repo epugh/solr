@@ -48,7 +48,7 @@ import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrRequest;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.SolrZkClientTimeout;
-import org.apache.solr.client.solrj.request.GenericSolrRequest;
+import org.apache.solr.client.solrj.request.FileStoreApi;
 import org.apache.solr.client.solrj.request.GenericV2SolrRequest;
 import org.apache.solr.client.solrj.request.PackageApi;
 import org.apache.solr.client.solrj.request.beans.PluginMeta;
@@ -163,9 +163,8 @@ public class PackageManager implements Closeable {
         String.format(Locale.ROOT, "/package/%s/%s/%s", packageName, version, "manifest.json"));
     for (String filePath : filesToDelete) {
       DistribFileStore.deleteZKFileEntry(zkClient, filePath);
-      String path = "/api/cluster/filestore/files" + filePath;
-      printGreen("Deleting " + path);
-      solrClient.request(new GenericSolrRequest(SolrRequest.METHOD.DELETE, path));
+      printGreen("Deleting " + filePath);
+      new FileStoreApi.DeleteFile(filePath).process(solrClient);
     }
 
     printGreen("Package uninstalled: " + packageName + ":" + version + ":-)");
