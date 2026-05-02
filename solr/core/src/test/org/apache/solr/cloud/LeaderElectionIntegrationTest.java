@@ -19,7 +19,6 @@ package org.apache.solr.cloud;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.request.CollectionAdminRequest;
 import org.apache.solr.common.cloud.ZkNodeProps;
@@ -61,7 +60,10 @@ public class LeaderElectionIntegrationTest extends SolrCloudTestCase {
     String collection = "collection1";
     createCollection(collection);
 
-    cluster.waitForActiveCollection(collection, 60, TimeUnit.SECONDS, 2, 6);
+    waitForState(
+        "Timeout waiting for collection to become active",
+        collection,
+        clusterShape(2, NUM_REPLICAS_OF_SHARD1 + 1));
     List<JettySolrRunner> stoppedRunners = new ArrayList<>();
     for (int i = 0; i < 4; i++) {
       // who is the leader?
