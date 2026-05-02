@@ -261,8 +261,13 @@ public class ClusterFileStore extends JerseyResource implements ClusterFileStore
       // File was deleted concurrently between listing and reading its attributes.
       return null;
     }
+    final var timestamp = details.getTimeStamp();
+    if (timestamp == null) {
+      // File was deleted concurrently between reading its size and timestamp.
+      return null;
+    }
     entryMetadata.size = size;
-    entryMetadata.timestamp = details.getTimeStamp();
+    entryMetadata.timestamp = timestamp;
     if (details.getMetaData() != null) {
       details.getMetaData().toMap(entryMetadata.unknownProperties());
     }
