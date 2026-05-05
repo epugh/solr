@@ -135,6 +135,13 @@ allprojects {
       systemProperty 'java.awt.headless', 'true'
       systemProperty 'jdk.map.althashing.threshold', '0'
 
+      // Use COMPAT locale provider to avoid CLDR adapter instantiation errors.
+      // When the security policy file is loaded, java.net.URLPermission entries trigger locale
+      // operations. On some JDK builds, the CLDR adapter cannot be instantiated, causing
+      // "java.security.policy: error adding Permission, java.net.URLPermission:" warnings.
+      // Setting COMPAT first avoids this failure while still allowing CLDR as a fallback.
+      systemProperty 'java.locale.providers', 'COMPAT,CLDR'
+
       if (!Os.isFamily(Os.FAMILY_WINDOWS)) {
         systemProperty 'java.security.egd', 'file:/dev/./urandom'
       }
