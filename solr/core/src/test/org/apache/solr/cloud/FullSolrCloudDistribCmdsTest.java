@@ -437,8 +437,6 @@ public class FullSolrCloudDistribCmdsTest extends SolrCloudTestCase {
     // create a new node for the purpose of killing it...
     final JettySolrRunner leaderToPartition = cluster.startJettySolrRunner();
     try {
-      cluster.waitForNode(leaderToPartition, DEFAULT_TIMEOUT);
-
       // HACK: we have to stop the node in order to enable the proxy, in order to then restart the
       // node
       // (in order to then "partition it" later via the proxy)
@@ -451,7 +449,6 @@ public class FullSolrCloudDistribCmdsTest extends SolrCloudTestCase {
       try {
         log.info("leaderToPartition's Proxy: {}", proxy);
 
-        cluster.waitForNode(leaderToPartition, DEFAULT_TIMEOUT);
         // create a 2x1 collection using a nodeSet that includes our leaderToPartition...
         assertEquals(
             RequestStatusState.COMPLETED,

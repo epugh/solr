@@ -188,7 +188,6 @@ public class TestCloudSearcherWarming extends SolrCloudTestCase {
     ZkStateReader.from(solrClient).registerCollectionStateWatcher(collectionName, stateWatcher);
 
     JettySolrRunner newNode = cluster.startJettySolrRunner();
-    cluster.waitForAllNodes(30);
     CollectionAdminRequest.addReplicaToShard(collectionName, "shard1")
         .setNode(newNode.getNodeName())
         .process(solrClient);

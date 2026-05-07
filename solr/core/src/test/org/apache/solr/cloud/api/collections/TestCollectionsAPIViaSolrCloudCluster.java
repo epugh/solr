@@ -114,7 +114,6 @@ public class TestCollectionsAPIViaSolrCloudCluster extends SolrCloudTestCase {
 
     // create a server
     JettySolrRunner startedServer = cluster.startJettySolrRunner();
-    cluster.waitForAllNodes(30);
     assertTrue(startedServer.isRunning());
     assertEquals(nodeCount, cluster.getJettySolrRunners().size());
 
@@ -159,7 +158,6 @@ public class TestCollectionsAPIViaSolrCloudCluster extends SolrCloudTestCase {
 
     // re-create a server (to restore original nodeCount count)
     startedServer = cluster.startJettySolrRunner(jettyToStop);
-    cluster.waitForAllNodes(30);
     assertTrue(startedServer.isRunning());
     assertEquals(nodeCount, cluster.getJettySolrRunners().size());
 

@@ -471,7 +471,9 @@ public class MiniSolrCloudCluster implements SolrBackend {
   }
 
   /**
-   * Start a new Solr instance on a particular servlet context
+   * Start a new Solr instance on a particular servlet context. Waits for the node to appear in
+   * cluster live nodes before returning (unless called during initial cluster construction, in
+   * which case the constructor's own {@link #waitForAllNodes} handles this).
    *
    * @param name the instance name
    * @param config a JettyConfig for the instance's {@link org.apache.solr.embedded.JettySolrRunner}
@@ -499,11 +501,17 @@ public class MiniSolrCloudCluster implements SolrBackend {
     synchronized (startupWait) {
       startupWait.notifyAll();
     }
+    // solrClient is null during the initial parallel cluster startup in the constructor;
+    // in that case the constructor's waitForAllNodes call handles node synchronization.
+    if (solrClient != null) {
+      waitForNode(jetty, DEFAULT_TIMEOUT);
+    }
     return jetty;
   }
 
   /**
-   * Start a new Solr instance, using the default config
+   * Start a new Solr instance, using the default config. Waits for the node to appear in cluster
+   * live nodes before returning.
    *
    * @return a JettySolrRunner
    */
@@ -512,7 +520,8 @@ public class MiniSolrCloudCluster implements SolrBackend {
   }
 
   /**
-   * Add a previously stopped node back to the cluster on a different port
+   * Add a previously stopped node back to the cluster on a different port. Waits for the node to
+   * appear in cluster live nodes before returning.
    *
    * @param jetty a {@link JettySolrRunner} previously returned by {@link #stopJettySolrRunner(int)}
    * @return the started node
@@ -523,7 +532,8 @@ public class MiniSolrCloudCluster implements SolrBackend {
   }
 
   /**
-   * Add a previously stopped node back to the cluster
+   * Add a previously stopped node back to the cluster. Waits for the node to appear in cluster live
+   * nodes before returning.
    *
    * @param jetty a {@link JettySolrRunner} previously returned by {@link #stopJettySolrRunner(int)}
    * @param reusePort the port previously used by jetty
@@ -534,6 +544,7 @@ public class MiniSolrCloudCluster implements SolrBackend {
       throws Exception {
     jetty.start(reusePort);
     if (!jettys.contains(jetty)) jettys.add(jetty);
+    waitForNode(jetty, DEFAULT_TIMEOUT);
     return jetty;
   }
 
