@@ -14,20 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.solr.common;
+package org.apache.solr.client.api.model;
 
-import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 
-/**
- * This is to facilitate just in time creation of objects before writing it to the response.
- *
- * @deprecated Use {@link MapWriter} instead
- */
-@Deprecated
-public interface MapSerializable {
-  /**
-   * Use the passed map to minimize object creation. Do not keep a reference to the passed map and
-   * reuse it. it may be reused by the framework
-   */
-  Map<String, Object> toMap(Map<String, Object> map);
+/** Response body for the Schema Designer get-info endpoint. */
+public class SchemaDesignerInfoResponse extends SchemaDesignerSettingsResponse {
+
+  @JsonProperty("configSet")
+  public String configSet;
+
+  /** Whether the configSet has a published (live) version. */
+  @JsonProperty("published")
+  public Boolean published;
+
+  @JsonProperty("schemaVersion")
+  public Integer schemaVersion;
+
+  /** Collections currently using this configSet. */
+  @JsonProperty("collections")
+  public List<String> collections;
+
+  /** Number of sample documents stored for this configSet, if available. */
+  @JsonProperty("numDocs")
+  public Integer numDocs;
 }
