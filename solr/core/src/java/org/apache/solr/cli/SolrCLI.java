@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -43,8 +44,8 @@ import org.apache.commons.cli.help.HelpFormatter;
 import org.apache.commons.cli.help.TableDefinition;
 import org.apache.commons.cli.help.TextHelpAppendable;
 import org.apache.solr.client.solrj.SolrClient;
-import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
-import org.apache.solr.common.util.ContentStreamBase;
+import org.apache.solr.client.solrj.SolrRequest;
+import org.apache.solr.client.solrj.request.GenericSolrRequest;
 import org.apache.solr.common.util.EnvUtils;
 import org.apache.solr.common.util.NamedList;
 import org.apache.solr.common.util.SuppressForbidden;
@@ -398,10 +399,10 @@ public class SolrCLI implements CLIO {
 
   public static NamedList<Object> postJsonToSolr(
       SolrClient solrClient, String updatePath, String jsonBody) throws Exception {
-    ContentStreamBase.StringStream contentStream = new ContentStreamBase.StringStream(jsonBody);
-    contentStream.setContentType(JSON_CONTENT_TYPE);
-    ContentStreamUpdateRequest req = new ContentStreamUpdateRequest(updatePath);
-    req.addContentStream(contentStream);
+    GenericSolrRequest req =
+        new GenericSolrRequest(SolrRequest.METHOD.POST, updatePath)
+            .setRequiresCollection(true)
+            .withContent(jsonBody.getBytes(StandardCharsets.UTF_8), JSON_CONTENT_TYPE);
     return solrClient.request(req);
   }
 
