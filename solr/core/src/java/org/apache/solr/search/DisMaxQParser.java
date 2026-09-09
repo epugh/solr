@@ -227,7 +227,14 @@ public class DisMaxQParser extends QParser {
      * matched those phrases but do match looser phrases.
      */
     String userPhraseQuery = userQuery.replace("\"", "");
-    return pp.parse("\"" + userPhraseQuery + "\"");
+    Query phrase = pp.parse("\"" + userPhraseQuery + "\"");
+    // when pf is blank/missing, pp.parse(...) bottoms out with no aliased fields and returns an
+    // empty BooleanQuery rather than null; normalize that to null so callers don't add a no-op
+    // clause (SOLR-504)
+    if (ExtendedDismaxQParser.isEmpty(phrase)) {
+      return null;
+    }
+    return phrase;
   }
 
   protected Query getUserQuery(
