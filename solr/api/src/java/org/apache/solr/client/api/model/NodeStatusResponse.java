@@ -17,33 +17,23 @@
 package org.apache.solr.client.api.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Map;
-import java.util.Set;
 
-/** Response body for {@code GET /api/cluster/nodes}. */
-public class ListClusterNodesResponse extends SolrJerseyResponse {
+/** Response body for {@code GET /api/cluster/nodes/{nodeName}}. */
+public class NodeStatusResponse extends SolrJerseyResponse {
 
-  @Schema(description = "The live nodes in the cluster.")
-  @JsonProperty("nodes")
-  public Set<String> nodes;
+  @JsonProperty public String nodeName;
 
-  @Schema(
-      description = "Per-node replica and leadership metadata, present only when detailed=true.")
-  @JsonProperty("nodesDetail")
-  public Map<String, NodeState> nodesDetail;
+  @JsonProperty("live")
+  public Boolean live;
 
-  /** Replica and leadership metadata for one node. */
-  public static class NodeState {
-    @JsonProperty public Boolean live;
-    @JsonProperty public Boolean overseerLeader;
-    @JsonProperty public Integer leaders;
-    @JsonProperty public Integer replicas;
+  @JsonProperty("overseerLeader")
+  public Boolean overseerLeader;
 
-    @Schema(description = "Replicas this node hosts, grouped by collection and shard.")
-    @JsonProperty
-    public Map<String, Map<String, ShardReplicaCounts>> collections;
-  }
+  @JsonProperty public Integer leaders;
+  @JsonProperty public Integer replicas;
+
+  @JsonProperty public Map<String, Map<String, ShardReplicaCounts>> collections;
 
   /** Replica counts, scoped to the replicas of one shard that live on this node. */
   public static class ShardReplicaCounts {

@@ -234,6 +234,99 @@ The response includes a `nodes` array of live node names. SolrJ provides `Cluste
 }
 ----
 
+[[list-cluster-nodes-detailed]]
+=== Detailed Node Status
+
+With `detailed=true`, this same endpoint instead returns per-node replica and leadership metadata (in `nodesDetail`) for every live node, every node hosting a replica, and the Overseer leader -- instead of the plain live-node-name list above.
+
+[source,bash]
+----
+curl -X GET "http://localhost:8983/api/cluster/nodes?detailed=true"
+----
+
+Each entry in `nodesDetail` reports:
+
+`live`::
+Whether this node is currently a live node in the cluster.
+
+`overseerLeader`::
+Whether this node is the Overseer leader.
+
+`leaders`::
+The number of shard leaders hosted on this node, across all collections.
+
+`replicas`::
+The number of replicas hosted on this node, across all collections.
+
+`collections`::
+Replicas hosted on this node, grouped by collection and shard.
+Each shard entry reports `totalReplicas`, `activeReplicas`, and `downReplicas` -- counts of this node's own replicas of that shard, not the shard's cluster-wide replica count.
+
+[source,json]
+----
+{
+  "responseHeader":{
+    "status":0,
+    "QTime":2},
+  "nodesDetail":{
+    "127.0.1.1:8983_solr":{
+      "live":true,
+      "overseerLeader":true,
+      "leaders":2,
+      "replicas":2,
+      "collections":{
+        "films":{
+          "shard1":{
+            "totalReplicas":1,
+            "activeReplicas":1,
+            "downReplicas":0}},
+        "testcol":{
+          "shard1":{
+            "totalReplicas":1,
+            "activeReplicas":1,
+            "downReplicas":0}}}}}
+}
+----
+
+[[node-status]]
+=== Single Node Status
+
+`GET /api/cluster/nodes/{nodeName}` reports the same per-node metadata as `detailed=true` above, for one node directly rather than wrapped in a `nodesDetail` map.
+
+This is a v2-only API with no v1 equivalent.
+
+[source,bash]
+----
+curl -X GET "http://localhost:8983/api/cluster/nodes/127.0.1.1:8983_solr"
+----
+
+Returns a 404 if `nodeName` is not live, is not the Overseer leader, and hosts no replicas.
+
+[source,json]
+----
+{
+  "responseHeader":{
+    "status":0,
+    "QTime":2},
+  "nodeName":"127.0.1.1:8983_solr",
+  "live":true,
+  "overseerLeader":true,
+  "leaders":2,
+  "replicas":2,
+  "collections":{
+    "films":{
+      "shard1":{
+        "totalReplicas":1,
+        "activeReplicas":1,
+        "downReplicas":0}},
+    "testcol":{
+      "shard1":{
+        "totalReplicas":1,
+        "activeReplicas":1,
+        "downReplicas":0}}}
+}
+----
+
 [[clusterprop]]
 == CLUSTERPROP: Cluster Properties
 

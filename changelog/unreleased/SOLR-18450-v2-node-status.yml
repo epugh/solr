@@ -1,0 +1,12 @@
+title:
+  New V2-only `GET /api/cluster/nodes/{nodeName}` endpoint, and a `detailed=true` param on
+  `GET /api/cluster/nodes`, report replica and leadership metadata per node: whether it's live,
+  whether it's the overseer leader, its total leader/replica counts, and a per-collection/shard
+  breakdown of the replicas it hosts. The Admin UI's Cloud > Nodes view now uses the bulk form
+  instead of reverse-engineering the same data from `GET /api/collections?detailed=true`.
+type: added
+authors:
+  - name: Eric Pugh
+links:
+  - name: SOLR-18450
+    url: https://issues.apache.org/jira/browse/SOLR-18450

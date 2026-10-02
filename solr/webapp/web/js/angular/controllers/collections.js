@@ -23,7 +23,7 @@ solrAdminApp.controller('CollectionsController',
 
           $scope.rootUrl = Constants.ROOT_URL + "#/~collections/" + $routeParams.collection;
 
-          ClusterV2.listClusterNodes(function(error, data, response) {
+          ClusterV2.listClusterNodes({}, function(error, data, response) {
             $timeout(function() {
               if (error) { ApiErrorHandler.handle(response); return; }
               $scope.availableNodeSet = data.nodes;
@@ -252,7 +252,7 @@ solrAdminApp.controller('CollectionsController',
           shard.showAdd = !shard.showAdd;
           delete $scope.addReplicaMessage;
 
-          ClusterV2.listClusterNodes(function(error, data, response) {
+          ClusterV2.listClusterNodes({}, function(error, data, response) {
             $timeout(function() {
               if (error) { ApiErrorHandler.handle(response); return; }
               $scope.nodes = data.nodes;

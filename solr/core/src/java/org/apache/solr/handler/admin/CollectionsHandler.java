@@ -192,6 +192,7 @@ import org.apache.solr.handler.admin.api.MigrateDocsAPI;
 import org.apache.solr.handler.admin.api.MigrateReplicas;
 import org.apache.solr.handler.admin.api.ModifyCollectionAPI;
 import org.apache.solr.handler.admin.api.MoveReplicaAPI;
+import org.apache.solr.handler.admin.api.NodeStatus;
 import org.apache.solr.handler.admin.api.RebalanceLeadersAPI;
 import org.apache.solr.handler.admin.api.ReloadCollectionAPI;
 import org.apache.solr.handler.admin.api.RenameCollection;
@@ -1192,6 +1193,7 @@ public class CollectionsHandler extends RequestHandlerBase implements Permission
         ForceLeader.class,
         InstallShardData.class,
         ListClusterNodes.class,
+        NodeStatus.class,
         ListCollections.class,
         ListCollectionBackups.class,
         ReloadCollectionAPI.class,

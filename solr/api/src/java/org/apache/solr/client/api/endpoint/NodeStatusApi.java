@@ -20,23 +20,27 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.QueryParam;
-import org.apache.solr.client.api.model.ListClusterNodesResponse;
+import jakarta.ws.rs.PathParam;
+import org.apache.solr.client.api.model.NodeStatusResponse;
 
-/** V2 API definition for listing the nodes in the SolrCloud cluster. */
-@Path("/cluster/nodes")
-public interface ListClusterNodesApi {
+/**
+ * V2 API definition for fetching replica and leadership metadata about a single node in the
+ * SolrCloud cluster.
+ *
+ * <p>This API (GET /api/cluster/nodes/{nodeName}) has no v1 equivalent; it reports a per-node view
+ * of the same underlying cluster state that {@code /admin/collections?action=CLUSTERSTATUS} and
+ * {@code GET /api/collections?detailed=true} report per-collection.
+ */
+@Path("/cluster/nodes/{nodeName}")
+public interface NodeStatusApi {
 
   @GET
   @Operation(
-      summary = "List the nodes in this Solr cluster.",
+      summary = "Fetches replica and leadership metadata about the specified node",
       tags = {"cluster"})
-  ListClusterNodesResponse listClusterNodes(
-      @Parameter(
-              description =
-                  "When true, return per-node replica and leadership metadata (in"
-                      + " 'nodesDetail') instead of the plain live-node-name list.")
-          @QueryParam("detailed")
-          Boolean detailed)
+  NodeStatusResponse getNodeStatus(
+      @Parameter(description = "The name of the node to return metadata for", required = true)
+          @PathParam("nodeName")
+          String nodeName)
       throws Exception;
 }

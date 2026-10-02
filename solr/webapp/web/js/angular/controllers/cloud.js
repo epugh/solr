@@ -177,61 +177,63 @@ var nodesSubController = function($scope, $timeout, ClusterV2, CollectionsV2, Sy
     var hosts = {};
     var live_nodes = [];
 
-    // We build a node-centric view of the cluster state which we can easily consume to render the table
-    CollectionsV2.listCollections({detailed: true}, function (error, data, response) {
+    // The node-detail endpoint is the authoritative source for which nodes exist (live,
+    // replica-hosting, or overseer leader) and whether each is live -- seed the node/host
+    // structures from it before layering on per-replica detail below.
+    ClusterV2.listClusterNodes({detailed: true}, function (error, nodesData, response) {
       $timeout(function() {
         if (error) { ApiErrorHandler.handle(response); return; }
 
-        // Fetch cluster state from CollectionsApi and invert to a nodes structure
-        for (var name in data.collectionsDetail) {
-          var collection = data.collectionsDetail[name];
-          collection.name = name;
-          var shards = collection.shards;
-          collection.shards = [];
-          for (var shardName in shards) {
-            var shard = shards[shardName];
-            shard.name = shardName;
-            shard.collection = collection.name;
-            var replicas = shard.replicas;
-            shard.replicas = [];
-            for (var replicaName in replicas) {
-              var core = replicas[replicaName];
-              core.name = replicaName;
-              core.replica = core['core'].replace(/.*_(replica_.*)$/, '\$1');
-              core.collection = collection.name;
-              core.shard = shard.name;
-              core.shard_state = shard.state;
-              core.label = core['collection'] + "_"
-                + (core['shard'] + "_").replace(/shard(\d+)_/, 's\$1')
-                + core['replica'].replace(/replica_?[ntp]?(\d+)/, 'r\$1');
-
-              var node_name = core['node_name'];
-              var node = getOrCreateObj(node_name, nodes);
-              var cores = getOrCreateList("cores", node);
-              cores.push(core);
-              node['base_url'] = core.base_url;
-              node['id'] = core.base_url.replace(/[^\w\d]/g, '');
-              node['host'] = node_name.split(":")[0];
-              var collections = getOrCreateList("collections", node);
-              ensureInList(core.collection, collections);
-              ensureNodeInHosts(node_name, hosts);
-            }
+        for (var node_name in nodesData.nodesDetail) {
+          var node = getOrCreateObj(node_name, nodes);
+          node['host'] = node_name.split(":")[0];
+          if (nodesData.nodesDetail[node_name].live) {
+            live_nodes.push(node_name);
           }
+          ensureNodeInHosts(node_name, hosts);
         }
 
-        ClusterV2.listClusterNodes(function (error, nodesData, response) {
+        // Layer in per-replica core details (names, labels, states), which the node-detail
+        // summary above doesn't carry but the per-node Details view and metric label matching
+        // below need.
+        CollectionsV2.listCollections({detailed: true}, function (error, data, response) {
           $timeout(function() {
             if (error) { ApiErrorHandler.handle(response); return; }
 
-            live_nodes = nodesData.nodes;
-            for (n in live_nodes) {
-              node = live_nodes[n];
-              if (!(node in nodes)) {
-                var hostName = node.split(":")[0];
-                nodes[node] = {};
-                nodes[node]['host'] = hostName;
+            for (var name in data.collectionsDetail) {
+              var collection = data.collectionsDetail[name];
+              collection.name = name;
+              var shards = collection.shards;
+              collection.shards = [];
+              for (var shardName in shards) {
+                var shard = shards[shardName];
+                shard.name = shardName;
+                shard.collection = collection.name;
+                var replicas = shard.replicas;
+                shard.replicas = [];
+                for (var replicaName in replicas) {
+                  var core = replicas[replicaName];
+                  core.name = replicaName;
+                  core.replica = core['core'].replace(/.*_(replica_.*)$/, '\$1');
+                  core.collection = collection.name;
+                  core.shard = shard.name;
+                  core.shard_state = shard.state;
+                  core.label = core['collection'] + "_"
+                    + (core['shard'] + "_").replace(/shard(\d+)_/, 's\$1')
+                    + core['replica'].replace(/replica_?[ntp]?(\d+)/, 'r\$1');
+
+                  var node_name = core['node_name'];
+                  var node = getOrCreateObj(node_name, nodes);
+                  var cores = getOrCreateList("cores", node);
+                  cores.push(core);
+                  node['base_url'] = core.base_url;
+                  node['id'] = core.base_url.replace(/[^\w\d]/g, '');
+                  node['host'] = node_name.split(":")[0];
+                  var collections = getOrCreateList("collections", node);
+                  ensureInList(core.collection, collections);
+                  ensureNodeInHosts(node_name, hosts);
+                }
               }
-              ensureNodeInHosts(node, hosts);
             }
 
             // Make sure nodes are sorted alphabetically to align with rowspan in table
@@ -511,10 +513,9 @@ var nodesSubController = function($scope, $timeout, ClusterV2, CollectionsV2, Sy
               core['label'] += "_(" + labelState + ")";
             }
 
-            // Build full core name for label matching
-            // Prometheus metrics use format: "collection_shard_replica"
-            var fullCoreName = core['collection'] + '_' + core['shard'] + '_' + core['replica'];
-            var coreLabels = { core: fullCoreName, node: node };
+            // Prometheus metrics key cores by their core name (e.g. "films_shard1_replica_n1"),
+            // which is exactly what core['core'] already is.
+            var coreLabels = { core: core['core'], node: node };
 
             // Extract metrics using helpers (with node filter)
             var size = MetricsExtractor.extractCoreIndexSize(parsedMetrics, coreLabels);
@@ -852,7 +853,7 @@ var graphSubController = function ($scope, $timeout, Zookeeper, ClusterV2, ApiEr
     };
 
     $scope.initGraph = function() {
-        ClusterV2.listClusterNodes(function (error, data, response) {
+        ClusterV2.listClusterNodes({}, function (error, data, response) {
             $timeout(function() {
                 if (error) { ApiErrorHandler.handle(response); return; }
 

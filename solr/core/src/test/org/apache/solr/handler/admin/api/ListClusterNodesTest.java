@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.solr.client.api.model.ListClusterNodesResponse;
 import org.apache.solr.client.solrj.request.ClusterApi;
+import org.apache.solr.client.solrj.request.CollectionAdminRequest;
 import org.apache.solr.cloud.SolrCloudTestCase;
 import org.apache.solr.embedded.JettySolrRunner;
 import org.junit.BeforeClass;
@@ -41,11 +42,43 @@ public class ListClusterNodesTest extends SolrCloudTestCase {
     assertNotNull(rsp);
     assertNull(rsp.error);
     assertNotNull(rsp.nodes);
+    assertNull(rsp.nodesDetail);
 
     Set<String> expected =
         cluster.getJettySolrRunners().stream()
             .map(JettySolrRunner::getNodeName)
             .collect(Collectors.toSet());
     assertEquals(expected, rsp.nodes);
+  }
+
+  @Test
+  public void testListLiveNodesDetailed() throws Exception {
+    final String collection = "listClusterNodesDetailedTest";
+    CollectionAdminRequest.createCollection(collection, "conf", 1, 2)
+        .process(cluster.getSolrClient());
+    cluster.waitForActiveCollection(collection, 1, 2);
+
+    final var request = new ClusterApi.ListClusterNodes();
+    request.setDetailed(true);
+    final ListClusterNodesResponse rsp = request.process(cluster.getSolrClient());
+
+    assertNotNull(rsp);
+    assertNull(rsp.error);
+    assertNull(rsp.nodes);
+    assertNotNull(rsp.nodesDetail);
+
+    final Set<String> expected =
+        cluster.getJettySolrRunners().stream()
+            .map(JettySolrRunner::getNodeName)
+            .collect(Collectors.toSet());
+    assertEquals(expected, rsp.nodesDetail.keySet());
+
+    int totalReplicasAcrossNodes = 0;
+    for (var nodeState : rsp.nodesDetail.values()) {
+      assertTrue(nodeState.live);
+      assertNotNull(nodeState.replicas);
+      totalReplicasAcrossNodes += nodeState.replicas;
+    }
+    assertEquals(2, totalReplicasAcrossNodes);
   }
 }
