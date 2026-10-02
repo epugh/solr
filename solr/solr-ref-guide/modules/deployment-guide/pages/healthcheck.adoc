@@ -16,32 +16,37 @@
 // specific language governing permissions and limitations
 // under the License.
 
-Solr provides two distinct tools for checking whether things are working, and they answer different questions.
-Confusing them is easy, since both are casually called a "healthcheck", so this page describes each and helps you pick the right one.
+Solr provides a few distinct ways to check whether things are working, and they answer different questions.
+Confusing them is easy, since several get casually called a "healthcheck", so this page describes each and helps you pick the right one.
 
-[cols="1,2,2"]
+[cols="1,2,2,2"]
 |===
-| |Node Health Endpoint |`bin/solr healthcheck` command
+| |Node Health Endpoint |`bin/solr healthcheck` command |Collection Health Rollup
 
 |Answers
 |"Is this node alive and part of the cluster?"
 |"Does this collection actually have data, and is every replica in sync?"
+|"At a glance, which collections are degraded?"
 
 |Scope
 |A single node
 |A single collection, across all its shards and replicas
+|Every collection in the cluster
 
 |Checks the index/data?
 |No -- metadata only
 |Yes -- runs real queries
+|No -- ZooKeeper cluster state only
 
 |Interface
 |HTTP endpoint
 |Command-line tool
+|HTTP endpoint
 
 |Typical use
 |Load balancer / orchestrator liveness or readiness probe
 |Manual or scripted diagnosis after deployment, restart, or an incident
+|Dashboard or quick cluster-wide health glance
 |===
 
 == Node Healthcheck
@@ -167,3 +172,10 @@ bin/solr healthcheck -c gettingstarted
 TIP: Healthy, well-functioning replicas often disagree on exact document counts due to slightly staggered autoCommit periods or in-flight updates. Small, momentary count discrepancies between replicas are normal and should not automatically be treated as an issue unless the mismatch persists.
 
 See xref:solr-control-script-reference.adoc#healthcheck[the `healthcheck` command reference] for the full list of options.
+
+== Collection Health Rollup
+
+For a quick, no-query view across an entire cluster, `GET /api/collections?detailed=true` (v2) and `CLUSTERSTATUS` (v1) report a GREEN/YELLOW/ORANGE/RED health rollup per collection and shard, based on the percentage of active replicas in ZooKeeper's cluster state.
+Like the Node Health endpoint, this doesn't run any real queries -- it's a glance at cluster state, not a confirmation that queries return correct results.
+
+See xref:collection-management.adoc#collectionsdetail[Detailed Collections Tree] (v2) or xref:cluster-node-management.adoc#clusterstatus[CLUSTERSTATUS] (v1) for the full parameter and response documentation.
