@@ -1,7 +1,7 @@
 title:
   V2 GET /api/collections gains a `detailed=true` param returning the collections, shards, and
   replicas tree (in `collectionsDetail`), without live nodes, aliases, or cluster properties. This
-  tree previously lived at GET /api/cluster in an earlier draft of this change; it was relocated to
+  tree previously lived at GET /api/cluster in the original v2 cluster api; it was relocated to
   /api/collections since it's collection data, not cluster-wide data -- `/api/cluster/nodes`,
   `/api/aliases`, and `/api/cluster/properties` already cover the cluster-wide pieces.
 type: changed
